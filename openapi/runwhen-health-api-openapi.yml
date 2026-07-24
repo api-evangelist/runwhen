@@ -1,0 +1,78 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy health API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: health
+paths:
+  /:
+    get:
+      tags:
+      - health
+      summary: Root
+      description: Root endpoint for nginx-ingress backend health checks.
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Root  Get
+      security:
+      - BearerAuth: []
+  /healthz:
+    get:
+      tags:
+      - health
+      summary: Health
+      description: "Check overall service health.\n\nUsed by K8s readiness and startup probes.\nReturns 503 during graceful shutdown to drain traffic.\n\nReturns:\n    Health status with version information."
+      operationId: health_healthz_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /health:
+    get:
+      tags:
+      - health
+      summary: Health
+      description: "Check overall service health.\n\nUsed by K8s readiness and startup probes.\nReturns 503 during graceful shutdown to drain traffic.\n\nReturns:\n    Health status with version information."
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /livez:
+    get:
+      tags:
+      - health
+      summary: Liveness
+      description: "Liveness probe endpoint.\n\nUsed by K8s liveness probe.\n\nReturns:\n    Liveness status."
+      operationId: liveness_livez_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Liveness Livez Get
+      security: []
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

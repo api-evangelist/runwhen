@@ -1,0 +1,211 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy internal API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: internal
+paths:
+  /api/v1/workspaces/{workspace_name}/internal/upload-config:
+    get:
+      tags:
+      - internal
+      summary: Generate upload config (internal)
+      description: 'Generate upload credentials for runner-control.
+
+
+        Returns a short-lived SA token and the public PAPI URL so runner-control
+
+        can assemble a complete ``uploadInfo`` for workspace-builder.
+
+
+        **Network isolation:** This endpoint MUST be blocked from external access
+
+        via an ingress deny rule on ``/*/internal/*`` (same pattern as ``/metrics``).
+
+        Runner-control reaches PAPI through the cluster-internal Service URL, which
+
+        bypasses ingress. The ``RW-Runner-Token`` header is required as a secondary
+
+        guard but is not cryptographically validated by PAPI — runner-control already
+
+        validated the token before making this call.
+
+
+        **Why require a non-empty header at all?** Largely a lightweight handshake so
+
+        the caller is clearly runner-control (or anything that holds the runner token),
+
+        not arbitrary cluster traffic. It does not strengthen auth on the PAPI side.
+
+
+        **Future consideration:** If this endpoint remains strictly internal-only and
+
+        PAPI never gains cryptographic validation of the runner token, the header could
+
+        be removed entirely — it would not change the trust model on PAPI (isolation
+
+        is ClusterIP + ingress deny). Doing so would require a coordinated change with
+
+        runner-control and regression testing; we keep the header until then to avoid
+
+        churn on a path that already works.'
+      operationId: get_internal_upload_config_api_v1_workspaces__workspace_name__internal_upload_config_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: RW-Runner-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Rw-Runner-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/internal/upload-config:
+    get:
+      tags:
+      - internal
+      summary: Generate upload config (internal)
+      description: 'Generate upload credentials for runner-control.
+
+
+        Returns a short-lived SA token and the public PAPI URL so runner-control
+
+        can assemble a complete ``uploadInfo`` for workspace-builder.
+
+
+        **Network isolation:** This endpoint MUST be blocked from external access
+
+        via an ingress deny rule on ``/*/internal/*`` (same pattern as ``/metrics``).
+
+        Runner-control reaches PAPI through the cluster-internal Service URL, which
+
+        bypasses ingress. The ``RW-Runner-Token`` header is required as a secondary
+
+        guard but is not cryptographically validated by PAPI — runner-control already
+
+        validated the token before making this call.
+
+
+        **Why require a non-empty header at all?** Largely a lightweight handshake so
+
+        the caller is clearly runner-control (or anything that holds the runner token),
+
+        not arbitrary cluster traffic. It does not strengthen auth on the PAPI side.
+
+
+        **Future consideration:** If this endpoint remains strictly internal-only and
+
+        PAPI never gains cryptographic validation of the runner token, the header could
+
+        be removed entirely — it would not change the trust model on PAPI (isolation
+
+        is ClusterIP + ingress deny). Doing so would require a coordinated change with
+
+        runner-control and regression testing; we keep the header until then to avoid
+
+        churn on a path that already works.'
+      operationId: get_internal_upload_config_api_v3_workspaces__workspace_name__internal_upload_config_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: RW-Runner-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Rw-Runner-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    UploadConfigResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+        papi_url:
+          type: string
+          title: Papi Url
+      type: object
+      required:
+      - token
+      - papi_url
+      title: UploadConfigResponse
+      description: Response containing upload credentials and PAPI URL for workspace-builder.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

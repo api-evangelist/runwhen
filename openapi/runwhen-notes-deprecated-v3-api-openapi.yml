@@ -1,0 +1,430 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy notes (deprecated v3) API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: notes (deprecated v3)
+paths:
+  /api/v3/workspaces/{workspace_name}/notes:
+    get:
+      tags:
+      - notes (deprecated v3)
+      summary: List notes for a workspace (deprecated v3)
+      description: 'List notes for a workspace.
+
+
+        Without include_enrichment: plain list of notes.
+
+        With include_enrichment=true: paginated wrapper with USearch metadata.'
+      operationId: list_notes_api_v3_workspaces__workspace_name__notes_get
+      deprecated: true
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: include_enrichment
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include USearch indexing metadata
+          default: false
+          title: Include Enrichment
+        description: Include USearch indexing metadata
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by status
+          title: Status
+        description: Filter by status
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search within content
+          title: Search
+        description: Search within content
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          description: Max results
+          default: 200
+          title: Limit
+        description: Max results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Pagination offset
+          default: 0
+          title: Offset
+        description: Pagination offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - notes (deprecated v3)
+      summary: Create a note (deprecated v3)
+      description: Create a new manual note and enqueue the v4 resolve+index reconcile.
+      operationId: create_note_api_v3_workspaces__workspace_name__notes_post
+      deprecated: true
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/notes/{note_id}:
+    get:
+      tags:
+      - notes (deprecated v3)
+      summary: Get a note (deprecated v3)
+      description: Retrieve a single note by UUID.
+      operationId: get_note_api_v3_workspaces__workspace_name__notes__note_id__get
+      deprecated: true
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Note Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - notes (deprecated v3)
+      summary: Update a note (deprecated v3)
+      description: Partial update of a note. Re-runs the resolve+index reconcile.
+      operationId: update_note_api_v3_workspaces__workspace_name__notes__note_id__patch
+      deprecated: true
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Note Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - notes (deprecated v3)
+      summary: Delete a note (deprecated v3)
+      description: Delete a note and remove it from the USearch index.
+      operationId: delete_note_api_v3_workspaces__workspace_name__notes__note_id__delete
+      deprecated: true
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Note Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    NoteResponse:
+      properties:
+        noteId:
+          type: string
+          format: uuid
+          title: Noteid
+          description: Unique note identifier
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Short note title
+        content:
+          type: string
+          title: Content
+          description: Note content
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+          description: Canonical resource paths
+        abstractEntities:
+          items:
+            type: string
+          type: array
+          title: Abstractentities
+          description: Normalized entity tokens
+        status:
+          type: string
+          title: Status
+          description: Note lifecycle status
+        verified:
+          type: boolean
+          title: Verified
+          description: Whether note is human-verified
+        authorEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authoremail
+          description: Author email address
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          title: Updatedat
+          description: Last update timestamp
+      type: object
+      required:
+      - noteId
+      - content
+      - resourcePaths
+      - abstractEntities
+      - status
+      - verified
+      - createdAt
+      - updatedAt
+      title: NoteResponse
+      description: Note response schema for API responses.
+    NoteUpdate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+        content:
+          anyOf:
+          - type: string
+            maxLength: 20000
+            minLength: 1
+          - type: 'null'
+          title: Content
+        resourcePaths:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Resourcepaths
+        abstractEntities:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Abstractentities
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/NoteStatus'
+          - type: 'null'
+        verified:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Verified
+      type: object
+      title: NoteUpdate
+      description: Schema for partial update of a note.
+    NoteCreate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+          description: Short note title
+        content:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Content
+          description: Note content
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+          description: Canonical resource paths
+        abstractEntities:
+          items:
+            type: string
+          type: array
+          title: Abstractentities
+          description: Normalized entity tokens
+        status:
+          $ref: '#/components/schemas/NoteStatus'
+          description: Note lifecycle status
+          default: active
+      type: object
+      required:
+      - content
+      title: NoteCreate
+      description: Schema for creating a note.
+    NoteStatus:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatus
+      description: Note lifecycle status.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

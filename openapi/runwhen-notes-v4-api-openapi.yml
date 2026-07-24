@@ -1,0 +1,577 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy notes-v4 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: notes-v4
+paths:
+  /api/v4/workspaces/{workspace_name}/notes:
+    get:
+      tags:
+      - notes-v4
+      summary: List notes for a workspace
+      description: 'List notes for a workspace.
+
+
+        ``view=summary``: lightweight metadata-only list (no content body) — the
+
+        "summary representation" for listing UIs (e.g. the rwfs tree). ``status``
+
+        and ``search`` filters still apply (``search`` is title-only here, since
+
+        content is not loaded). It is a distinct representation from
+
+        ``include_enrichment`` and the two cannot be combined (400).
+
+        Without include_enrichment: plain list of notes (full, with content).
+
+        With include_enrichment=true: paginated wrapper with USearch metadata.'
+      operationId: list_notes_api_v4_workspaces__workspace_name__notes_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: view
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(full|summary)$
+          description: '"full" (default): notes with content. "summary": lightweight metadata-only representation (no content body) for listing UIs.'
+          default: full
+          title: View
+        description: '"full" (default): notes with content. "summary": lightweight metadata-only representation (no content body) for listing UIs.'
+      - name: include_enrichment
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include USearch indexing metadata
+          default: false
+          title: Include Enrichment
+        description: Include USearch indexing metadata
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by status
+          title: Status
+        description: Filter by status
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Case-insensitive substring filter. full view: title or content; summary view: title only (content is not loaded at this representation).'
+          title: Search
+        description: 'Case-insensitive substring filter. full view: title or content; summary view: title only (content is not loaded at this representation).'
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          description: Max results
+          default: 200
+          title: Limit
+        description: Max results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Pagination offset
+          default: 0
+          title: Offset
+        description: Pagination offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - notes-v4
+      summary: Create a note
+      description: Create a new note and fire-and-forget USearch indexing.
+      operationId: create_note_api_v4_workspaces__workspace_name__notes_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteCreateV4'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/notes/{note_id}:
+    get:
+      tags:
+      - notes-v4
+      summary: Get a note
+      description: Retrieve a single note by UUID.
+      operationId: get_note_api_v4_workspaces__workspace_name__notes__note_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Note Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - notes-v4
+      summary: Update a note
+      description: Partial update of a note. Re-indexes in USearch.
+      operationId: update_note_api_v4_workspaces__workspace_name__notes__note_id__patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Note Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteUpdateV4'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - notes-v4
+      summary: Delete a note
+      description: Delete a note and remove from USearch index.
+      operationId: delete_note_api_v4_workspaces__workspace_name__notes__note_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Note Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    NoteResponseV4:
+      properties:
+        noteId:
+          type: string
+          format: uuid
+          title: Noteid
+          description: Unique note identifier
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Short note title
+        content:
+          type: string
+          title: Content
+          description: Note content
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+          description: Authored explicit resource paths
+        resourceSelectors:
+          items:
+            $ref: '#/components/schemas/ResourceSelectorV4'
+          type: array
+          title: Resourceselectors
+          description: Authored tag selectors (Tier-2 rule)
+        resourceLinks:
+          items:
+            $ref: '#/components/schemas/NoteResourceLinkV4'
+          type: array
+          title: Resourcelinks
+          description: Resolved concrete attachments (Tier-3), reconciler-owned
+        lastResolvedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastresolvedat
+          description: When the reconciler last resolved this note
+        resolutionState:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resolutionstate
+          description: ok | pending | error
+        indexingState:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Indexingstate
+          description: usearch-reported index state, mirrored into core DB (completed | failed | queued | …)
+        abstractEntities:
+          items:
+            type: string
+          type: array
+          title: Abstractentities
+          description: Normalized entity tokens
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Author-facing labels
+        status:
+          type: string
+          title: Status
+          description: Note lifecycle status
+        verified:
+          type: boolean
+          title: Verified
+          description: Whether note is human-verified
+        authorEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authoremail
+          description: Author email address
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          title: Updatedat
+          description: Last update timestamp
+        sourceKind:
+          type: string
+          title: Sourcekind
+          description: 'Origin: "manual" or external (e.g. "git")'
+          default: manual
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+          description: Origin/collection (e.g. repo) for synced notes
+        sourceId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sourceid
+          description: Identifier within the source (e.g. file path)
+        sourceRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sourceref
+          description: Version pointer at last sync (e.g. commit)
+        readOnly:
+          type: boolean
+          title: Readonly
+          description: True for externally-synced notes (edit at source)
+          default: false
+      type: object
+      required:
+      - noteId
+      - content
+      - resourcePaths
+      - abstractEntities
+      - status
+      - verified
+      - createdAt
+      - updatedAt
+      title: NoteResponseV4
+      description: Note response schema for API responses.
+    NoteCreateV4:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+          description: Short note title
+        content:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Content
+          description: Note content
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+          description: Canonical resource paths
+        resourceSelectors:
+          items:
+            $ref: '#/components/schemas/ResourceSelectorV4'
+          type: array
+          title: Resourceselectors
+          description: Tag selectors resolved to resources by the platform
+        abstractEntities:
+          items:
+            type: string
+          type: array
+          title: Abstractentities
+          description: Normalized entity tokens
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Author-facing labels
+        status:
+          $ref: '#/components/schemas/NoteStatusV4'
+          description: Note lifecycle status
+          default: active
+      additionalProperties: false
+      type: object
+      required:
+      - content
+      title: NoteCreateV4
+      description: Schema for creating a note.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    NoteStatusV4:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatusV4
+      description: Note lifecycle status.
+    ResourceSelectorV4:
+      properties:
+        matchTags:
+          additionalProperties:
+            type: string
+          type: object
+          title: Matchtags
+          description: Tag key/value equalities, ANDed together
+      additionalProperties: false
+      type: object
+      title: ResourceSelectorV4
+      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
+
+
+        (``matchExpressions`` — set-based operators — is a planned follow-on; only
+
+        ``matchTags`` is supported today.)'
+    NoteUpdateV4:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+        content:
+          anyOf:
+          - type: string
+            maxLength: 20000
+            minLength: 1
+          - type: 'null'
+          title: Content
+        resourcePaths:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Resourcepaths
+        resourceSelectors:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ResourceSelectorV4'
+            type: array
+          - type: 'null'
+          title: Resourceselectors
+        abstractEntities:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Abstractentities
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/NoteStatusV4'
+          - type: 'null'
+        verified:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Verified
+      additionalProperties: false
+      type: object
+      title: NoteUpdateV4
+      description: Schema for partial update of a note.
+    NoteResourceLinkV4:
+      properties:
+        resourcePath:
+          type: string
+          title: Resourcepath
+          description: Concrete resource path the note attaches to
+        matchReason:
+          type: string
+          title: Matchreason
+          description: '"explicit_path" | "selector"'
+        matchedSelector:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Matchedselector
+          description: Index into resourceSelectors (null for explicit paths)
+      type: object
+      required:
+      - resourcePath
+      - matchReason
+      title: NoteResourceLinkV4
+      description: A materialized note→resource attachment (Tier-3), resolver-owned.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

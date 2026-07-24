@@ -1,0 +1,276 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy profile API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: profile
+paths:
+  /accounts/profile/{user_id}:
+    get:
+      tags:
+      - profile
+      summary: Get Profile
+      description: 'Retrieve a user''s public profile by user ID.
+
+
+        Intentionally readable by any authenticated user — profiles contain only
+
+        public-facing fields (avatar, bio, LinkedIn). Write/delete operations
+
+        enforce ownership.'
+      operationId: get_profile_accounts_profile__user_id__get
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - profile
+      summary: Update Profile
+      description: 'Update a profile. Creates the profile if it doesn''t exist (PUT-as-create).
+
+
+        Users can only edit their own profile.'
+      operationId: update_profile_accounts_profile__user_id__put
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - profile
+      summary: Delete Profile
+      description: Delete a profile. Only the profile owner or superuser can delete.
+      operationId: delete_profile_accounts_profile__user_id__delete
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /accounts/sync-user-account:
+    post:
+      tags:
+      - profile
+      summary: Sync User Account
+      description: 'Reconcile workspace permissions for a user.
+
+
+        When workspace admins invite a user by email before that user has an
+
+        account, the permission row stores a placeholder email. This endpoint
+
+        links those placeholder rows to the actual user record.
+
+
+        Only the target user or staff may trigger this.'
+      operationId: sync_user_account_accounts_sync_user_account_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncUserAccountRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Sync User Account Accounts Sync User Account Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SyncUserAccountRequest:
+      properties:
+        username:
+          type: string
+          title: Username
+      type: object
+      required:
+      - username
+      title: SyncUserAccountRequest
+      description: Request body matching Django's sync-user-account endpoint.
+    ProfileResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        user:
+          type: integer
+          title: User
+        publicEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicemail
+        publicFullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicfullname
+        publicLinkedinUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publiclinkedinurl
+        publicAvatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicavatarurl
+        publicBio:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicbio
+        optOutPublicGroup:
+          type: boolean
+          title: Optoutpublicgroup
+          default: false
+      type: object
+      required:
+      - id
+      - user
+      title: ProfileResponse
+      description: Profile response matching Django's ProfileSerializer (all fields, camelCase).
+    ProfileUpdateRequest:
+      properties:
+        publicEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicemail
+        publicFullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicfullname
+        publicLinkedinUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publiclinkedinurl
+        publicAvatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicavatarurl
+        publicBio:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicbio
+        optOutPublicGroup:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Optoutpublicgroup
+      type: object
+      title: ProfileUpdateRequest
+      description: Profile update request — all fields optional for partial updates.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

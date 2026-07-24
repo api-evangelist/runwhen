@@ -1,0 +1,1050 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy users API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: users
+paths:
+  /api/v3/users/register:
+    post:
+      tags:
+      - users
+      summary: Register a new user account
+      description: "Create a new user account and send a verification email.\n\nArgs:\n    data: Registration details (username, email, password).\n    session: Database session.\n\nReturns:\n    The created user's basic info with a confirmation message.\n\nRaises:\n    HTTPException: 409 if username or email already exists."
+      operationId: register_api_v3_users_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /api/v3/users/verify-email:
+    post:
+      tags:
+      - users
+      summary: Verify email address via token
+      description: "Verify a user's email address using a signed token.\n\nArgs:\n    data: The verification token.\n    session: Database session.\n\nReturns:\n    Confirmation message.\n\nRaises:\n    HTTPException: 400 if token is invalid or expired."
+      operationId: verify_email_api_v3_users_verify_email_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /api/v3/users/resend-verification:
+    post:
+      tags:
+      - users
+      summary: Resend verification email
+      description: 'Resend verification email for an unverified account.
+
+
+        Always returns 200 with a generic message to prevent email enumeration.'
+      operationId: resend_verification_api_v3_users_resend_verification_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/forgot-password:
+    post:
+      tags:
+      - users
+      summary: Request a password reset email
+      description: "Send a password reset email if the email exists.\n\nAlways returns 200 with a generic message to prevent email enumeration.\n\nArgs:\n    data: The email address to send the reset link to.\n    session: Database session.\n\nReturns:\n    Generic confirmation message (regardless of whether the email exists)."
+      operationId: forgot_password_api_v3_users_forgot_password_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /api/v3/users/reset-password:
+    post:
+      tags:
+      - users
+      summary: Reset password using a token
+      description: "Reset a user's password using a signed, one-time-use token.\n\nArgs:\n    data: The reset token and new password.\n    session: Database session.\n\nReturns:\n    Confirmation message.\n\nRaises:\n    HTTPException: 400 if token is invalid, expired, or already consumed."
+      operationId: reset_password_api_v3_users_reset_password_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /api/v3/users/csrf-token:
+    get:
+      tags:
+      - users
+      summary: Get CSRF token
+      description: "Get a CSRF token for cross-domain requests.\n\nThis endpoint is provided for UI compatibility. With JWT-based\nauthentication, CSRF tokens are not strictly necessary since\nthe auth token is sent in the Authorization header (not cookies).\n\nHowever, the frontend may still expect this endpoint to exist.\n\nReturns:\n    A CSRF token."
+      operationId: get_csrf_token_api_v3_users_csrf_token_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CsrfTokenResponse'
+      security: []
+  /api/v3/users/login:
+    post:
+      tags:
+      - users
+      summary: Login with username and password
+      description: "Authenticate user with username and password.\n\nArgs:\n    data: Login credentials.\n    session: Database session.\n\nReturns:\n    Access and refresh tokens with user info.\n\nRaises:\n    HTTPException: 401 if credentials invalid."
+      operationId: login_api_v3_users_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /api/v3/users/logout:
+    post:
+      tags:
+      - users
+      summary: Logout (invalidate session)
+      description: 'Logout the current user.
+
+
+        Clears the JWT cookie so browser-based sessions are terminated immediately.'
+      operationId: logout_api_v3_users_logout_post
+      responses:
+        '204':
+          description: Successful Response
+      security:
+      - BearerAuth: []
+  /api/v3/users/whoami:
+    get:
+      tags:
+      - users
+      summary: Get current user info
+      description: "Get information about the currently logged in user.\n\nArgs:\n    current_user: The authenticated user.\n\nReturns:\n    The current user's information."
+      operationId: whoami_api_v3_users_whoami_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+      security:
+      - BearerAuth: []
+  /api/v3/users/search:
+    get:
+      tags:
+      - users
+      summary: Search users by name or email
+      description: 'Search users by first name, last name, username, or email.
+
+
+        Returns empty list if search term is less than 3 characters.
+
+        Excludes service accounts from results.
+
+
+        Staff-only for general search (matching Django IsAdminUser).
+
+        Non-staff users may search within an anonymous workspace (returns only
+
+        anonymized results).'
+      operationId: search_users_api_v3_users_search_get
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search term
+          title: Q
+        description: Search term
+      - name: workspace
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Workspace name for anonymous mode
+          title: Workspace
+        description: Workspace name for anonymous mode
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSearchResponse'
+                title: Response Search Users Api V3 Users Search Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/search-email:
+    get:
+      tags:
+      - users
+      summary: Search users by exact email
+      description: 'Search users by exact email address match.
+
+
+        Returns matching users and list of emails not found.
+
+        Used for mapping git contributors to user accounts.
+
+
+        Note: Accepts both `q` and `q[]` query parameter formats for compatibility
+
+        with different frontend frameworks.'
+      operationId: search_users_by_email_api_v3_users_search_email_get
+      parameters:
+      - name: q[]
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          description: Email addresses to search
+          default: []
+          title: Q[]
+        description: Email addresses to search
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSearchEmailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/get-token:
+    get:
+      tags:
+      - users
+      summary: Get access token for API usage
+      description: 'Generate an access token for the current user.
+
+
+        The token can be used for API authentication with Bearer scheme.'
+      operationId: get_token_api_v3_users_get_token_get
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 365
+          minimum: 1
+          description: Token lifetime in days
+          default: 1
+          title: Days
+        description: Token lifetime in days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/my-network:
+    get:
+      tags:
+      - users
+      summary: Get users in current user's network
+      description: "Get users who share workspaces with the current user.\n\nWorkspace name to scope results to (required).\nReturns users who have permissions on the specified workspace.\nUseful for autocomplete/mentions.\n\nArgs:\n    workspace: Workspace name to scope results to (required).\n    current_user: The authenticated user.\n    session: Database session.\n\nReturns:\n    List of users in the current user's network."
+      operationId: get_my_network_api_v3_users_my_network_get
+      parameters:
+      - name: workspace
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Workspace name (required)
+          title: Workspace
+        description: Workspace name (required)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserNetworkResponse'
+                title: Response Get My Network Api V3 Users My Network Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/{user_id}:
+    get:
+      tags:
+      - users
+      summary: Get user by ID
+      description: "Get a user by their ID.\n\nArgs:\n    user_id: The ID of the user to retrieve.\n    session: Database session.\n    current_user: The authenticated user (required for auth).\n\nReturns:\n    The user information.\n\nRaises:\n    HTTPException: 404 if user not found."
+      operationId: get_user_api_v3_users__user_id__get
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - users
+      summary: Update user details
+      description: "Update user details.\n\nUsers can only update their own profile. Admins can update any user.\n\nArgs:\n    user_id: The ID of the user to update.\n    update_data: The fields to update.\n    current_user: The authenticated user.\n    session: Database session.\n\nReturns:\n    The updated user information.\n\nRaises:\n    HTTPException: 403 if trying to update another user's profile.\n    HTTPException: 404 if user not found."
+      operationId: update_user_api_v3_users__user_id__patch
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/{user_id}/activeworkspaces:
+    get:
+      tags:
+      - users
+      summary: Get user's active workspaces
+      description: "Get workspaces sorted by user's activity count.\n\nArgs:\n    user_id: The user ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of workspaces with activity counts."
+      operationId: get_user_active_workspaces_api_v3_users__user_id__activeworkspaces_get
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserActiveWorkspacesResponse'
+                title: Response Get User Active Workspaces Api V3 Users  User Id  Activeworkspaces Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/{user_id}/activities/count:
+    get:
+      tags:
+      - users
+      summary: Get count of user's activities
+      description: "Get the count of activities for a user (heatmap data).\n\nReturns a list of date/count pairs for generating activity heatmaps.\n\nArgs:\n    user_id: The user ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of date/count pairs."
+      operationId: get_user_activities_count_api_v3_users__user_id__activities_count_get
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserActivitiesCountResponse'
+                title: Response Get User Activities Count Api V3 Users  User Id  Activities Count Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/{user_id}/activities:
+    get:
+      tags:
+      - users
+      summary: Get user's activity stream
+      description: "Get activity stream for a user.\n\nArgs:\n    user_id: The user ID.\n    page: Page number.\n    page_size: Items per page.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of activities."
+      operationId: get_user_activities_api_v3_users__user_id__activities_get
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page-size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page-Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Get User Activities Api V3 Users  User Id  Activities Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    UserNetworkResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        primaryEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primaryemail
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+      type: object
+      required:
+      - id
+      - username
+      title: UserNetworkResponse
+      description: Response schema for users in the current user's network.
+    VerifyEmailRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: VerifyEmailRequest
+      description: Email verification request.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UserResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        primaryEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primaryemail
+          description: Alias for email, for UI compatibility
+        firstName:
+          type: string
+          title: Firstname
+          default: ''
+        lastName:
+          type: string
+          title: Lastname
+          default: ''
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+        liveAvatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Liveavatarurl
+        groups:
+          items:
+            $ref: '#/components/schemas/GroupResponse'
+          type: array
+          title: Groups
+        provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider
+        escalationMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Escalationmessage
+        optOutPublicGroup:
+          type: boolean
+          title: Optoutpublicgroup
+          default: false
+        isActive:
+          type: boolean
+          title: Isactive
+          default: true
+        isStaff:
+          type: boolean
+          title: Isstaff
+          default: false
+        isSuperuser:
+          type: boolean
+          title: Issuperuser
+          default: false
+        isServiceAccount:
+          type: boolean
+          title: Isserviceaccount
+          default: false
+      type: object
+      required:
+      - id
+      - username
+      title: UserResponse
+      description: User response schema matching Django's UserSerializer.
+    RegisterRequest:
+      properties:
+        username:
+          anyOf:
+          - type: string
+            maxLength: 150
+            minLength: 3
+          - type: 'null'
+          title: Username
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          maxLength: 128
+          minLength: 8
+          title: Password
+        confirm_password:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Confirm Password
+        first_name:
+          type: string
+          maxLength: 100
+          title: First Name
+          default: ''
+        last_name:
+          type: string
+          maxLength: 100
+          title: Last Name
+          default: ''
+      type: object
+      required:
+      - email
+      - password
+      title: RegisterRequest
+      description: User registration request.
+    UserSearchEmailResponse:
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/UserSearchResponse'
+          type: array
+          title: Users
+        notFound:
+          items:
+            type: string
+          type: array
+          title: Notfound
+      type: object
+      required:
+      - users
+      title: UserSearchEmailResponse
+      description: Response for email search including not found emails.
+    UserActivitiesCountResponse:
+      properties:
+        date:
+          type: string
+          title: Date
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - date
+      - count
+      title: UserActivitiesCountResponse
+      description: Response for user activities count (heatmap data).
+    UserUpdateRequest:
+      properties:
+        primaryEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primaryemail
+        firstName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Firstname
+        lastName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastname
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+        escalationMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Escalationmessage
+        optOutPublicGroup:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Optoutpublicgroup
+      type: object
+      title: UserUpdateRequest
+      description: 'Request schema for updating user details.
+
+
+        Accepts both camelCase (from UI) and snake_case field names.'
+    LoginResponse:
+      properties:
+        access:
+          type: string
+          title: Access
+        refresh:
+          type: string
+          title: Refresh
+        user:
+          $ref: '#/components/schemas/UserResponse'
+      type: object
+      required:
+      - access
+      - refresh
+      - user
+      title: LoginResponse
+      description: Login response with tokens.
+    GroupResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: GroupResponse
+      description: Minimal group info returned inside UserResponse.
+    RegisterResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        email:
+          type: string
+          title: Email
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - username
+      - email
+      - message
+      title: RegisterResponse
+      description: User registration response.
+    UserSearchResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        primaryEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primaryemail
+        firstName:
+          type: string
+          title: Firstname
+          default: ''
+        lastName:
+          type: string
+          title: Lastname
+          default: ''
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+        isActive:
+          type: boolean
+          title: Isactive
+          default: true
+        isServiceAccount:
+          type: boolean
+          title: Isserviceaccount
+          default: false
+      type: object
+      required:
+      - id
+      - username
+      title: UserSearchResponse
+      description: Response for user search results.
+    LoginRequest:
+      properties:
+        username:
+          type: string
+          title: Username
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - username
+      - password
+      title: LoginRequest
+      description: Username/password login request.
+    UserActiveWorkspacesResponse:
+      properties:
+        workspaceName:
+          type: string
+          title: Workspacename
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - workspaceName
+      - count
+      title: UserActiveWorkspacesResponse
+      description: Response for user's active workspaces with activity count.
+    ResetPasswordRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+        password:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 8
+          - type: 'null'
+          title: Password
+        new_password:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 8
+          - type: 'null'
+          title: New Password
+        confirm_password:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Confirm Password
+      type: object
+      required:
+      - token
+      title: ResetPasswordRequest
+      description: 'Password reset request.
+
+
+        Accepts both ''password'' (frontend sends this) and ''new_password'' for
+
+        backward compatibility.'
+    CsrfTokenResponse:
+      properties:
+        csrfToken:
+          type: string
+          title: Csrftoken
+      type: object
+      required:
+      - csrfToken
+      title: CsrfTokenResponse
+      description: CSRF token response.
+    UserTokenResponse:
+      properties:
+        access:
+          type: string
+          title: Access
+        lifetime:
+          type: string
+          title: Lifetime
+      type: object
+      required:
+      - access
+      - lifetime
+      title: UserTokenResponse
+      description: Response for token generation.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ForgotPasswordRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+      - email
+      title: ForgotPasswordRequest
+      description: Forgot password request.
+    MessageResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - message
+      title: MessageResponse
+      description: Generic message response.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

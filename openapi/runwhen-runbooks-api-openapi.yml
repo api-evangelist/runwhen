@@ -1,0 +1,297 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy runbooks API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: runbooks
+paths:
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook:
+    get:
+      tags:
+      - runbooks
+      summary: Get the Runbook for an SLX
+      description: "Get the Runbook for an SLX.\n\nSLX and Runbook have a 1:1 relationship. This endpoint returns the single\nRunbook associated with the specified SLX, or 404 if no Runbook exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The Runbook details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or Runbook not found."
+      operationId: get_slx_runbook_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: detail
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Accepted for Django parity; ignored (always returns full detail)
+          title: Detail
+        description: Accepted for Django parity; ignored (always returns full detail)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__runbook__RunbookResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook:
+    get:
+      tags:
+      - runbooks
+      summary: Get the Runbook for an SLX
+      description: "Get the Runbook for an SLX.\n\nSLX and Runbook have a 1:1 relationship. This endpoint returns the single\nRunbook associated with the specified SLX, or 404 if no Runbook exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The Runbook details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or Runbook not found."
+      operationId: get_slx_runbook_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: detail
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Accepted for Django parity; ignored (always returns full detail)
+          title: Detail
+        description: Accepted for Django parity; ignored (always returns full detail)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__runbook__RunbookResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    RunbookTaskV4:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Task tags
+      type: object
+      required:
+      - name
+      - value
+      title: RunbookTaskV4
+      description: Individual task in a runbook (V4 wire shape).
+    papi__schemas__runbook__RunbookResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        slxId:
+          type: integer
+          title: Slxid
+        name:
+          type: string
+          title: Name
+          default: ''
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        runtimeVarsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Runtimevarsprovided
+        requirements:
+          additionalProperties: true
+          type: object
+          title: Requirements
+        lookbackWindow:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lookbackwindow
+        resolvedTasks:
+          items:
+            type: string
+          type: array
+          title: Resolvedtasks
+        taskDetails:
+          additionalProperties: true
+          type: object
+          title: Taskdetails
+        lastRunCode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastruncode
+        lastRunMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastrunmessage
+        lastRunAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastrunat
+        tasks:
+          items:
+            $ref: '#/components/schemas/RunbookTaskV4'
+          type: array
+          title: Tasks
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Spec dict matching Django CoreModelSerializer shape.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Status dict matching Django CoreModelSerializer shape.
+          readOnly: true
+      type: object
+      required:
+      - id
+      - slxId
+      - created
+      - modified
+      - spec
+      - status
+      title: RunbookResponse
+      description: "Legacy V1/V3 shape: V4 fields + computed ``spec`` and ``status`` for Django-era consumers.\n\nSubclassing keeps flat fields in lock-step with V4. Computed fields rebuild the\nCRD-shape sub-objects from flat ones at serialization time. Sunset path: when\nexternal consumers fully migrate to /api/v4, delete this subclass.\n\nLegacy wire keys preserved by overriding aliased timestamp fields:\n  - ``created_at`` → alias ``created``   (was ``createdAt`` in V4)\n  - ``modified_at`` → alias ``modified``  (was ``modifiedAt`` in V4)"
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

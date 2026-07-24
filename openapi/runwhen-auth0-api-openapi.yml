@@ -1,0 +1,209 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy auth0 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: auth0
+paths:
+  /accounts/auth0/login/:
+    get:
+      tags:
+      - auth0
+      summary: Auth0 Login
+      description: "Initiate Auth0 OAuth2 login flow with PKCE.\n\nBuilds the Auth0 authorize URL, stores state in Redis, and redirects\nthe browser to Auth0 for authentication.\n\nArgs:\n    request: The incoming request.\n    next: URL to redirect to after login (e.g. /rd/<b64_url>).\n    auth_params: Auth0 connection parameters (e.g. [connection]=runwhen).\n    oauth_session: OAuth 2.1 AS session ID — when present, the callback\n        issues an authorization code and redirects to the OAuth client\n        instead of setting a UI cookie.\n\nReturns:\n    Redirect to Auth0 authorize URL."
+      operationId: auth0_login_accounts_auth0_login__get
+      parameters:
+      - name: next
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+      - name: auth_params
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Auth Params
+      - name: oauth_session
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Oauth Session
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /accounts/auth0/login/callback/:
+    get:
+      tags:
+      - auth0
+      summary: Auth0 Callback
+      description: "Handle Auth0 OAuth2 callback.\n\nExchanges authorization code for tokens, fetches userinfo, creates or\nlinks the user, issues a JWT cookie, and redirects to the next URL.\n\nArgs:\n    request: The incoming request.\n    code: Authorization code from Auth0.\n    state: State parameter for CSRF validation.\n    error: Error code from Auth0 (if any).\n    error_description: Error description from Auth0 (if any).\n\nReturns:\n    Redirect to next URL with JWT cookie set."
+      operationId: auth0_callback_accounts_auth0_login_callback__get
+      parameters:
+      - name: code
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+      - name: state
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State
+      - name: error
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      - name: error_description
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Description
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /accounts/logout/:
+    get:
+      tags:
+      - auth0
+      summary: Generic Logout
+      description: 'Log out — clears JWT cookie and delegates to Auth0 federated logout.
+
+
+        This is the path the UI redirects to (pages/logout.tsx).
+
+        Delegates to the Auth0 logout flow.'
+      operationId: generic_logout_accounts_logout__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /accounts/auth0/logout/:
+    get:
+      tags:
+      - auth0
+      summary: Auth0 Logout
+      description: "Log out via Auth0 federated logout.\n\nRedirects to Auth0's /v2/logout endpoint which clears the Auth0 session\nand the upstream SAML/OIDC provider session, then redirects back to\nthe user pages login page.\n\nReturns:\n    Redirect to Auth0 logout URL or direct to login page."
+      operationId: auth0_logout_accounts_auth0_logout__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /rd/{nxt_raw}:
+    get:
+      tags:
+      - auth0
+      summary: Login Redirect
+      description: "Redirect to a base64-encoded URL after login, with host whitelist validation.\n\nThis matches Django's core/login.py:rd() view exactly. The URL is base64-encoded\nto avoid issues with OAuth providers stripping query parameters.\n\nArgs:\n    nxt_raw: Base64-encoded absolute URL to redirect to.\n\nReturns:\n    Redirect to the decoded URL if host is allowed, or to an error page."
+      operationId: login_redirect_rd__nxt_raw__get
+      parameters:
+      - name: nxt_raw
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Nxt Raw
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

@@ -1,0 +1,218 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy workspace-v4 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: workspace-v4
+paths:
+  /api/v4/workspaces/{workspace_name}/configuration:
+    get:
+      tags:
+      - workspace-v4
+      summary: Get workspace configuration (lightweight)
+      description: 'Return only the fields the Workspace Configuration page needs.
+
+
+        Cheap reads only: WorkspaceModel columns, the eagerly-loaded permissions
+
+        relationship, the user''s effective role, and a ``COUNT(*)`` of SLXs.
+
+        No SLX list, no firing alerts, no layout, no gallery summaries.'
+      operationId: get_workspace_configuration_api_v4_workspaces__workspace_name__configuration_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceConfigurationResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    WorkspacePermissionV4:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: Permission role (admin, readwrite, readandrun, readonly, …)
+        user:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User
+          description: User email if a user permission. For an invited user who hasn't registered yet this is the placeholder email (see ``invited``).
+        group:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Group
+          description: Group name if a group permission
+        invited:
+          type: boolean
+          title: Invited
+          description: True when this is an invited user added by email who has no account yet (placeholder row); the UI badges these as 'Invited'. (RW-1341)
+          default: false
+      type: object
+      required:
+      - role
+      title: WorkspacePermissionV4
+      description: A single workspace permission entry. Either ``user`` or ``group`` is set.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ResourceScrubberConfigEnum:
+      type: string
+      enum:
+      - SCRUB_ALL_RESOURCE_LABELS
+      - SCRUB_ALL_EXCEPT_RESOURCE_NAME
+      - SCRUB_NONE
+      title: ResourceScrubberConfigEnum
+      description: Configuration for resource scrubbing before LLM calls.
+    WorkspaceRoleEnum:
+      type: string
+      enum:
+      - admin
+      - readwrite
+      - readandrun
+      - readonly
+      - readandrunwithassistant
+      title: WorkspaceRoleEnum
+      description: Workspace permission roles.
+    WorkspaceConfigurationResponseV4:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Workspace short name (slug)
+        alias:
+          type: string
+          title: Alias
+          description: Human-readable display name
+          default: ''
+        description:
+          type: string
+          title: Description
+          description: Workspace description
+          default: ''
+        scrubberConfig:
+          $ref: '#/components/schemas/ResourceScrubberConfigEnum'
+          description: Resource scrubbing configuration
+          default: SCRUB_NONE
+        anonymousMode:
+          type: boolean
+          title: Anonymousmode
+          description: Whether anonymous mode is enabled
+          default: false
+        permissions:
+          items:
+            $ref: '#/components/schemas/WorkspacePermissionV4'
+          type: array
+          title: Permissions
+          description: Workspace permission entries (user or group keyed)
+        owner:
+          anyOf:
+          - $ref: '#/components/schemas/WorkspaceOwnerV4'
+          - type: 'null'
+          description: Workspace owner
+        userRole:
+          anyOf:
+          - $ref: '#/components/schemas/WorkspaceRoleEnum'
+          - type: 'null'
+          description: Effective role of the requesting user in this workspace
+        slxCount:
+          type: integer
+          title: Slxcount
+          description: Number of SLXs in this workspace
+          default: 0
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+          description: Timestamp of last successful workspace config sync
+      type: object
+      required:
+      - name
+      title: WorkspaceConfigurationResponseV4
+      description: 'Flat response for the Workspace Configuration page.
+
+
+        Covers exactly what the Settings, Users, and Secrets tabs read — no
+
+        SLX list, no alerts, no layout, no gallery fields. See the migration
+
+        plan for the field-by-field rationale.'
+    WorkspaceOwnerV4:
+      properties:
+        id:
+          type: integer
+          title: Id
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+      type: object
+      required:
+      - id
+      title: WorkspaceOwnerV4
+      description: Workspace owner summary.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

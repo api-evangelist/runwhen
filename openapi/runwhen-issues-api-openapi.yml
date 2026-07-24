@@ -1,0 +1,1711 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy issues API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: issues
+paths:
+  /api/v1/workspaces/{workspace_name}/issues:
+    get:
+      tags:
+      - issues
+      summary: List issues for a workspace
+      description: 'List issues for a workspace with optional filters.
+
+
+        Supports Django-compatible query parameters for filtering and pagination.'
+      operationId: list_workspace_issues_api_v1_workspaces__workspace_name__issues_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: severity
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          description: Filter by severity (1-4 or SEV1-SEV4, repeatable)
+          title: Severity
+        description: Filter by severity (1-4 or SEV1-SEV4, repeatable)
+      - name: severity__in
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by severity (comma-sep, e.g. 1,2,3)
+          title: Severity  In
+        description: Filter by severity (comma-sep, e.g. 1,2,3)
+      - name: severity__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: severity >= value'
+          title: Severity  Gte
+        description: 'Filter: severity >= value'
+      - name: severity__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: severity <= value'
+          title: Severity  Lte
+        description: 'Filter: severity <= value'
+      - name: closed
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Filter by closed status - true for closed, false for open
+          title: Closed
+        description: Filter by closed status - true for closed, false for open
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search in title, task_title, and slx_name
+          title: Search
+        description: Search in title, task_title, and slx_name
+      - name: task_title
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Exact match filter on issue.task_title. Use together with slx_name to narrow to all issues belonging to one task within an SLX without scanning the full SLX issue set on the client.
+          title: Task Title
+        description: Exact match filter on issue.task_title. Use together with slx_name to narrow to all issues belonging to one task within an SLX without scanning the full SLX issue set on the client.
+      - name: latest_occurrence_at__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: latest_occurrence_at >= ISO datetime'
+          title: Latest Occurrence At  Gte
+        description: 'Filter: latest_occurrence_at >= ISO datetime'
+      - name: modified__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: modified_at >= ISO datetime'
+          title: Modified  Gte
+        description: 'Filter: modified_at >= ISO datetime'
+      - name: modified__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: modified_at <= ISO datetime'
+          title: Modified  Lte
+        description: 'Filter: modified_at <= ISO datetime'
+      - name: created__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: created_at >= ISO datetime'
+          title: Created  Gte
+        description: 'Filter: created_at >= ISO datetime'
+      - name: created__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: created_at <= ISO datetime'
+          title: Created  Lte
+        description: 'Filter: created_at <= ISO datetime'
+      - name: open_since__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: open_since >= ISO datetime'
+          title: Open Since  Gte
+        description: 'Filter: open_since >= ISO datetime'
+      - name: open_since__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: open_since <= ISO datetime'
+          title: Open Since  Lte
+        description: 'Filter: open_since <= ISO datetime'
+      - name: open_occurrence_count__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: open_occurrence_count >= value'
+          title: Open Occurrence Count  Gte
+        description: 'Filter: open_occurrence_count >= value'
+      - name: open_occurrence_count__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: open_occurrence_count <= value'
+          title: Open Occurrence Count  Lte
+        description: 'Filter: open_occurrence_count <= value'
+      - name: total_occurrence_count__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: total_occurrence_count >= value'
+          title: Total Occurrence Count  Gte
+        description: 'Filter: total_occurrence_count >= value'
+      - name: total_occurrence_count__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: total_occurrence_count <= value'
+          title: Total Occurrence Count  Lte
+        description: 'Filter: total_occurrence_count <= value'
+      - name: details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include heavy fields from latest occurrence
+          default: false
+          title: Details
+        description: Include heavy fields from latest occurrence
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/issues/{issue_id}:
+    get:
+      tags:
+      - issues
+      summary: Get an issue by ID
+      description: "Get an issue by ID within a workspace.\n\nSupports optional occurrence timestamp slicing via query parameters.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    include_occurrence_timestamps: Opt-in for occurrence timestamps.\n    occurrence_tail: Return N most recent occurrences.\n    occurrence_from: Slice from position (1=latest).\n    occurrence_to: Slice to position (1=latest).\n    occurrence_window_gte: Filter occurrences observed_at >= this datetime.\n    occurrence_window_lte: Filter occurrences observed_at <= this datetime.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue details.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: get_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      - name: include_occurrence_timestamps
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include occurrence timestamps
+          default: false
+          title: Include Occurrence Timestamps
+        description: Include occurrence timestamps
+      - name: occurrence_tail
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          description: Return N most recent occurrences
+          title: Occurrence Tail
+        description: Return N most recent occurrences
+      - name: occurrence_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          description: Slice from (1=latest, inclusive)
+          title: Occurrence From
+        description: Slice from (1=latest, inclusive)
+      - name: occurrence_to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          description: Slice to (1=latest, inclusive)
+          title: Occurrence To
+        description: Slice to (1=latest, inclusive)
+      - name: occurrence_window_gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Window filter: observed_at >= ISO datetime'
+          title: Occurrence Window Gte
+        description: 'Window filter: observed_at >= ISO datetime'
+      - name: occurrence_window_lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Window filter: observed_at <= ISO datetime'
+          title: Occurrence Window Lte
+        description: 'Window filter: observed_at <= ISO datetime'
+      - name: occurrence_fields
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Comma-separated occurrence fields to include (e.g. observed_at)
+          title: Occurrence Fields
+        description: Comma-separated occurrence fields to include (e.g. observed_at)
+      - name: occurrence_order
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Sort order for occurrences: asc or desc (default desc)'
+          default: desc
+          title: Occurrence Order
+        description: 'Sort order for occurrences: asc or desc (default desc)'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - issues
+      summary: Update an issue
+      description: "Update an issue (partial update).\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    issue_data: The issue update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: update_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - issues
+      summary: Delete an issue
+      description: "Delete an issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: delete_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/issues/{issue_id}/ignore:
+    patch:
+      tags:
+      - issues
+      summary: Ignore an issue
+      description: "Ignore an issue.\n\nSets ignored_by_user, ignored_since, and ignored_until.\nAlso resets open_since and open_occurrence_count to close the issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    ignore_data: The ignore request data with required ignored_until.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The ignored issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: ignore_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__ignore_patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueIgnoreRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/issues/{issue_id}/close:
+    patch:
+      tags:
+      - issues
+      summary: Close an issue
+      description: "Close an issue, optionally with a comment.\n\nSets the issue's closed_at timestamp and resets open_since\nand open_occurrence_count to 0.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    body: Optional request body with a comment.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The closed issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: close_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__close_patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/IssueCloseRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/issues/{issue_id}/generate-next-steps:
+    post:
+      tags:
+      - issues
+      summary: Generate next steps for an issue using AI
+      description: "Generate intelligent next steps for an issue using sobrain AI service.\n\nThis endpoint calls the sobrain service to generate suggested next steps\nbased on the issue details and optional comment context.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    request_data: Optional request data with comment contents.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated next steps for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+      operationId: generate_issue_next_steps_api_v1_workspaces__workspace_name__issues__issue_id__generate_next_steps_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/GenerateNextStepsRequest'
+              - type: 'null'
+              title: Request Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateNextStepsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/issues/{issue_id}/generate-summary:
+    post:
+      tags:
+      - issues
+      summary: Generate a summary for an issue using AI
+      description: "Generate a summary for an issue using sobrain AI service.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated summary for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+      operationId: generate_issue_summary_api_v1_workspaces__workspace_name__issues__issue_id__generate_summary_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/runsessions/{runsession_id}/issues/{issue_id}/jit-summary:
+    post:
+      tags:
+      - issues
+      summary: Generate a just-in-time summary for an issue occurrence in a run session
+      description: 'Generate a JIT summary for an issue within a specific run session context.
+
+
+        Finds the latest occurrence of the issue, looks up the RunSessionIssueMap
+
+        entry for the given run session, builds a payload, and calls Sobrain to
+
+        generate a summary. Stores the summary in the occurrence''s additional_context.'
+      operationId: jit_summary_api_v1_workspaces__workspace_name__runsessions__runsession_id__issues__issue_id__jit_summary_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: runsession_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Runsession Id
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JitSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/issues:
+    get:
+      tags:
+      - issues
+      summary: List issues for a workspace
+      description: 'List issues for a workspace with optional filters.
+
+
+        Supports Django-compatible query parameters for filtering and pagination.'
+      operationId: list_workspace_issues_api_v3_workspaces__workspace_name__issues_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: severity
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          description: Filter by severity (1-4 or SEV1-SEV4, repeatable)
+          title: Severity
+        description: Filter by severity (1-4 or SEV1-SEV4, repeatable)
+      - name: severity__in
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by severity (comma-sep, e.g. 1,2,3)
+          title: Severity  In
+        description: Filter by severity (comma-sep, e.g. 1,2,3)
+      - name: severity__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: severity >= value'
+          title: Severity  Gte
+        description: 'Filter: severity >= value'
+      - name: severity__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: severity <= value'
+          title: Severity  Lte
+        description: 'Filter: severity <= value'
+      - name: closed
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Filter by closed status - true for closed, false for open
+          title: Closed
+        description: Filter by closed status - true for closed, false for open
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search in title, task_title, and slx_name
+          title: Search
+        description: Search in title, task_title, and slx_name
+      - name: task_title
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Exact match filter on issue.task_title. Use together with slx_name to narrow to all issues belonging to one task within an SLX without scanning the full SLX issue set on the client.
+          title: Task Title
+        description: Exact match filter on issue.task_title. Use together with slx_name to narrow to all issues belonging to one task within an SLX without scanning the full SLX issue set on the client.
+      - name: latest_occurrence_at__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: latest_occurrence_at >= ISO datetime'
+          title: Latest Occurrence At  Gte
+        description: 'Filter: latest_occurrence_at >= ISO datetime'
+      - name: modified__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: modified_at >= ISO datetime'
+          title: Modified  Gte
+        description: 'Filter: modified_at >= ISO datetime'
+      - name: modified__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: modified_at <= ISO datetime'
+          title: Modified  Lte
+        description: 'Filter: modified_at <= ISO datetime'
+      - name: created__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: created_at >= ISO datetime'
+          title: Created  Gte
+        description: 'Filter: created_at >= ISO datetime'
+      - name: created__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: created_at <= ISO datetime'
+          title: Created  Lte
+        description: 'Filter: created_at <= ISO datetime'
+      - name: open_since__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: open_since >= ISO datetime'
+          title: Open Since  Gte
+        description: 'Filter: open_since >= ISO datetime'
+      - name: open_since__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: open_since <= ISO datetime'
+          title: Open Since  Lte
+        description: 'Filter: open_since <= ISO datetime'
+      - name: open_occurrence_count__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: open_occurrence_count >= value'
+          title: Open Occurrence Count  Gte
+        description: 'Filter: open_occurrence_count >= value'
+      - name: open_occurrence_count__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: open_occurrence_count <= value'
+          title: Open Occurrence Count  Lte
+        description: 'Filter: open_occurrence_count <= value'
+      - name: total_occurrence_count__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: total_occurrence_count >= value'
+          title: Total Occurrence Count  Gte
+        description: 'Filter: total_occurrence_count >= value'
+      - name: total_occurrence_count__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter: total_occurrence_count <= value'
+          title: Total Occurrence Count  Lte
+        description: 'Filter: total_occurrence_count <= value'
+      - name: details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include heavy fields from latest occurrence
+          default: false
+          title: Details
+        description: Include heavy fields from latest occurrence
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/issues/{issue_id}:
+    get:
+      tags:
+      - issues
+      summary: Get an issue by ID
+      description: "Get an issue by ID within a workspace.\n\nSupports optional occurrence timestamp slicing via query parameters.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    include_occurrence_timestamps: Opt-in for occurrence timestamps.\n    occurrence_tail: Return N most recent occurrences.\n    occurrence_from: Slice from position (1=latest).\n    occurrence_to: Slice to position (1=latest).\n    occurrence_window_gte: Filter occurrences observed_at >= this datetime.\n    occurrence_window_lte: Filter occurrences observed_at <= this datetime.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue details.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: get_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      - name: include_occurrence_timestamps
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include occurrence timestamps
+          default: false
+          title: Include Occurrence Timestamps
+        description: Include occurrence timestamps
+      - name: occurrence_tail
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          description: Return N most recent occurrences
+          title: Occurrence Tail
+        description: Return N most recent occurrences
+      - name: occurrence_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          description: Slice from (1=latest, inclusive)
+          title: Occurrence From
+        description: Slice from (1=latest, inclusive)
+      - name: occurrence_to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          description: Slice to (1=latest, inclusive)
+          title: Occurrence To
+        description: Slice to (1=latest, inclusive)
+      - name: occurrence_window_gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Window filter: observed_at >= ISO datetime'
+          title: Occurrence Window Gte
+        description: 'Window filter: observed_at >= ISO datetime'
+      - name: occurrence_window_lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Window filter: observed_at <= ISO datetime'
+          title: Occurrence Window Lte
+        description: 'Window filter: observed_at <= ISO datetime'
+      - name: occurrence_fields
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Comma-separated occurrence fields to include (e.g. observed_at)
+          title: Occurrence Fields
+        description: Comma-separated occurrence fields to include (e.g. observed_at)
+      - name: occurrence_order
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Sort order for occurrences: asc or desc (default desc)'
+          default: desc
+          title: Occurrence Order
+        description: 'Sort order for occurrences: asc or desc (default desc)'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - issues
+      summary: Update an issue
+      description: "Update an issue (partial update).\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    issue_data: The issue update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: update_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - issues
+      summary: Delete an issue
+      description: "Delete an issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: delete_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/issues/{issue_id}/ignore:
+    patch:
+      tags:
+      - issues
+      summary: Ignore an issue
+      description: "Ignore an issue.\n\nSets ignored_by_user, ignored_since, and ignored_until.\nAlso resets open_since and open_occurrence_count to close the issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    ignore_data: The ignore request data with required ignored_until.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The ignored issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: ignore_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__ignore_patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueIgnoreRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/issues/{issue_id}/close:
+    patch:
+      tags:
+      - issues
+      summary: Close an issue
+      description: "Close an issue, optionally with a comment.\n\nSets the issue's closed_at timestamp and resets open_since\nand open_occurrence_count to 0.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    body: Optional request body with a comment.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The closed issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      operationId: close_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__close_patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/IssueCloseRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/issues/{issue_id}/generate-next-steps:
+    post:
+      tags:
+      - issues
+      summary: Generate next steps for an issue using AI
+      description: "Generate intelligent next steps for an issue using sobrain AI service.\n\nThis endpoint calls the sobrain service to generate suggested next steps\nbased on the issue details and optional comment context.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    request_data: Optional request data with comment contents.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated next steps for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+      operationId: generate_issue_next_steps_api_v3_workspaces__workspace_name__issues__issue_id__generate_next_steps_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/GenerateNextStepsRequest'
+              - type: 'null'
+              title: Request Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateNextStepsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/issues/{issue_id}/generate-summary:
+    post:
+      tags:
+      - issues
+      summary: Generate a summary for an issue using AI
+      description: "Generate a summary for an issue using sobrain AI service.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated summary for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+      operationId: generate_issue_summary_api_v3_workspaces__workspace_name__issues__issue_id__generate_summary_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/runsessions/{runsession_id}/issues/{issue_id}/jit-summary:
+    post:
+      tags:
+      - issues
+      summary: Generate a just-in-time summary for an issue occurrence in a run session
+      description: 'Generate a JIT summary for an issue within a specific run session context.
+
+
+        Finds the latest occurrence of the issue, looks up the RunSessionIssueMap
+
+        entry for the given run session, builds a payload, and calls Sobrain to
+
+        generate a summary. Stores the summary in the occurrence''s additional_context.'
+      operationId: jit_summary_api_v3_workspaces__workspace_name__runsessions__runsession_id__issues__issue_id__jit_summary_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: runsession_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Runsession Id
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JitSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    GenerateNextStepsRequest:
+      properties:
+        comment_contents:
+          items:
+            type: string
+          type: array
+          title: Comment Contents
+          description: Optional list of comment contents to provide additional context
+      type: object
+      title: GenerateNextStepsRequest
+      description: Request schema for generating next steps via sobrain.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    IssueResponse:
+      properties:
+        taskTitle:
+          type: string
+          title: Tasktitle
+          description: The task title for the issue
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Human-readable issue title
+        categorizationKey:
+          type: string
+          title: Categorizationkey
+          description: Key for categorizing/deduplicating issues
+        severity:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Severity
+          description: Issue severity level (1=critical, 4=warning)
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+          description: LLM-generated summary of the issue
+        observations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Observations
+          description: LLM-generated observations (list of strings)
+        nextSteps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nextsteps
+          description: LLM-generated next steps (plain text)
+        additionalContext:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Additionalcontext
+          description: Additional context for the issue
+        id:
+          type: integer
+          title: Id
+        workspaceId:
+          type: integer
+          title: Workspaceid
+        slxName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slxname
+        openSince:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Opensince
+        latestOccurrenceAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Latestoccurrenceat
+        openOccurrenceCount:
+          type: integer
+          title: Openoccurrencecount
+          default: 0
+        closedOccurrenceCount:
+          type: integer
+          title: Closedoccurrencecount
+          default: 0
+        totalOccurrenceCount:
+          type: integer
+          title: Totaloccurrencecount
+          default: 0
+        ignoredByUserId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ignoredbyuserid
+        ignoredSince:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Ignoredsince
+        ignoredUntil:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Ignoreduntil
+        closedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Closedat
+        closedByType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Closedbytype
+        closedById:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Closedbyid
+        latestOccurrenceDetails:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latestoccurrencedetails
+        latestOccurrenceNextSteps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latestoccurrencenextsteps
+        latestOccurrenceExpected:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latestoccurrenceexpected
+        latestOccurrenceActual:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latestoccurrenceactual
+        latestOccurrenceReproduceHint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latestoccurrencereproducehint
+        latestOccurrenceId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Latestoccurrenceid
+        latestOccurrenceObservedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Latestoccurrenceobservedat
+        latestOccurrenceRunRequestId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Latestoccurrencerunrequestid
+        latestOccurrenceRunSessionId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Latestoccurrencerunsessionid
+        details:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Details
+        expected:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected
+        actual:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actual
+        reproduceHint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reproducehint
+        created:
+          type: string
+          format: date-time
+          title: Created
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        occurrenceTimestamps:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Occurrencetimestamps
+        occurrenceTimestampsMeta:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Occurrencetimestampsmeta
+      type: object
+      required:
+      - taskTitle
+      - categorizationKey
+      - id
+      - workspaceId
+      - created
+      - modified
+      title: IssueResponse
+      description: 'Schema for issue response with all fields.
+
+
+        Uses alias_generator=to_camel so the JSON output uses camelCase keys
+
+        matching the Django DRF convention the frontend expects.'
+    JitSummaryResponse:
+      properties:
+        summary:
+          type: string
+          title: Summary
+          description: Generated summary for the issue
+      type: object
+      required:
+      - summary
+      title: JitSummaryResponse
+      description: Response schema for JIT summary.
+    GenerateSummaryResponse:
+      properties:
+        summary:
+          type: string
+          title: Summary
+          description: Generated summary for the issue
+        issue_id:
+          type: integer
+          title: Issue Id
+          description: The issue ID
+      type: object
+      required:
+      - summary
+      - issue_id
+      title: GenerateSummaryResponse
+      description: Response schema for generated issue summary.
+    IssueUpdate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        severity:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Severity
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        observations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Observations
+        next_steps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Steps
+        additional_context:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Additional Context
+      type: object
+      title: IssueUpdate
+      description: Schema for updating an issue (partial update).
+    GenerateNextStepsResponse:
+      properties:
+        next_steps:
+          items:
+            type: string
+          type: array
+          title: Next Steps
+          description: Generated next steps for the issue
+        raw_next_steps:
+          items:
+            type: string
+          type: array
+          title: Raw Next Steps
+          description: Raw next steps from LLM before validation
+        issue_id:
+          type: integer
+          title: Issue Id
+          description: The issue ID
+      type: object
+      required:
+      - next_steps
+      - issue_id
+      title: GenerateNextStepsResponse
+      description: Response schema for generated next steps.
+    IssueIgnoreRequest:
+      properties:
+        ignored_until:
+          type: string
+          format: date-time
+          title: Ignored Until
+          description: Ignore until this datetime (required, ISO 8601 format)
+      type: object
+      required:
+      - ignored_until
+      title: IssueIgnoreRequest
+      description: Schema for ignore issue request.
+    IssueListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/IssueResponse'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: IssueListResponse
+      description: Schema for paginated issue list response.
+    IssueCloseRequest:
+      properties:
+        comment:
+          anyOf:
+          - type: string
+            maxLength: 10000
+          - type: 'null'
+          title: Comment
+          description: Optional comment when closing
+      type: object
+      title: IssueCloseRequest
+      description: Optional request body for closing an issue with a comment.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

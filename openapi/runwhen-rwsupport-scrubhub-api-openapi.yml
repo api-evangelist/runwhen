@@ -1,0 +1,532 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy rwsupport-scrubhub API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: rwsupport-scrubhub
+paths:
+  /api/v3/rwsupport/scrubhub/workspaces/{workspace_name}/recognizers:
+    get:
+      tags:
+      - rwsupport-scrubhub
+      summary: List Recognizers
+      operationId: list_recognizers_api_v3_rwsupport_scrubhub_workspaces__workspace_name__recognizers_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response List Recognizers Api V3 Rwsupport Scrubhub Workspaces  Workspace Name  Recognizers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - rwsupport-scrubhub
+      summary: Create Recognizer
+      description: 'Staff-only proxy. `workspace_name` is the URL primary scope — never
+
+        in the body (matches the platform-wide `{workspace_name}` URL
+
+        convention; lets logging/anonymization middleware bind cleanly).'
+      operationId: create_recognizer_api_v3_rwsupport_scrubhub_workspaces__workspace_name__recognizers_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Create Recognizer Api V3 Rwsupport Scrubhub Workspaces  Workspace Name  Recognizers Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/workspaces/{workspace_name}/recognizers/bulk:
+    post:
+      tags:
+      - rwsupport-scrubhub
+      summary: Bulk Create Recognizers
+      description: 'Staff-only thin proxy for bulk recognizer creation (multipart/form-data).
+
+
+        `workspace_name` is in the URL path, NOT a form field. Reads the
+
+        uploaded CSV bytes and forwards them via the SDK to the scrubber
+
+        service, which parses + validates server-side.'
+      operationId: bulk_create_recognizers_api_v3_rwsupport_scrubhub_workspaces__workspace_name__recognizers_bulk_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_bulk_create_recognizers_api_v3_rwsupport_scrubhub_workspaces__workspace_name__recognizers_bulk_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Bulk Create Recognizers Api V3 Rwsupport Scrubhub Workspaces  Workspace Name  Recognizers Bulk Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/workspaces/{workspace_name}/scrub-preview:
+    post:
+      tags:
+      - rwsupport-scrubhub
+      summary: Scrub Preview
+      description: 'Staff-only proxy for the ScrubHub Scrub Tester dry-run.
+
+
+        Runs the live detection pipeline for `workspace_name` and returns the
+
+        scrubbed text, a descrub round-trip, and the per-detection detail —
+
+        minting no pseudonyms and writing no audit row. `workspace_name` is the
+
+        URL primary scope; the body carries only `{ "text": ... }`.'
+      operationId: scrub_preview_api_v3_rwsupport_scrubhub_workspaces__workspace_name__scrub_preview_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Scrub Preview Api V3 Rwsupport Scrubhub Workspaces  Workspace Name  Scrub Preview Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/recognizers/{recognizer_id}:
+    patch:
+      tags:
+      - rwsupport-scrubhub
+      summary: Update Recognizer
+      operationId: update_recognizer_api_v3_rwsupport_scrubhub_recognizers__recognizer_id__patch
+      parameters:
+      - name: recognizer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Recognizer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Update Recognizer Api V3 Rwsupport Scrubhub Recognizers  Recognizer Id  Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - rwsupport-scrubhub
+      summary: Delete Recognizer
+      operationId: delete_recognizer_api_v3_rwsupport_scrubhub_recognizers__recognizer_id__delete
+      parameters:
+      - name: recognizer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Recognizer Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/assignments:
+    get:
+      tags:
+      - rwsupport-scrubhub
+      summary: List Assignments
+      operationId: list_assignments_api_v3_rwsupport_scrubhub_assignments_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response List Assignments Api V3 Rwsupport Scrubhub Assignments Get
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/assignments/{workspace_name}:
+    get:
+      tags:
+      - rwsupport-scrubhub
+      summary: Get Assignment
+      operationId: get_assignment_api_v3_rwsupport_scrubhub_assignments__workspace_name__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Assignment Api V3 Rwsupport Scrubhub Assignments  Workspace Name  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - rwsupport-scrubhub
+      summary: Update Assignment
+      operationId: update_assignment_api_v3_rwsupport_scrubhub_assignments__workspace_name__put
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Update Assignment Api V3 Rwsupport Scrubhub Assignments  Workspace Name  Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/assignments/{workspace_name}/reset:
+    post:
+      tags:
+      - rwsupport-scrubhub
+      summary: Reset Assignment
+      operationId: reset_assignment_api_v3_rwsupport_scrubhub_assignments__workspace_name__reset_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Reset Assignment Api V3 Rwsupport Scrubhub Assignments  Workspace Name  Reset Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/audit/workspaces-summary:
+    get:
+      tags:
+      - rwsupport-scrubhub
+      summary: List Audit Workspaces Summary
+      description: Section 2 of the mockup — workspace-summary list landing view.
+      operationId: list_audit_workspaces_summary_api_v3_rwsupport_scrubhub_audit_workspaces_summary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response List Audit Workspaces Summary Api V3 Rwsupport Scrubhub Audit Workspaces Summary Get
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/audit/{workspace_id}/summary:
+    get:
+      tags:
+      - rwsupport-scrubhub
+      summary: Get Audit Summary
+      operationId: get_audit_summary_api_v3_rwsupport_scrubhub_audit__workspace_id__summary_get
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Audit Summary Api V3 Rwsupport Scrubhub Audit  Workspace Id  Summary Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/audit/{workspace_id}/sample-rate:
+    get:
+      tags:
+      - rwsupport-scrubhub
+      summary: Get Audit Sample Rate
+      operationId: get_audit_sample_rate_api_v3_rwsupport_scrubhub_audit__workspace_id__sample_rate_get
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Audit Sample Rate Api V3 Rwsupport Scrubhub Audit  Workspace Id  Sample Rate Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - rwsupport-scrubhub
+      summary: Set Audit Sample Rate
+      operationId: set_audit_sample_rate_api_v3_rwsupport_scrubhub_audit__workspace_id__sample_rate_put
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Workspace Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Set Audit Sample Rate Api V3 Rwsupport Scrubhub Audit  Workspace Id  Sample Rate Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/scrubhub/audit/{workspace_id}:
+    get:
+      tags:
+      - rwsupport-scrubhub
+      summary: Query Audit
+      operationId: query_audit_api_v3_rwsupport_scrubhub_audit__workspace_id__get
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Query Audit Api V3 Rwsupport Scrubhub Audit  Workspace Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_bulk_create_recognizers_api_v3_rwsupport_scrubhub_workspaces__workspace_name__recognizers_bulk_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+          description: CSV upload
+        kind:
+          type: string
+          title: Kind
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        entity_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Label
+      type: object
+      required:
+      - file
+      - kind
+      title: Body_bulk_create_recognizers_api_v3_rwsupport_scrubhub_workspaces__workspace_name__recognizers_bulk_post
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

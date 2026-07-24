@@ -1,0 +1,377 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy notes-import-v4 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: notes-import-v4
+paths:
+  /api/v4/workspaces/{workspace_name}/notes:
+    delete:
+      tags:
+      - notes-import-v4
+      summary: Remove KB notes from a source
+      description: Delete a list of notes (by source_id) from one source. ``dry_run`` previews.
+      operationId: delete_notes_api_v4_workspaces__workspace_name__notes_delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteDeleteRequestV4'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteDeleteResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/notes/sync:
+    post:
+      tags:
+      - notes-import-v4
+      summary: Publish (upsert) a KB note from a source
+      description: Upsert a note identified by its source. ``dry_run`` validates without writing.
+      operationId: sync_note_api_v4_workspaces__workspace_name__notes_sync_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteSyncRequestV4'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteSyncResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/resource-paths:
+    get:
+      tags:
+      - notes-import-v4
+      summary: List the workspace's valid resource paths
+      description: Resource paths to author/validate `resource_paths` against.
+      operationId: list_resource_paths_api_v4_workspaces__workspace_name__resource_paths_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePathsResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/tags:
+    get:
+      tags:
+      - notes-import-v4
+      summary: List the workspace's tag keys and values
+      description: The workspace's tag keys → values, to author ``match_tags`` selectors against.
+      operationId: list_workspace_tags_api_v4_workspaces__workspace_name__tags_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: limit_values
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Max sample values returned per tag key
+          default: 100
+          title: Limit Values
+        description: Max sample values returned per tag key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceTagsResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    NoteDeleteResponseV4:
+      properties:
+        applied:
+          type: boolean
+          title: Applied
+        results:
+          items:
+            $ref: '#/components/schemas/NoteDeleteResultV4'
+          type: array
+          title: Results
+          default: []
+      type: object
+      required:
+      - applied
+      title: NoteDeleteResponseV4
+    NoteSyncResponseV4:
+      properties:
+        status:
+          type: string
+          title: Status
+        applied:
+          type: boolean
+          title: Applied
+        ok:
+          type: boolean
+          title: Ok
+        noteId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Noteid
+        diagnostics:
+          items:
+            $ref: '#/components/schemas/NoteDiagnosticV4'
+          type: array
+          title: Diagnostics
+          default: []
+      type: object
+      required:
+      - status
+      - applied
+      - ok
+      title: NoteSyncResponseV4
+    WorkspaceTagsResponseV4:
+      properties:
+        tags:
+          items:
+            $ref: '#/components/schemas/TagKeyValuesV4'
+          type: array
+          title: Tags
+      type: object
+      required:
+      - tags
+      title: WorkspaceTagsResponseV4
+    ResourcePathsResponseV4:
+      properties:
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+      type: object
+      required:
+      - resourcePaths
+      title: ResourcePathsResponseV4
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TagKeyValuesV4:
+      properties:
+        key:
+          type: string
+          title: Key
+        values:
+          items:
+            type: string
+          type: array
+          title: Values
+        valueCount:
+          type: integer
+          title: Valuecount
+      type: object
+      required:
+      - key
+      - values
+      - valueCount
+      title: TagKeyValuesV4
+    NoteDeleteResultV4:
+      properties:
+        sourceId:
+          type: string
+          title: Sourceid
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - sourceId
+      - status
+      title: NoteDeleteResultV4
+    NoteSyncRequestV4:
+      properties:
+        sourceKind:
+          type: string
+          title: Sourcekind
+          description: Origin type, e.g. "git". Not "manual".
+          default: git
+        source:
+          type: string
+          title: Source
+          description: Origin/collection (e.g. repo URL).
+        sourceId:
+          type: string
+          title: Sourceid
+          description: Stable id within the source (e.g. file path).
+        sourceRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sourceref
+          description: Version pointer (e.g. commit).
+        sourceMetadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Sourcemetadata
+          description: Source-specific extras.
+        content:
+          type: string
+          title: Content
+          description: Markdown note with YAML frontmatter.
+        dryRun:
+          type: boolean
+          title: Dryrun
+          description: Validate only; write nothing.
+          default: false
+      additionalProperties: false
+      type: object
+      required:
+      - source
+      - sourceId
+      - content
+      title: NoteSyncRequestV4
+    NoteDeleteRequestV4:
+      properties:
+        sourceKind:
+          type: string
+          title: Sourcekind
+          default: git
+        source:
+          type: string
+          title: Source
+        sourceIds:
+          items:
+            type: string
+          type: array
+          title: Sourceids
+        dryRun:
+          type: boolean
+          title: Dryrun
+          default: false
+      additionalProperties: false
+      type: object
+      required:
+      - source
+      - sourceIds
+      title: NoteDeleteRequestV4
+    NoteDiagnosticV4:
+      properties:
+        level:
+          type: string
+          title: Level
+        code:
+          type: string
+          title: Code
+        field:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Field
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - level
+      - code
+      - message
+      title: NoteDiagnosticV4
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

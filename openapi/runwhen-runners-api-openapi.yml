@@ -1,0 +1,201 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy runners API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: runners
+paths:
+  /api/v3/runners:
+    get:
+      tags:
+      - runners
+      summary: List all runners
+      description: List all runners, ordered by id descending.
+      operationId: list_runners_api_v3_runners_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/runners/{runner_uuid}:
+    get:
+      tags:
+      - runners
+      summary: Get a runner by UUID
+      description: Get a single runner by its UUID.
+      operationId: get_runner_api_v3_runners__runner_uuid__get
+      parameters:
+      - name: runner_uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Runner Uuid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    RunnerListResponse:
+      properties:
+        count:
+          type: integer
+          title: Count
+          description: Total count of runners
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: URL to next page
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: URL to previous page
+        results:
+          items:
+            $ref: '#/components/schemas/RunnerResponse'
+          type: array
+          title: Results
+          description: List of runners
+      type: object
+      required:
+      - count
+      - results
+      title: RunnerListResponse
+      description: DRF-style paginated response for Runner list endpoint.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RunnerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Unique identifier
+        runner_uuid:
+          type: string
+          title: Runner Uuid
+          description: Stable UUID identifier for this runner
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Human-readable runner name
+        workspace_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspace Name
+          description: Associated workspace name
+        last_heartbeat:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Heartbeat
+          description: Last heartbeat timestamp
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Creation timestamp
+        modified_at:
+          type: string
+          format: date-time
+          title: Modified At
+          description: Last modification timestamp
+      type: object
+      required:
+      - id
+      - runner_uuid
+      - created_at
+      - modified_at
+      title: RunnerResponse
+      description: Runner response schema for API responses.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

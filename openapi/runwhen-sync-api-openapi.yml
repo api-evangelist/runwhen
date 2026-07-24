@@ -1,0 +1,646 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy sync API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: sync
+paths:
+  /api/v1/workspaces/{workspace_name}/slxs/sync:
+    post:
+      tags:
+      - sync
+      summary: Upsert an SLX
+      description: Upsert an SLX record using SHA-based deduplication.
+      operationId: sync_slx_api_v1_workspaces__workspace_name__slxs_sync_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{name}:
+    delete:
+      tags:
+      - sync
+      summary: Soft-delete an SLX
+      description: Soft-delete an SLX by name.
+      operationId: delete_slx_api_v1_workspaces__workspace_name__slxs__name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/reconcile-tasks:
+    post:
+      tags:
+      - sync
+      summary: '[dev only] Re-reconcile slx_tasks for a workspace'
+      description: 'Re-run the slx_tasks reconcile for every runbook in a workspace.
+
+
+        Dev-only validation hook: the production trigger is the runbook reconcile
+
+        hook (sync endpoints / workspace-upload pipeline), but seeded/migrated
+
+        workspaces have runbooks without slx_tasks rows until something re-syncs.
+
+        Reconciles from the runbooks'' current resolved_tasks/task_details — no
+
+        robot re-parse — so it works without git access. Returns 404 outside the
+
+        development environment.'
+      operationId: reconcile_workspace_tasks_api_v1_workspaces__workspace_name__slxs_reconcile_tasks_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReconcileTasksResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slis/sync:
+    post:
+      tags:
+      - sync
+      summary: Upsert an SLI
+      description: Upsert an SLI record.  The slx_id must be present in the payload.
+      operationId: sync_sli_api_v1_workspaces__workspace_name__slis_sync_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slis/{slx_name}:
+    delete:
+      tags:
+      - sync
+      summary: Soft-delete an SLI by its parent SLX name
+      description: Soft-delete an SLI identified by its parent SLX name.
+      operationId: delete_sli_api_v1_workspaces__workspace_name__slis__slx_name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slos/sync:
+    post:
+      tags:
+      - sync
+      summary: Upsert an SLO
+      description: Upsert an SLO record.  The slx_id must be present in the payload.
+      operationId: sync_slo_api_v1_workspaces__workspace_name__slos_sync_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slos/{slx_name}:
+    delete:
+      tags:
+      - sync
+      summary: Soft-delete an SLO by its parent SLX name
+      description: Soft-delete an SLO identified by its parent SLX name.
+      operationId: delete_slo_api_v1_workspaces__workspace_name__slos__slx_name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/runbooks/sync:
+    post:
+      tags:
+      - sync
+      summary: Upsert a Runbook
+      description: Upsert a Runbook record.  The slx_id must be present in the payload.
+      operationId: sync_runbook_api_v1_workspaces__workspace_name__runbooks_sync_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/runbooks/{slx_name}:
+    delete:
+      tags:
+      - sync
+      summary: Soft-delete a Runbook by its parent SLX name
+      description: Soft-delete a Runbook identified by its parent SLX name.
+      operationId: delete_runbook_api_v1_workspaces__workspace_name__runbooks__slx_name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/personas/sync:
+    post:
+      tags:
+      - sync
+      summary: Upsert a Persona
+      description: Upsert a Persona record.
+      operationId: sync_persona_api_v1_workspaces__workspace_name__personas_sync_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/personas/{name}:
+    delete:
+      tags:
+      - sync
+      summary: Soft-delete a Persona
+      description: Soft-delete a Persona by name.
+      operationId: delete_persona_api_v1_workspaces__workspace_name__personas__name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/workflows/sync:
+    post:
+      tags:
+      - sync
+      summary: Upsert a Workflow
+      description: Upsert a Workflow record.
+      operationId: sync_workflow_api_v1_workspaces__workspace_name__workflows_sync_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/workflows/{name}:
+    delete:
+      tags:
+      - sync
+      summary: Soft-delete a Workflow
+      description: Soft-delete a Workflow by name.
+      operationId: delete_workflow_api_v1_workspaces__workspace_name__workflows__name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/sync:
+    post:
+      tags:
+      - sync
+      summary: Upsert a Workspace
+      description: 'Upsert a Workspace record.
+
+
+        Workspace deletion is handled by the dedicated workspace deletion flow
+
+        and is not exposed here.'
+      operationId: sync_workspace_api_v1_workspaces__workspace_name__sync_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DeleteResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        name:
+          type: string
+          title: Name
+        resource_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resource Id
+      type: object
+      required:
+      - status
+      - name
+      title: DeleteResponse
+      description: Response for a soft-delete operation.
+    ReconcileTasksResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        slx_count:
+          type: integer
+          title: Slx Count
+        task_upserted:
+          type: integer
+          title: Task Upserted
+        task_soft_deleted:
+          type: integer
+          title: Task Soft Deleted
+      type: object
+      required:
+      - workspace
+      - slx_count
+      - task_upserted
+      - task_soft_deleted
+      title: ReconcileTasksResponse
+      description: Response for the dev-only slx_tasks reconcile trigger.
+    SyncResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        name:
+          type: string
+          title: Name
+        resource_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resource Id
+      type: object
+      required:
+      - status
+      - name
+      title: SyncResponse
+      description: Response for a sync (upsert) operation.
+    SyncRequest:
+      properties:
+        last_synced_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Synced At
+          description: Timestamp from upload task.
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: Full model payload.
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: SyncRequest
+      description: 'Request body for a sync (upsert) operation.
+
+
+        ``modified_by`` is *not* accepted from the request body — the server
+
+        derives the writer identity from the JWT via
+
+        :func:`shared.auth.dependencies.get_effective_modifier`. ``extra="forbid"``
+
+        ensures any caller still sending ``modified_by`` (or any other unknown
+
+        key) sees HTTP 422 rather than a silent drop. See RW-998 / the
+
+        ``modified_by`` field removal for rationale.'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

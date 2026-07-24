@@ -1,0 +1,482 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy slis API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: slis
+paths:
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/sli:
+    get:
+      tags:
+      - slis
+      summary: Get the SLI for an SLX
+      description: "Get the SLI for an SLX.\n\nSLX and SLI have a 1:1 relationship. This endpoint returns the single\nSLI associated with the specified SLX, or 404 if no SLI exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLI details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLI not found."
+      operationId: get_slx_sli_api_v1_workspaces__workspace_name__slxs__slx_short_name__sli_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: detail
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Accepted for Django parity; ignored (always returns full detail)
+          title: Detail
+        description: Accepted for Django parity; ignored (always returns full detail)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__sli__SliResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/push-alert-rules:
+    post:
+      tags:
+      - slis
+      summary: Push alert rules for all SLIs with alertConfig
+      description: 'Push Prometheus alert rules to the metric store for every SLI in the workspace that has an alertConfig.
+
+
+        Bypasses the SHA-based sync deduplication — safe to call even when workspace YAML has not changed.
+
+        Useful for bootstrapping alert rules after a new cluster is stood up or after
+
+        METRIC_STORE_RULER_URL is first configured.
+
+
+        Returns a summary with counts and any per-SLX errors.'
+      operationId: push_workspace_alert_rules_api_v1_workspaces__workspace_name__push_alert_rules_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Push Workspace Alert Rules Api V1 Workspaces  Workspace Name  Push Alert Rules Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/sli/runners:
+    get:
+      tags:
+      - slis
+      summary: List runners for an SLI
+      description: 'Get runners and health status for an SLI.
+
+
+        Health is derived from the freshness of the runner''s ``last_heartbeat`` column,
+
+        which is updated on every ``POST /runners/status`` from the runner agent. A
+
+        runner is considered Healthy if its heartbeat is within
+
+        ``settings.runner_heartbeat_staleness_seconds`` (default 90s).
+
+
+        Note: the legacy Django implementation (``HasCodeRunLocationsMixin.list_locations``)
+
+        derived health from ``status.runnerLocations[*].status.code`` on the SLI CRD —
+
+        a string set by the runner via ``POST /runners/run-status``. In CRD-less the
+
+        runner no longer reports that code and the JSONB ``runner_status`` blob only
+
+        contains registration metadata, so we use heartbeat freshness instead.'
+      operationId: list_sli_runners_api_v1_workspaces__workspace_name__slxs__slx_short_name__sli_runners_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Sli Runners Api V1 Workspaces  Workspace Name  Slxs  Slx Short Name  Sli Runners Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/sli:
+    get:
+      tags:
+      - slis
+      summary: Get the SLI for an SLX
+      description: "Get the SLI for an SLX.\n\nSLX and SLI have a 1:1 relationship. This endpoint returns the single\nSLI associated with the specified SLX, or 404 if no SLI exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLI details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLI not found."
+      operationId: get_slx_sli_api_v3_workspaces__workspace_name__slxs__slx_short_name__sli_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: detail
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Accepted for Django parity; ignored (always returns full detail)
+          title: Detail
+        description: Accepted for Django parity; ignored (always returns full detail)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__sli__SliResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/push-alert-rules:
+    post:
+      tags:
+      - slis
+      summary: Push alert rules for all SLIs with alertConfig
+      description: 'Push Prometheus alert rules to the metric store for every SLI in the workspace that has an alertConfig.
+
+
+        Bypasses the SHA-based sync deduplication — safe to call even when workspace YAML has not changed.
+
+        Useful for bootstrapping alert rules after a new cluster is stood up or after
+
+        METRIC_STORE_RULER_URL is first configured.
+
+
+        Returns a summary with counts and any per-SLX errors.'
+      operationId: push_workspace_alert_rules_api_v3_workspaces__workspace_name__push_alert_rules_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Push Workspace Alert Rules Api V3 Workspaces  Workspace Name  Push Alert Rules Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/sli/runners:
+    get:
+      tags:
+      - slis
+      summary: List runners for an SLI
+      description: 'Get runners and health status for an SLI.
+
+
+        Health is derived from the freshness of the runner''s ``last_heartbeat`` column,
+
+        which is updated on every ``POST /runners/status`` from the runner agent. A
+
+        runner is considered Healthy if its heartbeat is within
+
+        ``settings.runner_heartbeat_staleness_seconds`` (default 90s).
+
+
+        Note: the legacy Django implementation (``HasCodeRunLocationsMixin.list_locations``)
+
+        derived health from ``status.runnerLocations[*].status.code`` on the SLI CRD —
+
+        a string set by the runner via ``POST /runners/run-status``. In CRD-less the
+
+        runner no longer reports that code and the JSONB ``runner_status`` blob only
+
+        contains registration metadata, so we use heartbeat freshness instead.'
+      operationId: list_sli_runners_api_v3_workspaces__workspace_name__slxs__slx_short_name__sli_runners_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Sli Runners Api V3 Workspaces  Workspace Name  Slxs  Slx Short Name  Sli Runners Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    papi__schemas__sli__SliResponse:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        displayUnitsLong:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitslong
+        displayUnitsShort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitsshort
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        intervalStrategy:
+          type: string
+          title: Intervalstrategy
+          default: intermezzo
+        intervalSeconds:
+          type: integer
+          title: Intervalseconds
+          default: 300
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        alertConfig:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Alertconfig
+        lastRunCode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastruncode
+        lastRunMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastrunmessage
+        lastRunAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastrunat
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Spec dict matching Django CoreModelSerializer shape.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Status dict matching Django CoreModelSerializer shape.
+          readOnly: true
+      type: object
+      required:
+      - slxId
+      - created
+      - modified
+      - spec
+      - status
+      title: SliResponse
+      description: "Legacy V1/V3 shape: V4 fields + computed ``spec`` and ``status`` for Django-era consumers.\n\nSubclassing keeps flat fields in lock-step with V4. Computed fields rebuild the\nCRD-shape sub-objects from flat ones at serialization time. Sunset path: when\nexternal consumers fully migrate to /api/v4, delete this subclass.\n\nLegacy wire keys preserved by overriding aliased timestamp fields:\n  - ``created_at`` → alias ``created``   (was ``createdAt`` in V4)\n  - ``modified_at`` → alias ``modified``  (was ``modifiedAt`` in V4)"
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

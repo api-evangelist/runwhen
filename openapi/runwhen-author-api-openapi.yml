@@ -1,0 +1,648 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy author API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: author
+paths:
+  /api/v1/workspaces/{workspace_name}/author/run:
+    post:
+      tags:
+      - author
+      summary: Create an author run
+      description: 'Submit a new author run.
+
+
+        Generates a UUID, stores the command payload in Redis, and enqueues a
+
+        TaskSet with the runner control plane.'
+      operationId: create_run_api_v1_workspaces__workspace_name__author_run_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRunCreate'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorRunCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/author/run/{run_id}:
+    get:
+      tags:
+      - author
+      summary: Get stored command for a run (public, for runner/explorer)
+      description: 'Return the stored user command for a run.
+
+
+        This endpoint is public (no auth required) — the runner/explorer service
+
+        calls it to fetch the command to execute.'
+      operationId: get_run_api_v1_workspaces__workspace_name__author_run__run_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Run UUID
+          title: Run Id
+        description: Run UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Run Api V1 Workspaces  Workspace Name  Author Run  Run Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/author/run/{run_id}/status:
+    get:
+      tags:
+      - author
+      summary: Get run status (owner only)
+      description: 'Return the current status of an author run.
+
+
+        Only the user who created the run may query its status.'
+      operationId: get_run_status_api_v1_workspaces__workspace_name__author_run__run_id__status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Run UUID
+          title: Run Id
+        description: Run UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorRunStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - author
+      summary: Update run status (runner callback)
+      description: 'Runner callback to update the run status.
+
+
+        Derives SUCCEEDED / FAILED from whether ``passed_titles`` is truthy
+
+        (matches Django''s ``RunRequestResponseSerializer`` logic).'
+      operationId: update_run_status_api_v1_workspaces__workspace_name__author_run__run_id__status_patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Run UUID
+          title: Run Id
+        description: Run UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRunStatusUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorRunStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/author/run/{run_id}/output:
+    get:
+      tags:
+      - author
+      summary: Get signed URLs for run output artifacts (owner only)
+      description: 'Return signed URLs for the primary output artifacts of an author run.
+
+
+        Only the user who created the run may retrieve its output.  Three artifacts
+
+        are returned: ``report.jsonl``, ``issues.jsonl``, and ``log.html``.'
+      operationId: get_run_output_api_v1_workspaces__workspace_name__author_run__run_id__output_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Run UUID
+          title: Run Id
+        description: Run UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorRunOutputResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/author/run:
+    post:
+      tags:
+      - author
+      summary: Create an author run
+      description: 'Submit a new author run.
+
+
+        Generates a UUID, stores the command payload in Redis, and enqueues a
+
+        TaskSet with the runner control plane.'
+      operationId: create_run_api_v3_workspaces__workspace_name__author_run_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRunCreate'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorRunCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/author/run/{run_id}:
+    get:
+      tags:
+      - author
+      summary: Get stored command for a run (public, for runner/explorer)
+      description: 'Return the stored user command for a run.
+
+
+        This endpoint is public (no auth required) — the runner/explorer service
+
+        calls it to fetch the command to execute.'
+      operationId: get_run_api_v3_workspaces__workspace_name__author_run__run_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Run UUID
+          title: Run Id
+        description: Run UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Run Api V3 Workspaces  Workspace Name  Author Run  Run Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/author/run/{run_id}/status:
+    get:
+      tags:
+      - author
+      summary: Get run status (owner only)
+      description: 'Return the current status of an author run.
+
+
+        Only the user who created the run may query its status.'
+      operationId: get_run_status_api_v3_workspaces__workspace_name__author_run__run_id__status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Run UUID
+          title: Run Id
+        description: Run UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorRunStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - author
+      summary: Update run status (runner callback)
+      description: 'Runner callback to update the run status.
+
+
+        Derives SUCCEEDED / FAILED from whether ``passed_titles`` is truthy
+
+        (matches Django''s ``RunRequestResponseSerializer`` logic).'
+      operationId: update_run_status_api_v3_workspaces__workspace_name__author_run__run_id__status_patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Run UUID
+          title: Run Id
+        description: Run UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRunStatusUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorRunStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/author/run/{run_id}/output:
+    get:
+      tags:
+      - author
+      summary: Get signed URLs for run output artifacts (owner only)
+      description: 'Return signed URLs for the primary output artifacts of an author run.
+
+
+        Only the user who created the run may retrieve its output.  Three artifacts
+
+        are returned: ``report.jsonl``, ``issues.jsonl``, and ``log.html``.'
+      operationId: get_run_output_api_v3_workspaces__workspace_name__author_run__run_id__output_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Workspace short name
+          title: Workspace Name
+        description: Workspace short name
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Run UUID
+          title: Run Id
+        description: Run UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorRunOutputResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    AuthorRunOutputResponse:
+      properties:
+        runId:
+          type: string
+          title: Runid
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        artifacts:
+          items:
+            $ref: '#/components/schemas/AuthorRunOutputArtifact'
+          type: array
+          title: Artifacts
+      type: object
+      required:
+      - runId
+      - status
+      - artifacts
+      title: AuthorRunOutputResponse
+      description: Response for ``GET /author/run/{run_id}/output``.
+    AuthorRunStatusResponse:
+      properties:
+        runId:
+          type: string
+          title: Runid
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - runId
+      - status
+      title: AuthorRunStatusResponse
+      description: Response for ``GET|PATCH /author/run/{run_id}/status``.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AuthorRunCreate:
+      properties:
+        command:
+          type: string
+          title: Command
+          description: Script source (will be base64-encoded before storage)
+        runType:
+          type: string
+          title: Runtype
+          description: Run type — "task" or "runbook"
+          default: task
+        interpreter:
+          type: string
+          title: Interpreter
+          description: Script interpreter
+          default: bash
+        location:
+          type: string
+          title: Location
+          description: Runner location to execute on
+        envVars:
+          additionalProperties:
+            type: string
+          type: object
+          title: Envvars
+          description: Plain-text env vars
+        secretVars:
+          additionalProperties:
+            type: string
+          type: object
+          title: Secretvars
+          description: Secret env vars
+      type: object
+      required:
+      - command
+      - location
+      title: AuthorRunCreate
+      description: Payload for ``POST /author/run``.
+    AuthorRunCreateResponse:
+      properties:
+        runId:
+          type: string
+          title: Runid
+        status:
+          type: string
+          title: Status
+          default: RUNNING
+      type: object
+      required:
+      - runId
+      title: AuthorRunCreateResponse
+      description: Response for ``POST /author/run``.
+    AuthorRunStatusUpdate:
+      properties:
+        passedTitles:
+          type: string
+          title: Passedtitles
+          description: '''||''-separated titles of passed tasks'
+          default: ''
+        failedTitles:
+          type: string
+          title: Failedtitles
+          description: '''||''-separated titles of failed tasks'
+          default: ''
+        skippedTitles:
+          type: string
+          title: Skippedtitles
+          description: '''||''-separated titles of skipped tasks'
+          default: ''
+        errors:
+          title: Errors
+          description: Error details (dict or list)
+      type: object
+      title: AuthorRunStatusUpdate
+      description: 'Payload for ``PATCH /author/run/{run_id}/status`` (runner callback).
+
+
+        The runner posts back the RunRequest response shape; we derive SUCCEEDED /
+
+        FAILED from whether ``passed_titles`` is truthy.
+
+
+        Django stores these as ''||''-separated CharField strings, so the runner
+
+        sends strings (e.g. ``"Task A||Task B"``), not arrays.  Extra fields
+
+        (``robot_log_file``, ``runsession_id``, etc.) are silently ignored.'
+    AuthorRunOutputArtifact:
+      properties:
+        type:
+          type: string
+          title: Type
+        filename:
+          type: string
+          title: Filename
+        contentType:
+          type: string
+          title: Contenttype
+        expiresAt:
+          type: string
+          title: Expiresat
+        signedUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signedurl
+      type: object
+      required:
+      - type
+      - filename
+      - contentType
+      - expiresAt
+      - signedUrl
+      title: AuthorRunOutputArtifact
+      description: Single artifact entry inside the output response.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

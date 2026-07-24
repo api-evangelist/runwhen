@@ -1,0 +1,390 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy sli-v4 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: sli-v4
+paths:
+  /api/v4/workspaces/{workspace_name}/slxs/{slx_short_name}/sli:
+    get:
+      tags:
+      - sli-v4
+      summary: Get Sli
+      operationId: get_sli_api_v4_workspaces__workspace_name__slxs__slx_short_name__sli_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SliResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - sli-v4
+      summary: Soft-delete the SLI attached to an SLX (V4, short-name URL)
+      description: 'Soft-delete the SLI that belongs to ``{slx_short_name}`` in this workspace.
+
+
+        Mirrors the v4 GET URL (``/slxs/{slx_short_name}/sli``). SLI rows are
+
+        keyed by ``slx_id`` (1-1 with the parent SLX), so the path identifies
+
+        the parent SLX rather than the SLI itself.'
+      operationId: delete_sli_api_v4_workspaces__workspace_name__slxs__slx_short_name__sli_delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/slis/sync-typed:
+    post:
+      tags:
+      - sli-v4
+      summary: Upsert an SLI (V4 typed payload)
+      operationId: sync_sli_typed_api_v4_workspaces__workspace_name__slis_sync_typed_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SliSyncRequestV4'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    SliResponseV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        displayUnitsLong:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitslong
+        displayUnitsShort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitsshort
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        intervalStrategy:
+          type: string
+          title: Intervalstrategy
+          default: intermezzo
+        intervalSeconds:
+          type: integer
+          title: Intervalseconds
+          default: 300
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        alertConfig:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Alertconfig
+        lastRunCode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastruncode
+        lastRunMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastrunmessage
+        lastRunAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastrunat
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - slxId
+      - createdAt
+      - modifiedAt
+      title: SliResponseV4
+      description: Flat-shape SLI detail response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SliSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/SliPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: SliSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/slis/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+    SliPayloadV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        displayUnitsLong:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitslong
+        displayUnitsShort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitsshort
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        intervalStrategy:
+          type: string
+          title: Intervalstrategy
+          default: intermezzo
+        intervalSeconds:
+          type: integer
+          title: Intervalseconds
+          default: 300
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        alertConfig:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Alertconfig
+      additionalProperties: false
+      type: object
+      required:
+      - slxId
+      title: SliPayloadV4
+      description: Writable subset of SLI (the body of a sync upsert).
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

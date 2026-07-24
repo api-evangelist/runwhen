@@ -1,0 +1,394 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy runbook-v4 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: runbook-v4
+paths:
+  /api/v4/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook:
+    get:
+      tags:
+      - runbook-v4
+      summary: Get Runbook
+      operationId: get_runbook_api_v4_workspaces__workspace_name__slxs__slx_short_name__runbook_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunbookResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - runbook-v4
+      summary: Soft-delete the Runbook attached to an SLX (V4, short-name URL)
+      description: 'Soft-delete the Runbook that belongs to ``{slx_short_name}`` in this workspace.
+
+
+        Mirrors the v4 GET URL (``/slxs/{slx_short_name}/runbook``). Runbook rows
+
+        are keyed by ``slx_id`` (1-1 with the parent SLX).'
+      operationId: delete_runbook_api_v4_workspaces__workspace_name__slxs__slx_short_name__runbook_delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/runbooks/sync-typed:
+    post:
+      tags:
+      - runbook-v4
+      summary: Upsert a Runbook (V4 typed payload)
+      operationId: sync_runbook_typed_api_v4_workspaces__workspace_name__runbooks_sync_typed_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunbookSyncRequestV4'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    RunbookTaskV4:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Task tags
+      type: object
+      required:
+      - name
+      - value
+      title: RunbookTaskV4
+      description: Individual task in a runbook (V4 wire shape).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RunbookPayloadV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        name:
+          type: string
+          title: Name
+          default: ''
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        runtimeVarsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Runtimevarsprovided
+        requirements:
+          additionalProperties: true
+          type: object
+          title: Requirements
+        lookbackWindow:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lookbackwindow
+      additionalProperties: false
+      type: object
+      required:
+      - slxId
+      title: RunbookPayloadV4
+      description: Writable subset of Runbook (the body of a sync upsert).
+    RunbookResponseV4:
+      properties:
+        id:
+          type: integer
+          title: Id
+        slxId:
+          type: integer
+          title: Slxid
+        name:
+          type: string
+          title: Name
+          default: ''
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        runtimeVarsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Runtimevarsprovided
+        requirements:
+          additionalProperties: true
+          type: object
+          title: Requirements
+        lookbackWindow:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lookbackwindow
+        resolvedTasks:
+          items:
+            type: string
+          type: array
+          title: Resolvedtasks
+        taskDetails:
+          additionalProperties: true
+          type: object
+          title: Taskdetails
+        lastRunCode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastruncode
+        lastRunMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastrunmessage
+        lastRunAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastrunat
+        tasks:
+          items:
+            $ref: '#/components/schemas/RunbookTaskV4'
+          type: array
+          title: Tasks
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - id
+      - slxId
+      - createdAt
+      - modifiedAt
+      title: RunbookResponseV4
+      description: Flat-shape Runbook detail response.
+    RunbookSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/RunbookPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: RunbookSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/runbooks/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

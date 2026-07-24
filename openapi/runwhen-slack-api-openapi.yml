@@ -1,0 +1,168 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy slack API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: slack
+paths:
+  /api/v3/{workspace_name}/slack:
+    get:
+      tags:
+      - slack
+      summary: Get Slack integrations for workspace
+      description: "Get Slack integrations for a workspace.\n\nProxies to the slackbot service to fetch workspace integrations.\n\nArgs:\n    workspace_name: The workspace name from path.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Slack workspace integrations from slackbot service."
+      operationId: get_slack_workspaces_api_v3__workspace_name__slack_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Slack Workspaces Api V3  Workspace Name  Slack Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - slack
+      summary: Create Slack integration for workspace
+      description: "Create a Slack integration for a workspace.\n\nProxies to the slackbot service to create the integration.\n\nArgs:\n    workspace_name: The workspace name from path.\n    data: Slack integration data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Created integration from slackbot service."
+      operationId: create_slack_workspace_api_v3__workspace_name__slack_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlackWorkspaceCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Create Slack Workspace Api V3  Workspace Name  Slack Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/{workspace_name}/slack/{integration_id}:
+    delete:
+      tags:
+      - slack
+      summary: Delete Slack integration
+      description: "Delete a Slack integration for a workspace.\n\nArgs:\n    workspace_name: The workspace name from path.\n    integration_id: The integration ID to delete.\n    session: Database session.\n    current_user: The authenticated user."
+      operationId: delete_slack_workspace_api_v3__workspace_name__slack__integration_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: integration_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Integration Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    SlackWorkspaceCreate:
+      properties:
+        slack_payload:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          title: Slack Payload
+          description: Slack OAuth payload (encrypted string or dict)
+        workspace:
+          type: string
+          title: Workspace
+          description: Workspace name
+      type: object
+      required:
+      - slack_payload
+      - workspace
+      title: SlackWorkspaceCreate
+      description: Request to create a Slack workspace integration.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

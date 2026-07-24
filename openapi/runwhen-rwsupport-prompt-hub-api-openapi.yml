@@ -1,0 +1,602 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy rwsupport-prompt-hub API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: rwsupport-prompt-hub
+paths:
+  /api/v3/rwsupport/prompt-hub/agents/{agent_name}/categories:
+    get:
+      tags:
+      - rwsupport-prompt-hub
+      summary: List Categories
+      operationId: list_categories_api_v3_rwsupport_prompt_hub_agents__agent_name__categories_get
+      parameters:
+      - name: agent_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Agent Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryResponse'
+                title: Response List Categories Api V3 Rwsupport Prompt Hub Agents  Agent Name  Categories Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/prompt-hub/agents/{agent_name}/sections:
+    get:
+      tags:
+      - rwsupport-prompt-hub
+      summary: List Sections
+      operationId: list_sections_api_v3_rwsupport_prompt_hub_agents__agent_name__sections_get
+      parameters:
+      - name: agent_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Agent Name
+      - name: source
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - enum:
+            - ui
+            - slack
+            - teams
+            - '*'
+            type: string
+          - type: 'null'
+          title: Source
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResolvedSectionResponse'
+                title: Response List Sections Api V3 Rwsupport Prompt Hub Agents  Agent Name  Sections Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/prompt-hub/agents/{agent_name}/sections/{section_id}/overrides:
+    get:
+      tags:
+      - rwsupport-prompt-hub
+      summary: List Section Overrides
+      operationId: list_section_overrides_api_v3_rwsupport_prompt_hub_agents__agent_name__sections__section_id__overrides_get
+      parameters:
+      - name: agent_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Agent Name
+      - name: section_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Section Id
+      - name: source
+        in: query
+        required: false
+        schema:
+          enum:
+          - ui
+          - slack
+          - teams
+          - '*'
+          type: string
+          default: '*'
+          title: Source
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OverrideRowResponse'
+                title: Response List Section Overrides Api V3 Rwsupport Prompt Hub Agents  Agent Name  Sections  Section Id  Overrides Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - rwsupport-prompt-hub
+      summary: Create Section Override
+      operationId: create_section_override_api_v3_rwsupport_prompt_hub_agents__agent_name__sections__section_id__overrides_post
+      parameters:
+      - name: agent_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Agent Name
+      - name: section_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Section Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOverrideRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OverrideRowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - rwsupport-prompt-hub
+      summary: Reset Section
+      description: 'Soft-reset the platform-default cell so the runtime falls back to code default.
+
+
+        Mirrors the existing platform restore proxy — staff-gated, rate-limited,
+
+        audit-logged. Returns 204 on success.'
+      operationId: reset_section_api_v3_rwsupport_prompt_hub_agents__agent_name__sections__section_id__overrides_delete
+      parameters:
+      - name: agent_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Agent Name
+      - name: section_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Section Id
+      - name: source
+        in: query
+        required: true
+        schema:
+          enum:
+          - ui
+          - slack
+          - teams
+          - '*'
+          type: string
+          title: Source
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/prompt-hub/agents/{agent_name}/sections/{section_id}/overrides/{override_id}/restore:
+    post:
+      tags:
+      - rwsupport-prompt-hub
+      summary: Restore Override
+      operationId: restore_override_api_v3_rwsupport_prompt_hub_agents__agent_name__sections__section_id__overrides__override_id__restore_post
+      parameters:
+      - name: agent_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Agent Name
+      - name: section_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Section Id
+      - name: override_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Override Id
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OverrideRowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/prompt-hub/agents/{agent_name}/preview:
+    get:
+      tags:
+      - rwsupport-prompt-hub
+      summary: Preview
+      operationId: preview_api_v3_rwsupport_prompt_hub_agents__agent_name__preview_get
+      parameters:
+      - name: agent_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Agent Name
+      - name: source
+        in: query
+        required: false
+        schema:
+          enum:
+          - ui
+          - slack
+          - teams
+          - '*'
+          type: string
+          default: ui
+          title: Source
+      - name: workspace_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviewResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    PreviewResponse:
+      properties:
+        agentName:
+          type: string
+          title: Agentname
+        workspaceId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspaceid
+        source:
+          type: string
+          enum:
+          - ui
+          - slack
+          - teams
+          - '*'
+          title: Source
+        sections:
+          items:
+            $ref: '#/components/schemas/PreviewSectionResponse'
+          type: array
+          title: Sections
+          default: []
+        assembled:
+          type: string
+          title: Assembled
+      type: object
+      required:
+      - agentName
+      - source
+      - assembled
+      title: PreviewResponse
+    OverrideRowResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        agentName:
+          type: string
+          title: Agentname
+        sectionId:
+          type: string
+          title: Sectionid
+        workspaceId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspaceid
+        isPlatformDefault:
+          type: boolean
+          title: Isplatformdefault
+        source:
+          type: string
+          enum:
+          - ui
+          - slack
+          - teams
+          - '*'
+          title: Source
+        version:
+          type: integer
+          title: Version
+        isLatest:
+          type: boolean
+          title: Islatest
+        prompt:
+          type: string
+          title: Prompt
+        lastModifiedBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastmodifiedby
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - id
+      - agentName
+      - sectionId
+      - isPlatformDefault
+      - source
+      - version
+      - isLatest
+      - prompt
+      - createdAt
+      - modifiedAt
+      title: OverrideRowResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ResolvedSectionResponse:
+      properties:
+        sectionId:
+          type: string
+          title: Sectionid
+        categoryId:
+          type: string
+          title: Categoryid
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        safetyCritical:
+          type: boolean
+          title: Safetycritical
+        recommendedPerSource:
+          type: boolean
+          title: Recommendedpersource
+        placeholdersRequired:
+          items:
+            type: string
+          type: array
+          title: Placeholdersrequired
+          default: []
+        placeholdersAllowed:
+          items:
+            type: string
+          type: array
+          title: Placeholdersallowed
+          default: []
+        defaultText:
+          type: string
+          title: Defaulttext
+        resolvedText:
+          type: string
+          title: Resolvedtext
+        resolvedOrigin:
+          type: string
+          enum:
+          - workspace_source
+          - workspace_any
+          - platform_source
+          - platform_any
+          - code_default
+          title: Resolvedorigin
+        resolvedVersion:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resolvedversion
+        resolvedModifiedBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resolvedmodifiedby
+        resolvedModifiedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Resolvedmodifiedat
+      type: object
+      required:
+      - sectionId
+      - categoryId
+      - title
+      - description
+      - safetyCritical
+      - recommendedPerSource
+      - defaultText
+      - resolvedText
+      - resolvedOrigin
+      title: ResolvedSectionResponse
+    CreateOverrideRequest:
+      properties:
+        source:
+          type: string
+          enum:
+          - ui
+          - slack
+          - teams
+          title: Source
+        prompt:
+          type: string
+          maxLength: 16384
+          minLength: 1
+          title: Prompt
+      type: object
+      required:
+      - source
+      - prompt
+      title: CreateOverrideRequest
+      description: Request body for creating a platform-default override.
+    PreviewSectionResponse:
+      properties:
+        sectionId:
+          type: string
+          title: Sectionid
+        title:
+          type: string
+          title: Title
+        text:
+          type: string
+          title: Text
+        origin:
+          type: string
+          enum:
+          - workspace_source
+          - workspace_any
+          - platform_source
+          - platform_any
+          - code_default
+          title: Origin
+        version:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Version
+      type: object
+      required:
+      - sectionId
+      - title
+      - text
+      - origin
+      title: PreviewSectionResponse
+    CategoryResponse:
+      properties:
+        categoryId:
+          type: string
+          title: Categoryid
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        displayOrder:
+          type: integer
+          title: Displayorder
+      type: object
+      required:
+      - categoryId
+      - title
+      - description
+      - displayOrder
+      title: CategoryResponse
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

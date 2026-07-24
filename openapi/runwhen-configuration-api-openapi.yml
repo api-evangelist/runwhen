@@ -1,0 +1,35 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy configuration API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: configuration
+paths:
+  /api/v3/configuration/what-knowledge:
+    get:
+      tags:
+      - configuration
+      summary: Get what-knowledge graph
+      description: Return the what-knowledge graph used for task search.
+      operationId: list_what_knowledge_api_v3_configuration_what_knowledge_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                type: array
+                title: Response List What Knowledge Api V3 Configuration What Knowledge Get
+      security:
+      - BearerAuth: []
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

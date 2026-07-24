@@ -1,0 +1,4654 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy workspaces API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: workspaces
+paths:
+  /api/v1/workspaces:
+    get:
+      tags:
+      - workspaces
+      summary: List workspaces for the current user
+      description: "List all workspaces the current user has access to.\n\nReturns workspaces where the user is either the owner or has\nexplicit permissions.\n\nArgs:\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of workspaces."
+      operationId: list_workspaces_api_v1_workspaces_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - workspaces
+      summary: Create a new workspace
+      description: "Create a new workspace (synchronous, DB-direct).\n\nThis endpoint:\n1. Auto-suffixes the name if it collides with an existing workspace,\n   tombstone, repository, or K8s CRD (e.g. ``myws`` -> ``myws-2``).\n2. Creates the workspace DB record and provisions runner infrastructure.\n3. Returns with status=\"ready\" on success.\n\nCreation is synchronous — no polling required after a 201 response."
+      operationId: create_workspace_api_v1_workspaces_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceGitCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_short_name}:
+    get:
+      tags:
+      - workspaces
+      summary: Get a workspace by name
+      description: "Get a workspace by its short name.\n\nArgs:\n    workspace_short_name: The workspace short name (e.g., 'pp-04').\n    detail: If true, include additional details (SLXs, alerts, spec). Defaults to false.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The workspace details.\n\nRaises:\n    HTTPException: 404 if workspace not found or user has no access."
+      operationId: get_workspace_api_v1_workspaces__workspace_short_name__get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: detail
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: 'If true, load SLXs and firing alerts. Default false: fast metadata-only response.'
+          default: false
+          title: Detail
+        description: 'If true, load SLXs and firing alerts. Default false: fast metadata-only response.'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/provisioning-status/{workspace_name}:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace provisioning progress
+      description: 'Get workspace provisioning progress without requiring a DB workspace record.
+
+
+        Non-detail endpoint — bypasses workspace permission checks.
+
+        Only requires authentication. Returns boolean stage flags and sync status.
+
+        Used by the UI wizard to poll until all provisioning stages complete.
+
+
+        CRD-less mode: workspace creation is synchronous — all stages are
+
+        complete if the workspace exists in the database.'
+      operationId: provisioning_status_api_v1_workspaces_provisioning_status__workspace_name__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_ProvisioningStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}:
+    patch:
+      tags:
+      - workspaces
+      summary: Update a workspace
+      description: "Update a workspace (partial update).\n\nAccepts workspace name (slug) as the path parameter. All body fields are\noptional; only non-None values are applied.\n\nSupports updating: alias, description, scrubber_config, enabled_locations,\nconfig_provided, permissions (full replacement), slx_groups, slx_relationships.\n\nRequires admin permission on the workspace.\n\nArgs:\n    workspace_name: The workspace short name (slug, e.g. 'my-workspace').\n    data: The workspace update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated workspace (detail view with spec populated).\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 403 if user lacks admin permission."
+      operationId: update_workspace_api_v1_workspaces__workspace_name__patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - workspaces
+      summary: Delete a workspace
+      description: 'Delete a workspace with full multi-system cleanup.
+
+
+        Phase 1 (sync): Vault secrets, Slack, K8s CRDs, git repo, DB + tombstone.
+
+        Phase 2 (async): Sobow, USearch, GCS files, email notification.
+
+
+        Returns step-by-step status for each cleanup operation.
+
+        Requires admin permission on the workspace.'
+      operationId: delete_workspace_api_v1_workspaces__workspace_name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceDeletionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/workspace-configuration-index:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace configuration index
+      description: "Get the workspace configuration index from sobow.\n\nThe configuration index contains cached workspace data including:\n- SLX metadata and task information\n- Entity index (Kubernetes resources, cloud resources, etc.)\n- Workspace relationships and hierarchies\n\nThis endpoint proxies to the sobow service which owns the canonical\nworkspace configuration index cached in Redis.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching configuration.\n\nReturns:\n    The workspace configuration index as a dictionary.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow service is unavailable."
+      operationId: get_workspace_configuration_index_api_v1_workspaces__workspace_name__workspace_configuration_index_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Workspace Configuration Index Api V1 Workspaces  Workspace Name  Workspace Configuration Index Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/metadata:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace metadata from sobow
+      description: "Get workspace metadata from sobow service.\n\nReturns metadata about the workspace including index status,\ntask counts, and other operational information.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching metadata.\n\nReturns:\n    The workspace metadata as a dictionary, or None if not available.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow service is unavailable."
+      operationId: get_workspace_metadata_api_v1_workspaces__workspace_name__metadata_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: object
+                  additionalProperties: true
+                - type: 'null'
+                title: Response Get Workspace Metadata Api V1 Workspaces  Workspace Name  Metadata Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/entities:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace entities
+      description: "Get entities (Kubernetes resources, cloud resources, etc.) for a workspace.\n\nEntities are extracted from the workspace configuration and represent\nthe discoverable resources that can be referenced in tasks.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching entities.\n\nReturns:\n    Dictionary containing workspace entities organized by type.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow service is unavailable."
+      operationId: get_workspace_entities_api_v1_workspaces__workspace_name__entities_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Workspace Entities Api V1 Workspaces  Workspace Name  Entities Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/index-health:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace index health
+      description: "Get the health status of the workspace task index.\n\nReturns information about the index's current state, including\nlast update time, task counts, and any indexing errors.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching health status.\n\nReturns:\n    Dictionary containing index health information.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow service is unavailable."
+      operationId: get_workspace_index_health_api_v1_workspaces__workspace_name__index_health_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Workspace Index Health Api V1 Workspaces  Workspace Name  Index Health Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/status:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace creation status
+      description: "Get the status of a workspace creation.\n\nThis endpoint is used to poll for workspace creation completion.\nIt checks:\n1. Whether the workspace exists in the database\n2. Whether the WorkSync has successfully reconciled\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    WorkspaceStatusResponse with workspace and sync booleans."
+      operationId: get_workspace_status_api_v1_workspaces__workspace_name__status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/my-permissions:
+    get:
+      tags:
+      - workspaces
+      summary: Get current user's permissions on workspace
+      description: 'Get the current user''s permissions (roles) on a workspace.
+
+
+        Returns a list of role strings the user has on this workspace.
+
+        This matches the Django implementation which returns a set of roles.'
+      operationId: get_my_permissions_api_v1_workspaces__workspace_name__my_permissions_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                title: Response Get My Permissions Api V1 Workspaces  Workspace Name  My Permissions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/sync-status:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace sync status from WorkSync CRD
+      description: "Get the sync status for a workspace from the WorkSync Kubernetes CRD.\n\nReturns information about the workspace's GitOps sync status including\nconditions, last applied revision, and related Kubernetes events.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Dictionary containing WorkSync status and events.\n\nRaises:\n    HTTPException: 404 if workspace not found or no WorkSync CRD exists."
+      operationId: get_workspace_sync_status_api_v1_workspaces__workspace_name__sync_status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Workspace Sync Status Api V1 Workspaces  Workspace Name  Sync Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/secrets-keys:
+    get:
+      tags:
+      - workspaces
+      summary: List workspace secret keys
+      description: 'Get list of secret key names for a workspace.
+
+
+        Returns only the key names, not the secret values.
+
+        Requires read access to the workspace.'
+      operationId: get_workspace_secret_keys_api_v1_workspaces__workspace_name__secrets_keys_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretsKeysResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/secrets:
+    post:
+      tags:
+      - workspaces
+      summary: Create or update workspace secrets
+      description: 'Create or update workspace secrets in Vault.
+
+
+        Requires admin access to the workspace.'
+      operationId: create_workspace_secrets_api_v1_workspaces__workspace_name__secrets_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecretsCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretsCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/secrets/{secret_key}:
+    delete:
+      tags:
+      - workspaces
+      summary: Delete a single workspace secret
+      description: 'Permanently delete a single workspace secret by key.
+
+
+        Requires admin access to the workspace. Mirrors Django''s
+
+        ``WorkspaceViewSet.delete_workspace_secret``.'
+      operationId: delete_workspace_secret_api_v1_workspaces__workspace_name__secrets__secret_key__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: secret_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Secret Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretDeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/secrets/{secret_key}/usage:
+    get:
+      tags:
+      - workspaces
+      summary: List where a workspace secret is used
+      description: 'Return the SLIs and Runbooks that reference this workspace secret.
+
+
+        Used by the UI to warn before deleting a secret that is still in use.
+
+        Requires read access to the workspace. Mirrors Django''s
+
+        ``WorkspaceViewSet.get_secret_usage``.'
+      operationId: get_workspace_secret_usage_api_v1_workspaces__workspace_name__secrets__secret_key__usage_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: secret_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Secret Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretUsageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/reset-service-account:
+    post:
+      tags:
+      - workspaces
+      summary: Reset or create workspace service account
+      description: 'Reset or create the service account for a workspace.
+
+
+        If a service account exists for this workspace, updates its password.
+
+        If no service account exists, creates a new one.
+
+
+        Also writes the credentials to Vault for use by SLI/Runbook containers.
+
+
+        Requires admin access to the workspace.'
+      operationId: reset_workspace_service_account_api_v1_workspaces__workspace_name__reset_service_account_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetServiceAccountRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetServiceAccountResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/sa-token:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace service account token
+      description: 'Get the workspace service account token.
+
+
+        Trades an existing valid token for a workspace service account token.
+
+        This is used by runners and SLI containers to authenticate with PAPI.
+
+
+        Valid tokenTypes:
+
+        - LOCATION_WORKSPACE_SA_TOKEN: Token from location namespace'
+      operationId: get_workspace_sa_token_api_v1_workspaces__workspace_name__sa_token_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Token to trade for SA token
+          title: Token
+        description: Token to trade for SA token
+      - name: tokenType
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Type of token being traded
+          title: Tokentype
+        description: Type of token being traded
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SATokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/get-gitlab-sas:
+    get:
+      tags:
+      - workspaces
+      summary: Get GitLab service accounts for workspace
+      description: 'Get GitLab service accounts for the workspace repository.
+
+
+        Returns service accounts filtered by the user''s access level:
+
+        - Admin/readwrite users get both read and write service accounts
+
+        - Read-only users get only read service accounts
+
+
+        Returns empty list for non-GitLab (e.g. Gitea) environments.'
+      operationId: get_gitlab_service_accounts_api_v1_workspaces__workspace_name__get_gitlab_sas_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Gitlab Service Accounts Api V1 Workspaces  Workspace Name  Get Gitlab Sas Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/task-search:
+    post:
+      tags:
+      - workspaces
+      summary: Search workspace tasks
+      description: 'Search for tasks in a workspace.
+
+
+        Supports scoping to specific SLXs and persona-based query interpretation.'
+      operationId: search_workspace_tasks_api_v1_workspaces__workspace_name__task_search_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskSearchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Search Workspace Tasks Api V1 Workspaces  Workspace Name  Task Search Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/autocomplete:
+    post:
+      tags:
+      - workspaces
+      summary: Autocomplete for task search
+      description: Get autocomplete suggestions for task search.
+      operationId: autocomplete_workspace_search_api_v1_workspaces__workspace_name__autocomplete_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutocompleteRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Autocomplete Workspace Search Api V1 Workspaces  Workspace Name  Autocomplete Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/runners:
+    get:
+      tags:
+      - workspaces
+      summary: Get runners
+      description: Returns runners registered for this workspace.
+      operationId: get_runners_api_v1_workspaces__workspace_name__runners_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorizedRunner'
+                title: Response Get Runners Api V1 Workspaces  Workspace Name  Runners Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/generate-workspace-builder-config:
+    get:
+      tags:
+      - workspaces
+      summary: '[DEPRECATED] Generate workspace builder config'
+      description: 'Deprecated: use GET /{workspace_name}/upload-config instead. Returns 410 Gone.'
+      operationId: generate_workspace_builder_config_api_v1_workspaces__workspace_name__generate_workspace_builder_config_get
+      deprecated: true
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/search-scope:
+    get:
+      tags:
+      - workspaces
+      summary: Get search scope options
+      description: 'Return search scope options for the workspace.
+
+
+        Returns SLX groups, subgroups, and individual SLXs with firing alert status.
+
+        Used by the workspace chat page to build the scope selector.'
+      operationId: get_search_scope_api_v1_workspaces__workspace_name__search_scope_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchScopeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/upload-config:
+    get:
+      tags:
+      - workspaces
+      summary: Generate upload config for a location
+      description: Returns an SA-scoped uploadConfig for the given workspace and location. Works for both private and public locations — no runner registration required.
+      operationId: get_upload_config_api_v1_workspaces__workspace_name__upload_config_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: location
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Location name
+          title: Location
+        description: Location name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Upload Config Api V1 Workspaces  Workspace Name  Upload Config Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/internal/upload-config:
+    get:
+      tags:
+      - workspaces
+      summary: Generate upload config (internal)
+      description: 'Generate upload credentials for runner-control.
+
+
+        Returns a short-lived SA token and the public PAPI URL so runner-control
+
+        can assemble a complete ``uploadInfo`` for workspace-builder.
+
+
+        **Network isolation:** This endpoint MUST be blocked from external access
+
+        via an ingress deny rule on ``/*/internal/*`` (same pattern as ``/metrics``).
+
+        Runner-control reaches PAPI through the cluster-internal Service URL, which
+
+        bypasses ingress. The ``RW-Runner-Token`` header is required as a secondary
+
+        guard but is not cryptographically validated by PAPI — runner-control already
+
+        validated the token before making this call.
+
+
+        **Why require a non-empty header at all?** Largely a lightweight handshake so
+
+        the caller is clearly runner-control (or anything that holds the runner token),
+
+        not arbitrary cluster traffic. It does not strengthen auth on the PAPI side.
+
+
+        **Future consideration:** If this endpoint remains strictly internal-only and
+
+        PAPI never gains cryptographic validation of the runner token, the header could
+
+        be removed entirely — it would not change the trust model on PAPI (isolation
+
+        is ClusterIP + ingress deny). Doing so would require a coordinated change with
+
+        runner-control and regression testing; we keep the header until then to avoid
+
+        churn on a path that already works.'
+      operationId: get_internal_upload_config_api_v1_workspaces__workspace_name__internal_upload_config_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: RW-Runner-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Rw-Runner-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/runner-token:
+    get:
+      tags:
+      - workspaces
+      summary: Get runner registration token
+      description: "Get a runner registration token for a workspace.\n\nRequires admin permission on the workspace.\nCalls the internal runner service to generate a token.\n\nArgs:\n    workspace_name: The workspace name.\n    location: The location name for the runner.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The runner token response from the runner service.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 403 if user lacks admin permission.\n    HTTPException: 422 if location not provided.\n    HTTPException: 503 if runner service unavailable."
+      operationId: get_runner_token_api_v1_workspaces__workspace_name__runner_token_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: location
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Location name for the runner
+          title: Location
+        description: Location name for the runner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Runner Token Api V1 Workspaces  Workspace Name  Runner Token Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/anonymous-mode:
+    get:
+      tags:
+      - workspaces
+      summary: Get anonymous mode status
+      description: 'Check whether anonymous mode is enabled for a workspace.
+
+
+        Access: Staff or workspace admin.'
+      operationId: get_anonymous_mode_status_api_v1_workspaces__workspace_name__anonymous_mode_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnonymousModeStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - workspaces
+      summary: Toggle anonymous mode
+      description: 'Enable or disable anonymous mode for a workspace.
+
+
+        Access: Staff or workspace admin.'
+      operationId: toggle_anonymous_mode_api_v1_workspaces__workspace_name__anonymous_mode_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnonymousModeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnonymousModeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_short_name}/workspace-stats:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace statistics
+      description: 'Get pre-aggregated workspace statistics for the chat page subtitle.
+
+
+        Returns alias, assistantCount, tasksCount24h, resourceTypeCounts, issuesCount24h.'
+      operationId: workspace_stats_api_v1_workspaces__workspace_short_name__workspace_stats_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Workspace Stats Api V1 Workspaces  Workspace Short Name  Workspace Stats Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_short_name}/top-issue-resources:
+    get:
+      tags:
+      - workspaces
+      summary: Get top resources by issue count
+      description: 'Get top resources with most issues in a configurable time window.
+
+
+        Returns resources grouped by SLX hierarchy with issue counts,
+
+        for ticker display on the workspace chat page.'
+      operationId: top_issue_resources_api_v1_workspaces__workspace_short_name__top_issue_resources_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: hours
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 168
+          minimum: 1
+          description: Lookback window in hours
+          default: 1
+          title: Hours
+        description: Lookback window in hours
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 20
+          minimum: 1
+          description: Max resources to return
+          default: 5
+          title: Limit
+        description: Max resources to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Top Issue Resources Api V1 Workspaces  Workspace Short Name  Top Issue Resources Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/agentfarm-params:
+    get:
+      tags:
+      - workspaces
+      summary: Get AgentFarm parameters for a workspace
+      description: 'Get parameters for AgentFarm including LLM config, org, user perms, and repo info.
+
+
+        Also serves to authenticate the user/workspace combination for AgentFarm.'
+      operationId: agentfarm_params_api_v1_workspaces__workspace_name__agentfarm_params_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: llm_category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'LLM category: DEFAULT, CHAT, BACKGROUND, EMBEDDING'
+          title: Llm Category
+        description: 'LLM category: DEFAULT, CHAT, BACKGROUND, EMBEDDING'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Agentfarm Params Api V1 Workspaces  Workspace Name  Agentfarm Params Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/activities:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace activity feed
+      description: 'Proxy workspace activities from the activities service.
+
+
+        Django parity: WorkspaceViewSet.get_activities proxies to the activities
+
+        service via activityutils.fetch_workspace_activities().'
+      operationId: get_workspace_activities_api_v1_workspaces__workspace_name__activities_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Workspace Activities Api V1 Workspaces  Workspace Name  Activities Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/runners/{runner_id}:
+    delete:
+      tags:
+      - workspaces
+      summary: Delete a runner
+      description: 'Delete a runner from the database.
+
+
+        Validates that the runner belongs to the specified workspace,
+
+        deletes the runner record, and revokes associated upload PATs.'
+      operationId: delete_runner_api_v1_workspaces__workspace_name__runners__runner_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: runner_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Runner Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Delete Runner Api V1 Workspaces  Workspace Name  Runners  Runner Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/layout:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace layout
+      description: Returns the workspace layout JSON (or alt_layout when ?alt_layout=true).
+      operationId: get_workspace_layout_api_v1_workspaces__workspace_name__layout_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: alt_layout
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return alt_layout instead of layout
+          default: false
+          title: Alt Layout
+        description: Return alt_layout instead of layout
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Workspace Layout Api V1 Workspaces  Workspace Name  Layout Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - workspaces
+      summary: Save workspace layout
+      description: Saves an arbitrary JSON body as the workspace layout (or alt_layout when ?alt_layout=true).
+      operationId: save_workspace_layout_api_v1_workspaces__workspace_name__layout_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: alt_layout
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Save to alt_layout instead of layout
+          default: false
+          title: Alt Layout
+        description: Save to alt_layout instead of layout
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Save Workspace Layout Api V1 Workspaces  Workspace Name  Layout Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/reprovision-workspace-infra:
+    post:
+      tags:
+      - workspaces
+      summary: Reprovision workspace runner infrastructure (staff only)
+      description: 'Re-run workspace-level runner infrastructure provisioning.
+
+
+        Creates or re-creates the Vault AppRole and cert-manager Certificates for
+
+        a workspace. Idempotent — safe to call on already-provisioned workspaces.
+
+        Returns per-subsystem status regardless of partial failure (HTTP 200).
+
+
+        Access: Staff only.'
+      operationId: reprovision_workspace_infra_api_v1_workspaces__workspace_name__reprovision_workspace_infra_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReprovisionWorkspaceInfraResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_short_name}/upload:
+    post:
+      tags:
+      - workspaces
+      summary: Upload workspace archive
+      description: "Upload a workspace archive for async processing.\n\nAccepts a base64-encoded tar archive containing workspace configuration.\nThe upload is processed asynchronously via TaskIQ.\n\nArgs:\n    workspace_short_name: The workspace identifier.\n    data: The upload request containing file_content and optional file_hash.\n    current_user: The authenticated user.\n    session: The database session.\n\nReturns:\n    WorkspaceUploadResponse with task_id for status tracking."
+      operationId: upload_workspace_api_v1_workspaces__workspace_short_name__upload_post
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceUploadRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceUploadResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/upload-status/{task_id}:
+    get:
+      tags:
+      - workspaces
+      summary: Check upload task status
+      description: "Check the status of an upload task.\n\nArgs:\n    task_id: The task ID returned from the upload endpoint.\n    current_user: The authenticated user.\n\nReturns:\n    UploadStatusResponse with current task status."
+      operationId: get_upload_status_api_v1_workspaces_upload_status__task_id__get
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/upload:
+    post:
+      tags:
+      - workspaces
+      summary: Upload workspace archive
+      description: "Upload a workspace archive for async processing.\n\nAccepts a base64-encoded tar archive containing workspace configuration.\nThe upload is processed asynchronously via TaskIQ.\n\nArgs:\n    workspace_short_name: The workspace identifier.\n    data: The upload request containing file_content and optional file_hash.\n    current_user: The authenticated user.\n    session: The database session.\n\nReturns:\n    WorkspaceUploadResponse with task_id for status tracking."
+      operationId: upload_workspace_api_v3_workspaces__workspace_short_name__upload_post
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceUploadRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceUploadResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/upload-status/{task_id}:
+    get:
+      tags:
+      - workspaces
+      summary: Check upload task status
+      description: "Check the status of an upload task.\n\nArgs:\n    task_id: The task ID returned from the upload endpoint.\n    current_user: The authenticated user.\n\nReturns:\n    UploadStatusResponse with current task status."
+      operationId: get_upload_status_api_v3_workspaces_upload_status__task_id__get
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces:
+    get:
+      tags:
+      - workspaces
+      summary: List workspaces for the current user
+      description: "List all workspaces the current user has access to.\n\nReturns workspaces where the user is either the owner or has\nexplicit permissions.\n\nArgs:\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of workspaces."
+      operationId: list_workspaces_api_v3_workspaces_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - workspaces
+      summary: Create a new workspace
+      description: "Create a new workspace (synchronous, DB-direct).\n\nThis endpoint:\n1. Auto-suffixes the name if it collides with an existing workspace,\n   tombstone, repository, or K8s CRD (e.g. ``myws`` -> ``myws-2``).\n2. Creates the workspace DB record and provisions runner infrastructure.\n3. Returns with status=\"ready\" on success.\n\nCreation is synchronous — no polling required after a 201 response."
+      operationId: create_workspace_api_v3_workspaces_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceGitCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}:
+    get:
+      tags:
+      - workspaces
+      summary: Get a workspace by name
+      description: "Get a workspace by its short name.\n\nArgs:\n    workspace_short_name: The workspace short name (e.g., 'pp-04').\n    detail: If true, include additional details (SLXs, alerts, spec). Defaults to false.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The workspace details.\n\nRaises:\n    HTTPException: 404 if workspace not found or user has no access."
+      operationId: get_workspace_api_v3_workspaces__workspace_short_name__get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: detail
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: 'If true, load SLXs and firing alerts. Default false: fast metadata-only response.'
+          default: false
+          title: Detail
+        description: 'If true, load SLXs and firing alerts. Default false: fast metadata-only response.'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/provisioning-status/{workspace_name}:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace provisioning progress
+      description: 'Get workspace provisioning progress without requiring a DB workspace record.
+
+
+        Non-detail endpoint — bypasses workspace permission checks.
+
+        Only requires authentication. Returns boolean stage flags and sync status.
+
+        Used by the UI wizard to poll until all provisioning stages complete.
+
+
+        CRD-less mode: workspace creation is synchronous — all stages are
+
+        complete if the workspace exists in the database.'
+      operationId: provisioning_status_api_v3_workspaces_provisioning_status__workspace_name__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_ProvisioningStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}:
+    patch:
+      tags:
+      - workspaces
+      summary: Update a workspace
+      description: "Update a workspace (partial update).\n\nAccepts workspace name (slug) as the path parameter. All body fields are\noptional; only non-None values are applied.\n\nSupports updating: alias, description, scrubber_config, enabled_locations,\nconfig_provided, permissions (full replacement), slx_groups, slx_relationships.\n\nRequires admin permission on the workspace.\n\nArgs:\n    workspace_name: The workspace short name (slug, e.g. 'my-workspace').\n    data: The workspace update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated workspace (detail view with spec populated).\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 403 if user lacks admin permission."
+      operationId: update_workspace_api_v3_workspaces__workspace_name__patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - workspaces
+      summary: Delete a workspace
+      description: 'Delete a workspace with full multi-system cleanup.
+
+
+        Phase 1 (sync): Vault secrets, Slack, K8s CRDs, git repo, DB + tombstone.
+
+        Phase 2 (async): Sobow, USearch, GCS files, email notification.
+
+
+        Returns step-by-step status for each cleanup operation.
+
+        Requires admin permission on the workspace.'
+      operationId: delete_workspace_api_v3_workspaces__workspace_name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceDeletionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/workspace-configuration-index:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace configuration index
+      description: "Get the workspace configuration index from sobow.\n\nThe configuration index contains cached workspace data including:\n- SLX metadata and task information\n- Entity index (Kubernetes resources, cloud resources, etc.)\n- Workspace relationships and hierarchies\n\nThis endpoint proxies to the sobow service which owns the canonical\nworkspace configuration index cached in Redis.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching configuration.\n\nReturns:\n    The workspace configuration index as a dictionary.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow service is unavailable."
+      operationId: get_workspace_configuration_index_api_v3_workspaces__workspace_name__workspace_configuration_index_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Workspace Configuration Index Api V3 Workspaces  Workspace Name  Workspace Configuration Index Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/metadata:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace metadata from sobow
+      description: "Get workspace metadata from sobow service.\n\nReturns metadata about the workspace including index status,\ntask counts, and other operational information.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching metadata.\n\nReturns:\n    The workspace metadata as a dictionary, or None if not available.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow service is unavailable."
+      operationId: get_workspace_metadata_api_v3_workspaces__workspace_name__metadata_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: object
+                  additionalProperties: true
+                - type: 'null'
+                title: Response Get Workspace Metadata Api V3 Workspaces  Workspace Name  Metadata Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/entities:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace entities
+      description: "Get entities (Kubernetes resources, cloud resources, etc.) for a workspace.\n\nEntities are extracted from the workspace configuration and represent\nthe discoverable resources that can be referenced in tasks.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching entities.\n\nReturns:\n    Dictionary containing workspace entities organized by type.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow service is unavailable."
+      operationId: get_workspace_entities_api_v3_workspaces__workspace_name__entities_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Workspace Entities Api V3 Workspaces  Workspace Name  Entities Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/index-health:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace index health
+      description: "Get the health status of the workspace task index.\n\nReturns information about the index's current state, including\nlast update time, task counts, and any indexing errors.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching health status.\n\nReturns:\n    Dictionary containing index health information.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow service is unavailable."
+      operationId: get_workspace_index_health_api_v3_workspaces__workspace_name__index_health_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Workspace Index Health Api V3 Workspaces  Workspace Name  Index Health Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/status:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace creation status
+      description: "Get the status of a workspace creation.\n\nThis endpoint is used to poll for workspace creation completion.\nIt checks:\n1. Whether the workspace exists in the database\n2. Whether the WorkSync has successfully reconciled\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    WorkspaceStatusResponse with workspace and sync booleans."
+      operationId: get_workspace_status_api_v3_workspaces__workspace_name__status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/my-permissions:
+    get:
+      tags:
+      - workspaces
+      summary: Get current user's permissions on workspace
+      description: 'Get the current user''s permissions (roles) on a workspace.
+
+
+        Returns a list of role strings the user has on this workspace.
+
+        This matches the Django implementation which returns a set of roles.'
+      operationId: get_my_permissions_api_v3_workspaces__workspace_name__my_permissions_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                title: Response Get My Permissions Api V3 Workspaces  Workspace Name  My Permissions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/sync-status:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace sync status from WorkSync CRD
+      description: "Get the sync status for a workspace from the WorkSync Kubernetes CRD.\n\nReturns information about the workspace's GitOps sync status including\nconditions, last applied revision, and related Kubernetes events.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Dictionary containing WorkSync status and events.\n\nRaises:\n    HTTPException: 404 if workspace not found or no WorkSync CRD exists."
+      operationId: get_workspace_sync_status_api_v3_workspaces__workspace_name__sync_status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Workspace Sync Status Api V3 Workspaces  Workspace Name  Sync Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/secrets-keys:
+    get:
+      tags:
+      - workspaces
+      summary: List workspace secret keys
+      description: 'Get list of secret key names for a workspace.
+
+
+        Returns only the key names, not the secret values.
+
+        Requires read access to the workspace.'
+      operationId: get_workspace_secret_keys_api_v3_workspaces__workspace_name__secrets_keys_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretsKeysResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/secrets:
+    post:
+      tags:
+      - workspaces
+      summary: Create or update workspace secrets
+      description: 'Create or update workspace secrets in Vault.
+
+
+        Requires admin access to the workspace.'
+      operationId: create_workspace_secrets_api_v3_workspaces__workspace_name__secrets_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecretsCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretsCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/secrets/{secret_key}:
+    delete:
+      tags:
+      - workspaces
+      summary: Delete a single workspace secret
+      description: 'Permanently delete a single workspace secret by key.
+
+
+        Requires admin access to the workspace. Mirrors Django''s
+
+        ``WorkspaceViewSet.delete_workspace_secret``.'
+      operationId: delete_workspace_secret_api_v3_workspaces__workspace_name__secrets__secret_key__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: secret_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Secret Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretDeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/secrets/{secret_key}/usage:
+    get:
+      tags:
+      - workspaces
+      summary: List where a workspace secret is used
+      description: 'Return the SLIs and Runbooks that reference this workspace secret.
+
+
+        Used by the UI to warn before deleting a secret that is still in use.
+
+        Requires read access to the workspace. Mirrors Django''s
+
+        ``WorkspaceViewSet.get_secret_usage``.'
+      operationId: get_workspace_secret_usage_api_v3_workspaces__workspace_name__secrets__secret_key__usage_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: secret_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Secret Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretUsageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/reset-service-account:
+    post:
+      tags:
+      - workspaces
+      summary: Reset or create workspace service account
+      description: 'Reset or create the service account for a workspace.
+
+
+        If a service account exists for this workspace, updates its password.
+
+        If no service account exists, creates a new one.
+
+
+        Also writes the credentials to Vault for use by SLI/Runbook containers.
+
+
+        Requires admin access to the workspace.'
+      operationId: reset_workspace_service_account_api_v3_workspaces__workspace_name__reset_service_account_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetServiceAccountRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetServiceAccountResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/sa-token:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace service account token
+      description: 'Get the workspace service account token.
+
+
+        Trades an existing valid token for a workspace service account token.
+
+        This is used by runners and SLI containers to authenticate with PAPI.
+
+
+        Valid tokenTypes:
+
+        - LOCATION_WORKSPACE_SA_TOKEN: Token from location namespace'
+      operationId: get_workspace_sa_token_api_v3_workspaces__workspace_name__sa_token_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Token to trade for SA token
+          title: Token
+        description: Token to trade for SA token
+      - name: tokenType
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Type of token being traded
+          title: Tokentype
+        description: Type of token being traded
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SATokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/get-gitlab-sas:
+    get:
+      tags:
+      - workspaces
+      summary: Get GitLab service accounts for workspace
+      description: 'Get GitLab service accounts for the workspace repository.
+
+
+        Returns service accounts filtered by the user''s access level:
+
+        - Admin/readwrite users get both read and write service accounts
+
+        - Read-only users get only read service accounts
+
+
+        Returns empty list for non-GitLab (e.g. Gitea) environments.'
+      operationId: get_gitlab_service_accounts_api_v3_workspaces__workspace_name__get_gitlab_sas_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Gitlab Service Accounts Api V3 Workspaces  Workspace Name  Get Gitlab Sas Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/task-search:
+    post:
+      tags:
+      - workspaces
+      summary: Search workspace tasks
+      description: 'Search for tasks in a workspace.
+
+
+        Supports scoping to specific SLXs and persona-based query interpretation.'
+      operationId: search_workspace_tasks_api_v3_workspaces__workspace_name__task_search_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskSearchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Search Workspace Tasks Api V3 Workspaces  Workspace Name  Task Search Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/autocomplete:
+    post:
+      tags:
+      - workspaces
+      summary: Autocomplete for task search
+      description: Get autocomplete suggestions for task search.
+      operationId: autocomplete_workspace_search_api_v3_workspaces__workspace_name__autocomplete_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutocompleteRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Autocomplete Workspace Search Api V3 Workspaces  Workspace Name  Autocomplete Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/runners:
+    get:
+      tags:
+      - workspaces
+      summary: Get runners
+      description: Returns runners registered for this workspace.
+      operationId: get_runners_api_v3_workspaces__workspace_name__runners_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorizedRunner'
+                title: Response Get Runners Api V3 Workspaces  Workspace Name  Runners Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/generate-workspace-builder-config:
+    get:
+      tags:
+      - workspaces
+      summary: '[DEPRECATED] Generate workspace builder config'
+      description: 'Deprecated: use GET /{workspace_name}/upload-config instead. Returns 410 Gone.'
+      operationId: generate_workspace_builder_config_api_v3_workspaces__workspace_name__generate_workspace_builder_config_get
+      deprecated: true
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/search-scope:
+    get:
+      tags:
+      - workspaces
+      summary: Get search scope options
+      description: 'Return search scope options for the workspace.
+
+
+        Returns SLX groups, subgroups, and individual SLXs with firing alert status.
+
+        Used by the workspace chat page to build the scope selector.'
+      operationId: get_search_scope_api_v3_workspaces__workspace_name__search_scope_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchScopeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/upload-config:
+    get:
+      tags:
+      - workspaces
+      summary: Generate upload config for a location
+      description: Returns an SA-scoped uploadConfig for the given workspace and location. Works for both private and public locations — no runner registration required.
+      operationId: get_upload_config_api_v3_workspaces__workspace_name__upload_config_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: location
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Location name
+          title: Location
+        description: Location name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Upload Config Api V3 Workspaces  Workspace Name  Upload Config Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/internal/upload-config:
+    get:
+      tags:
+      - workspaces
+      summary: Generate upload config (internal)
+      description: 'Generate upload credentials for runner-control.
+
+
+        Returns a short-lived SA token and the public PAPI URL so runner-control
+
+        can assemble a complete ``uploadInfo`` for workspace-builder.
+
+
+        **Network isolation:** This endpoint MUST be blocked from external access
+
+        via an ingress deny rule on ``/*/internal/*`` (same pattern as ``/metrics``).
+
+        Runner-control reaches PAPI through the cluster-internal Service URL, which
+
+        bypasses ingress. The ``RW-Runner-Token`` header is required as a secondary
+
+        guard but is not cryptographically validated by PAPI — runner-control already
+
+        validated the token before making this call.
+
+
+        **Why require a non-empty header at all?** Largely a lightweight handshake so
+
+        the caller is clearly runner-control (or anything that holds the runner token),
+
+        not arbitrary cluster traffic. It does not strengthen auth on the PAPI side.
+
+
+        **Future consideration:** If this endpoint remains strictly internal-only and
+
+        PAPI never gains cryptographic validation of the runner token, the header could
+
+        be removed entirely — it would not change the trust model on PAPI (isolation
+
+        is ClusterIP + ingress deny). Doing so would require a coordinated change with
+
+        runner-control and regression testing; we keep the header until then to avoid
+
+        churn on a path that already works.'
+      operationId: get_internal_upload_config_api_v3_workspaces__workspace_name__internal_upload_config_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: RW-Runner-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Rw-Runner-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/runner-token:
+    get:
+      tags:
+      - workspaces
+      summary: Get runner registration token
+      description: "Get a runner registration token for a workspace.\n\nRequires admin permission on the workspace.\nCalls the internal runner service to generate a token.\n\nArgs:\n    workspace_name: The workspace name.\n    location: The location name for the runner.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The runner token response from the runner service.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 403 if user lacks admin permission.\n    HTTPException: 422 if location not provided.\n    HTTPException: 503 if runner service unavailable."
+      operationId: get_runner_token_api_v3_workspaces__workspace_name__runner_token_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: location
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Location name for the runner
+          title: Location
+        description: Location name for the runner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Runner Token Api V3 Workspaces  Workspace Name  Runner Token Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/anonymous-mode:
+    get:
+      tags:
+      - workspaces
+      summary: Get anonymous mode status
+      description: 'Check whether anonymous mode is enabled for a workspace.
+
+
+        Access: Staff or workspace admin.'
+      operationId: get_anonymous_mode_status_api_v3_workspaces__workspace_name__anonymous_mode_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnonymousModeStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - workspaces
+      summary: Toggle anonymous mode
+      description: 'Enable or disable anonymous mode for a workspace.
+
+
+        Access: Staff or workspace admin.'
+      operationId: toggle_anonymous_mode_api_v3_workspaces__workspace_name__anonymous_mode_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnonymousModeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnonymousModeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/workspace-stats:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace statistics
+      description: 'Get pre-aggregated workspace statistics for the chat page subtitle.
+
+
+        Returns alias, assistantCount, tasksCount24h, resourceTypeCounts, issuesCount24h.'
+      operationId: workspace_stats_api_v3_workspaces__workspace_short_name__workspace_stats_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Workspace Stats Api V3 Workspaces  Workspace Short Name  Workspace Stats Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/top-issue-resources:
+    get:
+      tags:
+      - workspaces
+      summary: Get top resources by issue count
+      description: 'Get top resources with most issues in a configurable time window.
+
+
+        Returns resources grouped by SLX hierarchy with issue counts,
+
+        for ticker display on the workspace chat page.'
+      operationId: top_issue_resources_api_v3_workspaces__workspace_short_name__top_issue_resources_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: hours
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 168
+          minimum: 1
+          description: Lookback window in hours
+          default: 1
+          title: Hours
+        description: Lookback window in hours
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 20
+          minimum: 1
+          description: Max resources to return
+          default: 5
+          title: Limit
+        description: Max resources to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Top Issue Resources Api V3 Workspaces  Workspace Short Name  Top Issue Resources Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/agentfarm-params:
+    get:
+      tags:
+      - workspaces
+      summary: Get AgentFarm parameters for a workspace
+      description: 'Get parameters for AgentFarm including LLM config, org, user perms, and repo info.
+
+
+        Also serves to authenticate the user/workspace combination for AgentFarm.'
+      operationId: agentfarm_params_api_v3_workspaces__workspace_name__agentfarm_params_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: llm_category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'LLM category: DEFAULT, CHAT, BACKGROUND, EMBEDDING'
+          title: Llm Category
+        description: 'LLM category: DEFAULT, CHAT, BACKGROUND, EMBEDDING'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Agentfarm Params Api V3 Workspaces  Workspace Name  Agentfarm Params Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/activities:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace activity feed
+      description: 'Proxy workspace activities from the activities service.
+
+
+        Django parity: WorkspaceViewSet.get_activities proxies to the activities
+
+        service via activityutils.fetch_workspace_activities().'
+      operationId: get_workspace_activities_api_v3_workspaces__workspace_name__activities_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Workspace Activities Api V3 Workspaces  Workspace Name  Activities Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/runners/{runner_id}:
+    delete:
+      tags:
+      - workspaces
+      summary: Delete a runner
+      description: 'Delete a runner from the database.
+
+
+        Validates that the runner belongs to the specified workspace,
+
+        deletes the runner record, and revokes associated upload PATs.'
+      operationId: delete_runner_api_v3_workspaces__workspace_name__runners__runner_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: runner_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Runner Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Delete Runner Api V3 Workspaces  Workspace Name  Runners  Runner Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/layout:
+    get:
+      tags:
+      - workspaces
+      summary: Get workspace layout
+      description: Returns the workspace layout JSON (or alt_layout when ?alt_layout=true).
+      operationId: get_workspace_layout_api_v3_workspaces__workspace_name__layout_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: alt_layout
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return alt_layout instead of layout
+          default: false
+          title: Alt Layout
+        description: Return alt_layout instead of layout
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Workspace Layout Api V3 Workspaces  Workspace Name  Layout Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - workspaces
+      summary: Save workspace layout
+      description: Saves an arbitrary JSON body as the workspace layout (or alt_layout when ?alt_layout=true).
+      operationId: save_workspace_layout_api_v3_workspaces__workspace_name__layout_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: alt_layout
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Save to alt_layout instead of layout
+          default: false
+          title: Alt Layout
+        description: Save to alt_layout instead of layout
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Save Workspace Layout Api V3 Workspaces  Workspace Name  Layout Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/reprovision-workspace-infra:
+    post:
+      tags:
+      - workspaces
+      summary: Reprovision workspace runner infrastructure (staff only)
+      description: 'Re-run workspace-level runner infrastructure provisioning.
+
+
+        Creates or re-creates the Vault AppRole and cert-manager Certificates for
+
+        a workspace. Idempotent — safe to call on already-provisioned workspaces.
+
+        Returns per-subsystem status regardless of partial failure (HTTP 200).
+
+
+        Access: Staff only.'
+      operationId: reprovision_workspace_infra_api_v3_workspaces__workspace_name__reprovision_workspace_infra_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReprovisionWorkspaceInfraResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    WorkspacePermissionUpdate:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: Permission role (admin, readwrite, readandrun, readonly, …)
+        user:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: User
+          description: User email address
+        group:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Group
+          description: Group name
+      type: object
+      required:
+      - role
+      title: WorkspacePermissionUpdate
+      description: 'A single permission entry for workspace update requests.
+
+
+        Mirrors WorkspaceSpecPermission but is used for incoming PATCH payloads.
+
+        Either ``user`` (email) or ``group`` (name) must be set.'
+    WorkspaceUploadResponse:
+      properties:
+        task_id:
+          type: string
+          title: Task Id
+          description: Task ID for tracking upload progress (empty when deduplicated)
+          default: ''
+        status:
+          type: string
+          enum:
+          - queued
+          - duplicate_skipped
+          title: Status
+          description: Upload status
+          default: queued
+        message:
+          type: string
+          title: Message
+          description: Status message
+      type: object
+      required:
+      - message
+      title: WorkspaceUploadResponse
+      description: Schema for workspace upload response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MergeModeEnum:
+      type: string
+      enum:
+      - keepexisting
+      - keepuploaded
+      title: MergeModeEnum
+      description: Merge mode for workspace upload.
+    WorkspaceDeletionResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        status:
+          type: string
+          title: Status
+        steps:
+          items:
+            $ref: '#/components/schemas/DeletionStep'
+          type: array
+          title: Steps
+        async_task_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Async Task Id
+      type: object
+      required:
+      - workspace
+      - status
+      - steps
+      title: WorkspaceDeletionResponse
+      description: Response from workspace deletion endpoint.
+    _ProvisioningStatusResponse:
+      properties:
+        workspace:
+          type: boolean
+          title: Workspace
+          default: false
+        sync:
+          type: boolean
+          title: Sync
+          default: false
+        stages:
+          $ref: '#/components/schemas/_ProvisioningStages'
+        sync_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sync Message
+      type: object
+      title: _ProvisioningStatusResponse
+    WorkspaceCreateResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Workspace short name
+        repo_url:
+          type: string
+          title: Repo Url
+          description: URL of the created Git repository
+        status:
+          type: string
+          enum:
+          - provisioning
+          - ready
+          title: Status
+          description: Workspace creation status
+        renamed_from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Renamed From
+          description: Original requested name if it was auto-suffixed due to collision
+      type: object
+      required:
+      - name
+      - repo_url
+      - status
+      title: WorkspaceCreateResponse
+      description: 'Response for workspace creation.
+
+
+        Synchronous creation returns status="ready". Async GitOps-based creation
+
+        (if re-enabled) returns status="provisioning" and requires polling
+
+        GET /{workspace_name}/status for completion.'
+    SliBasicInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: SLI ID (same as slx_id)
+        name:
+          type: string
+          title: Name
+          description: SLI name (same as SLX full name)
+        slx:
+          type: integer
+          title: Slx
+          description: Parent SLX ID
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: SLI spec (reconstructed)
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository FK ID
+      type: object
+      required:
+      - id
+      - name
+      - slx
+      title: SliBasicInWorkspace
+      description: Basic SLI info for workspace SLX response (matches Django SliSerializer).
+    SlxInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Unique identifier
+        name:
+          type: string
+          title: Name
+          description: Full SLX name
+        shortName:
+          type: string
+          title: Shortname
+          description: Short SLX name
+        alias:
+          type: string
+          title: Alias
+          description: Human-readable alias
+          default: ''
+        tags:
+          items:
+            $ref: '#/components/schemas/SlxTag'
+          type: array
+          title: Tags
+          description: Tags with name-value pairs
+        hasSli:
+          type: boolean
+          title: Hassli
+          description: Whether SLX has an SLI
+          default: false
+        hasSlo:
+          type: boolean
+          title: Hasslo
+          description: Whether SLX has an SLO
+          default: false
+        hasRunbook:
+          type: boolean
+          title: Hasrunbook
+          description: Whether SLX has a Runbook
+          default: false
+        hasHook:
+          type: boolean
+          title: Hashook
+          description: Whether SLX has a Hook
+          default: false
+        created:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created
+          description: Creation timestamp (ISO format)
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository FK ID
+        sli:
+          anyOf:
+          - $ref: '#/components/schemas/SliBasicInWorkspace'
+          - type: 'null'
+          description: SLI details if SLX has one
+        slo:
+          anyOf:
+          - $ref: '#/components/schemas/SloBasicInWorkspace'
+          - type: 'null'
+          description: SLO details if SLX has one
+        spec:
+          $ref: '#/components/schemas/SlxSpecInWorkspace'
+          description: SLX specification for UI
+        runbook:
+          anyOf:
+          - $ref: '#/components/schemas/RunbookInWorkspace'
+          - type: 'null'
+          description: Runbook with tasks if SLX has one
+      type: object
+      required:
+      - id
+      - name
+      - shortName
+      title: SlxInWorkspace
+      description: SLX summary for workspace response (camelCase for UI compatibility).
+    DeletionStep:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+        status:
+          type: string
+          title: Status
+        detail:
+          type: string
+          title: Detail
+          default: ''
+      type: object
+      required:
+      - key
+      - label
+      - status
+      title: DeletionStep
+      description: Status of a single deletion step.
+    SliAlertInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Alert ID
+        slx_name:
+          type: string
+          title: Slx Name
+          description: SLX short name
+        sli_id:
+          type: integer
+          title: Sli Id
+          description: SLI ID (same as slx_id)
+        start_time:
+          type: string
+          format: date-time
+          title: Start Time
+          description: Alert start time
+        end_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: End Time
+          description: Alert end time
+        severity:
+          type: string
+          title: Severity
+          description: Alert severity
+          default: ''
+        kind:
+          type: string
+          title: Kind
+          description: Alert kind
+          default: ''
+      type: object
+      required:
+      - id
+      - slx_name
+      - sli_id
+      - start_time
+      title: SliAlertInWorkspace
+      description: SLI firing alert for workspace response.
+    WorkspaceSpecPermission:
+      additionalProperties: true
+      type: object
+    ResourceScrubberConfigEnum:
+      type: string
+      enum:
+      - SCRUB_ALL_RESOURCE_LABELS
+      - SCRUB_ALL_EXCEPT_RESOURCE_NAME
+      - SCRUB_NONE
+      title: ResourceScrubberConfigEnum
+      description: Configuration for resource scrubbing before LLM calls.
+    WorkspaceResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Unique identifier
+        name:
+          type: string
+          title: Name
+          description: Unique workspace identifier (slug)
+        alias:
+          type: string
+          title: Alias
+          description: Human-readable display name
+          default: ''
+        description:
+          type: string
+          title: Description
+          description: Workspace description
+          default: ''
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository ID
+        org:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Org
+          description: Organization name
+        repoHash:
+          type: string
+          title: Repohash
+          description: Repository modification hash
+          default: ''
+        openIssuesCount:
+          type: integer
+          title: Openissuescount
+          description: Number of open issues
+          default: 0
+        numberOfTools:
+          type: integer
+          title: Numberoftools
+          description: Number of tools/SLXs
+          default: 0
+        personas:
+          items:
+            $ref: '#/components/schemas/GalleryPersona'
+          type: array
+          title: Personas
+          description: List of personas in workspace
+        users:
+          items:
+            $ref: '#/components/schemas/GalleryUser'
+          type: array
+          title: Users
+          description: List of users with access
+        runSessionsCounts:
+          items:
+            $ref: '#/components/schemas/RunSessionCount'
+          type: array
+          title: Runsessionscounts
+          description: Run session counts by date
+        tasksCount1h:
+          type: integer
+          title: Taskscount1H
+          description: Task count in last 1 hour
+          default: 0
+        ownerId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ownerid
+          description: Owner user ID
+        organizationId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Organizationid
+          description: Organization ID if workspace belongs to an org
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+          description: Associated git repository ID
+        scrubberConfig:
+          anyOf:
+          - $ref: '#/components/schemas/ResourceScrubberConfigEnum'
+          - type: 'null'
+          description: Resource scrubbing configuration
+        enabledLocations:
+          items:
+            type: string
+          type: array
+          title: Enabledlocations
+          description: List of enabled location identifiers
+        configProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Configprovided
+          description: Configuration as list of {name, value} objects
+        createdAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Createdat
+          description: Creation timestamp
+        updatedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updatedat
+          description: Last update timestamp
+        anonymousMode:
+          type: boolean
+          title: Anonymousmode
+          description: Whether anonymous mode is enabled
+          default: false
+        ownerEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owneremail
+          description: Owner's email for display
+        owner:
+          anyOf:
+          - $ref: '#/components/schemas/OwnerResponse'
+          - type: 'null'
+          description: Owner user object with fullName
+        userRole:
+          anyOf:
+          - $ref: '#/components/schemas/WorkspaceRoleEnum'
+          - type: 'null'
+          description: Current user's role in this workspace
+        pending_invitations:
+          items:
+            type: string
+          type: array
+          title: Pending Invitations
+          description: Emails that were submitted but not matched to existing users; pending resolution.
+        spec:
+          anyOf:
+          - $ref: '#/components/schemas/WorkspaceSpec'
+          - type: 'null'
+          description: Workspace spec (reconstructed for UI compatibility)
+        slxGroups:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Slxgroups
+          description: SLX group definitions (top-level for UI compatibility)
+        slxSubGroups:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Slxsubgroups
+          description: SLX subgroup definitions (top-level for UI compatibility)
+        layout:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Layout
+          description: Map layout data with v2.groups, v2.subGroups, v2.slxs
+        slxs:
+          items:
+            $ref: '#/components/schemas/SlxInWorkspace'
+          type: array
+          title: Slxs
+          description: List of SLXs in this workspace
+        sli_firing_alerts:
+          items:
+            $ref: '#/components/schemas/SliAlertInWorkspace'
+          type: array
+          title: Sli Firing Alerts
+          description: Currently firing SLI alerts
+        slo_firing_alerts:
+          items:
+            $ref: '#/components/schemas/SloAlertInWorkspace'
+          type: array
+          title: Slo Firing Alerts
+          description: Currently firing SLO alerts
+      type: object
+      required:
+      - id
+      - name
+      title: WorkspaceResponse
+      description: Schema for workspace response with all fields (camelCase for UI).
+    RunbookInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Runbook ID
+        name:
+          type: string
+          title: Name
+          description: Runbook name (same as SLX full name)
+        slx:
+          type: integer
+          title: Slx
+          description: Parent SLX ID
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Runbook spec (codeBundle, location, etc.)
+        tasks:
+          items:
+            $ref: '#/components/schemas/RunbookTaskInWorkspace'
+          type: array
+          title: Tasks
+          description: Runbook tasks
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository FK ID
+      type: object
+      required:
+      - id
+      - name
+      - slx
+      title: RunbookInWorkspace
+      description: Runbook schema for workspace response with tasks.
+    SearchScopeSlx:
+      properties:
+        name:
+          type: string
+          title: Name
+        shortName:
+          type: string
+          title: Shortname
+        alias:
+          type: string
+          title: Alias
+        firingAlerts:
+          type: boolean
+          title: Firingalerts
+          default: false
+        sloId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Sloid
+        sliId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Sliid
+        runbookId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Runbookid
+        hierarchy:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Hierarchy
+        tags:
+          anyOf:
+          - items:
+              additionalProperties:
+                type: string
+              type: object
+            type: array
+          - type: 'null'
+          title: Tags
+        imageURL:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Imageurl
+      type: object
+      required:
+      - name
+      - shortName
+      - alias
+      title: SearchScopeSlx
+      description: SLX item in search scope.
+    WorkspaceUpdate:
+      properties:
+        alias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alias
+          description: Updated human-readable display name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Updated workspace description
+        scrubber_config:
+          anyOf:
+          - $ref: '#/components/schemas/ResourceScrubberConfigEnum'
+          - type: 'null'
+          description: Updated resource scrubbing configuration
+        enabled_locations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Enabled Locations
+          description: Updated list of enabled locations
+        config_provided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Config Provided
+          description: Updated configuration as list of {name, value} objects
+        permissions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/WorkspacePermissionUpdate'
+            type: array
+          - type: 'null'
+          title: Permissions
+          description: Full replacement of workspace permissions. Each entry must have 'role' and either 'user' (email) or 'group' (name). Owner admin permission is preserved automatically.
+        slx_groups:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Slx Groups
+          description: Updated SLX group definitions (replaces existing groups)
+        slx_relationships:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Slx Relationships
+          description: Updated SLX relationship definitions (replaces existing relationships)
+      type: object
+      title: WorkspaceUpdate
+      description: 'Schema for updating a workspace (partial update).
+
+
+        All fields are optional; only non-None values are applied.'
+    AnonymousModeStatusResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        anonymousMode:
+          type: boolean
+          title: Anonymousmode
+      type: object
+      required:
+      - workspace
+      - anonymousMode
+      title: AnonymousModeStatusResponse
+      description: Response for anonymous mode status check.
+    WorkspaceSpec:
+      properties:
+        slxGroups:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Slxgroups
+          description: SLX group definitions
+        slxSubGroups:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Slxsubgroups
+          description: SLX subgroup definitions
+        slxRelationships:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Slxrelationships
+          description: Relationships between SLXs
+        permissions:
+          items:
+            $ref: '#/components/schemas/WorkspaceSpecPermission'
+          type: array
+          title: Permissions
+          description: User/group permissions
+        configProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Configprovided
+          description: Configuration as list of {name, value} objects
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+          description: Secret references
+        commitToMain:
+          type: boolean
+          title: Committomain
+          description: Whether to commit directly to main branch
+          default: true
+        resourceScrubberConfig:
+          $ref: '#/components/schemas/ResourceScrubberConfigEnum'
+          description: Resource scrubbing configuration
+          default: SCRUB_NONE
+      type: object
+      title: WorkspaceSpec
+      description: 'Workspace spec (reconstructed from individual columns for UI compatibility).
+
+
+        The Django model stores all these in a `body.spec` JSON field. The FastAPI
+
+        model stores them in individual columns for better querying. This schema
+
+        reconstructs the spec for API responses to maintain UI compatibility.'
+    SATokenResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: SATokenResponse
+      description: Response containing a service account token.
+    RunbookTaskInWorkspace:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Task tags
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+          description: Stable platform-owned task id (slx_tasks.id); null until reconciled
+      type: object
+      required:
+      - name
+      - value
+      title: RunbookTaskInWorkspace
+      description: Individual task in a runbook for workspace response.
+    SearchScopeGroup:
+      properties:
+        name:
+          type: string
+          title: Name
+        firingAlerts:
+          type: boolean
+          title: Firingalerts
+          default: false
+        slxs:
+          items:
+            type: string
+          type: array
+          title: Slxs
+      type: object
+      required:
+      - name
+      title: SearchScopeGroup
+      description: SLX group in search scope.
+    TaskSearchRequest:
+      properties:
+        query:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          title: Query
+          description: Search query or queries
+        scope:
+          items:
+            type: string
+          type: array
+          title: Scope
+          description: SLX short names to scope search
+        start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start
+          description: Starting SLX short name
+        persona:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona
+          description: Persona name to interpret query
+      type: object
+      required:
+      - query
+      title: TaskSearchRequest
+      description: Request for workspace task search.
+    UploadConfigResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+        papi_url:
+          type: string
+          title: Papi Url
+      type: object
+      required:
+      - token
+      - papi_url
+      title: UploadConfigResponse
+      description: Response containing upload credentials and PAPI URL for workspace-builder.
+    WorkspaceGitCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 63
+          minLength: 2
+          pattern: ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$
+          title: Name
+          description: 'Workspace short name. Must be DNS-label compatible: lowercase alphanumerics and hyphens only, must start and end with an alphanumeric character.'
+        spec:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Spec
+          description: Optional workspace spec overrides
+      type: object
+      required:
+      - name
+      title: WorkspaceGitCreate
+      description: Schema for Git-first workspace creation.
+    SecretsCreateResponse:
+      properties:
+        keys:
+          items:
+            type: string
+          type: array
+          title: Keys
+        rsps:
+          items:
+            type: string
+          type: array
+          title: Rsps
+        codes:
+          items:
+            type: integer
+          type: array
+          title: Codes
+      type: object
+      title: SecretsCreateResponse
+      description: Response after creating/updating secrets.
+    AnonymousModeResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        anonymousMode:
+          type: boolean
+          title: Anonymousmode
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - workspace
+      - anonymousMode
+      - message
+      title: AnonymousModeResponse
+      description: Response for anonymous mode toggle.
+    WorkspaceUploadRequest:
+      properties:
+        output:
+          type: string
+          maxLength: 104857600
+          title: Output
+          description: Base64-encoded gzip-compressed tar archive
+        mergeMode:
+          $ref: '#/components/schemas/MergeModeEnum'
+          description: Deprecated — ignored under the new ownership/overridden_fields model. Accepted for backward compatibility with existing callers.
+          default: keepexisting
+        pruneStaleSlxs:
+          type: boolean
+          title: Prunestaleslxs
+          description: Remove SLXs no longer present in uploaded data
+          default: false
+        pruneStaleResources:
+          type: boolean
+          title: Prunestaleresources
+          description: Remove resources no longer present in uploaded data
+          default: false
+        message:
+          type: string
+          title: Message
+          description: Human-readable message describing the upload
+          default: Updated workspace from map builder.
+        finalizeAction:
+          $ref: '#/components/schemas/FinalizeActionEnum'
+          description: Action after upload completes
+          default: mergeToMain
+        build_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Build Date
+          description: Builder run timestamp (informational); not processed, stored for audit logs
+      type: object
+      required:
+      - output
+      title: WorkspaceUploadRequest
+      description: Schema for workspace upload request (matches runner format).
+    SlxTag:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Tag name/key
+        value:
+          type: string
+          title: Value
+          description: Tag value
+      type: object
+      required:
+      - name
+      - value
+      title: SlxTag
+      description: Tag with name-value structure for SLX.
+    AnonymousModeRequest:
+      properties:
+        action:
+          type: string
+          pattern: ^(on|off)$
+          title: Action
+          description: 'Action: ''on'' to enable, ''off'' to disable'
+      type: object
+      required:
+      - action
+      title: AnonymousModeRequest
+      description: Request body for toggling anonymous mode.
+    UploadStatusResponse:
+      properties:
+        task_id:
+          type: string
+          title: Task Id
+          description: Task ID
+        status:
+          type: string
+          enum:
+          - PENDING
+          - STARTED
+          - SUCCESS
+          - FAILURE
+          - UNKNOWN
+          title: Status
+          description: Task status
+        result:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Result
+          description: Task result if completed
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+          description: Error message if failed
+      type: object
+      required:
+      - task_id
+      - status
+      title: UploadStatusResponse
+      description: Schema for upload status check response.
+    SecretsKeysResponse:
+      properties:
+        secrets:
+          items:
+            type: string
+          type: array
+          title: Secrets
+      type: object
+      title: SecretsKeysResponse
+      description: Response containing list of secret key names.
+    ResetServiceAccountRequest:
+      properties:
+        password:
+          type: string
+          minLength: 8
+          title: Password
+          description: New password for the service account
+      type: object
+      required:
+      - password
+      title: ResetServiceAccountRequest
+      description: Request to reset a workspace service account password.
+    WorkspaceStatusResponse:
+      properties:
+        workspace:
+          type: boolean
+          title: Workspace
+          description: Whether workspace exists in database
+        sync:
+          type: boolean
+          title: Sync
+          description: Whether workspace sync has succeeded
+      type: object
+      required:
+      - workspace
+      - sync
+      title: WorkspaceStatusResponse
+      description: Response for workspace creation status check.
+    SecretUsageResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        usages:
+          items:
+            $ref: '#/components/schemas/SecretUsageItem'
+          type: array
+          title: Usages
+      type: object
+      required:
+      - key
+      title: SecretUsageResponse
+      description: Response listing where a workspace secret is referenced.
+    _ProvisioningStages:
+      properties:
+        git_repo:
+          type: boolean
+          title: Git Repo
+          default: false
+        repository_crd:
+          type: boolean
+          title: Repository Crd
+          default: false
+        worksync:
+          type: boolean
+          title: Worksync
+          default: false
+        workspace_crd:
+          type: boolean
+          title: Workspace Crd
+          default: false
+        workspace_db:
+          type: boolean
+          title: Workspace Db
+          default: false
+        reconciliation:
+          type: boolean
+          title: Reconciliation
+          default: false
+      type: object
+      title: _ProvisioningStages
+    WorkspaceRoleEnum:
+      type: string
+      enum:
+      - admin
+      - readwrite
+      - readandrun
+      - readonly
+      - readandrunwithassistant
+      title: WorkspaceRoleEnum
+      description: Workspace permission roles.
+    SloBasicInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: SLO ID (same as slx_id)
+        name:
+          type: string
+          title: Name
+          description: SLO name (same as SLX full name)
+        slx:
+          type: integer
+          title: Slx
+          description: Parent SLX ID
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: SLO spec (reconstructed)
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: SLO status (generation info)
+        created:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created
+          description: Creation timestamp (ISO format)
+        modified:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Modified
+          description: Last modified timestamp (ISO format)
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository FK ID
+      type: object
+      required:
+      - id
+      - name
+      - slx
+      title: SloBasicInWorkspace
+      description: Basic SLO info for workspace SLX response (matches Django SloSerializer).
+    WorkspaceListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/WorkspaceResponse'
+          type: array
+          title: Results
+          description: List of workspaces
+        count:
+          type: integer
+          title: Count
+          description: Total count matching filters
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      title: WorkspaceListResponse
+      description: Schema for paginated workspace list response.
+    AuthorizedRunner:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Runner display name
+        value:
+          type: string
+          title: Value
+          description: Runner resource name (UUID)
+        health:
+          type: string
+          title: Health
+          description: 'Runner health: online, stale, or unknown'
+          default: unknown
+        lastHeartbeat:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastheartbeat
+          description: ISO timestamp of last heartbeat
+        secondsSinceHeartbeat:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Secondssinceheartbeat
+          description: Seconds since last heartbeat
+      type: object
+      required:
+      - name
+      - value
+      title: AuthorizedRunner
+      description: Authorized runner for a workspace.
+    GalleryPersona:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Persona short name
+        fullName:
+          type: string
+          title: Fullname
+          description: Persona full display name
+        avatarUrl:
+          type: string
+          title: Avatarurl
+          description: Avatar image URL
+          default: ''
+      type: object
+      required:
+      - name
+      - fullName
+      title: GalleryPersona
+      description: Schema for persona info in workspace gallery.
+    ReprovisionWorkspaceInfraResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        vault_approle:
+          type: string
+          title: Vault Approle
+        runner_certs:
+          type: string
+          title: Runner Certs
+      type: object
+      required:
+      - workspace
+      - vault_approle
+      - runner_certs
+      title: ReprovisionWorkspaceInfraResponse
+      description: Response from reprovisioning workspace runner infrastructure.
+    SearchScopeResponse:
+      properties:
+        slxGroups:
+          items:
+            $ref: '#/components/schemas/SearchScopeGroup'
+          type: array
+          title: Slxgroups
+        slxSubGroups:
+          items:
+            $ref: '#/components/schemas/SearchScopeGroup'
+          type: array
+          title: Slxsubgroups
+        slxs:
+          items:
+            $ref: '#/components/schemas/SearchScopeSlx'
+          type: array
+          title: Slxs
+      type: object
+      title: SearchScopeResponse
+      description: Search scope response.
+    SloAlertInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Alert ID
+        slx_name:
+          type: string
+          title: Slx Name
+          description: SLX short name
+        slo_id:
+          type: integer
+          title: Slo Id
+          description: SLO ID (same as slx_id)
+        start_time:
+          type: string
+          format: date-time
+          title: Start Time
+          description: Alert start time
+        end_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: End Time
+          description: Alert end time
+        severity:
+          type: string
+          title: Severity
+          description: Alert severity
+          default: ''
+        window:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Window
+          description: SLO window
+        kind:
+          type: string
+          title: Kind
+          description: Alert kind
+          default: ''
+        hook_action:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Hook Action
+          description: Hook action data
+      type: object
+      required:
+      - id
+      - slx_name
+      - slo_id
+      - start_time
+      title: SloAlertInWorkspace
+      description: SLO firing alert for workspace response.
+    SecretsCreateRequest:
+      properties:
+        secrets:
+          additionalProperties:
+            type: string
+          type: object
+          title: Secrets
+          description: Key-value pairs of secrets to create/update
+      type: object
+      required:
+      - secrets
+      title: SecretsCreateRequest
+      description: Request to create/update workspace secrets.
+    FinalizeActionEnum:
+      type: string
+      enum:
+      - mergeToMain
+      title: FinalizeActionEnum
+      description: Finalize action after workspace upload.
+    AutocompleteRequest:
+      properties:
+        query:
+          type: string
+          title: Query
+          description: Partial query for autocomplete
+      type: object
+      required:
+      - query
+      title: AutocompleteRequest
+      description: Request for search autocomplete.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SecretDeleteResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        deleted:
+          type: boolean
+          title: Deleted
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Detail
+      type: object
+      required:
+      - key
+      - deleted
+      title: SecretDeleteResponse
+      description: Response after deleting a single workspace secret.
+    ResetServiceAccountResponse:
+      properties:
+        username:
+          type: string
+          title: Username
+        message:
+          type: string
+          title: Message
+          default: Service account password reset successfully
+      type: object
+      required:
+      - username
+      title: ResetServiceAccountResponse
+      description: Response from resetting a service account.
+    OwnerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Owner user ID
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Owner's email
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+          description: Owner's full name
+      type: object
+      required:
+      - id
+      title: OwnerResponse
+      description: Schema for owner info in workspace response.
+    RunSessionCount:
+      properties:
+        date:
+          type: string
+          title: Date
+          description: ISO date string
+        count:
+          type: integer
+          title: Count
+          description: Number of run sessions
+      type: object
+      required:
+      - date
+      - count
+      title: RunSessionCount
+      description: Schema for run session count by date.
+    SecretUsageItem:
+      properties:
+        slx:
+          type: string
+          title: Slx
+          description: SLX short name
+        kind:
+          type: string
+          title: Kind
+          description: '''Sli'' or ''Runbook'''
+        name:
+          type: string
+          title: Name
+          description: The secretsProvided entry name
+      type: object
+      required:
+      - slx
+      - kind
+      - name
+      title: SecretUsageItem
+      description: A single SLI/Runbook that references a workspace secret.
+    SlxSpecInWorkspace:
+      properties:
+        alias:
+          type: string
+          title: Alias
+          description: Human-readable alias
+          default: ''
+        statement:
+          type: string
+          title: Statement
+          description: SLX purpose statement
+          default: ''
+        asMeasuredBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asmeasuredby
+          description: How the SLX is measured
+        imageURL:
+          type: string
+          title: Imageurl
+          description: Image/icon URL
+          default: ''
+        owners:
+          items:
+            type: string
+          type: array
+          title: Owners
+          description: Owner email addresses
+        configProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Configprovided
+          description: Configuration as list of {name, value} objects
+        tags:
+          items:
+            $ref: '#/components/schemas/SlxTag'
+          type: array
+          title: Tags
+          description: Tags
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+          description: Additional context data (cluster, hierarchy, etc.)
+      type: object
+      title: SlxSpecInWorkspace
+      description: SLX spec for workspace response (matches frontend SlxSpec interface).
+    GalleryUser:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: User role in workspace
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: User email
+        group:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Group
+          description: User group
+      type: object
+      required:
+      - role
+      title: GalleryUser
+      description: Schema for user info in workspace gallery.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

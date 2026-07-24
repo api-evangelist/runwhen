@@ -1,0 +1,383 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy oauth-server API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: oauth-server
+paths:
+  /.well-known/oauth-authorization-server:
+    get:
+      tags:
+      - oauth-server
+      summary: Oauth As Metadata
+      description: RFC 8414 — OAuth 2.0 Authorization Server Metadata.
+      operationId: oauth_as_metadata__well_known_oauth_authorization_server_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /.well-known/openid-configuration:
+    get:
+      tags:
+      - oauth-server
+      summary: Openid Configuration
+      description: OIDC Discovery — alias for the same metadata document.
+      operationId: openid_configuration__well_known_openid_configuration_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /oauth/authorize:
+    get:
+      tags:
+      - oauth-server
+      summary: Oauth Authorize
+      description: Authorization endpoint — renders login page or returns error.
+      operationId: oauth_authorize_oauth_authorize_get
+      parameters:
+      - name: client_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Client Id
+      - name: redirect_uri
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Redirect Uri
+      - name: response_type
+        in: query
+        required: false
+        schema:
+          type: string
+          default: code
+          title: Response Type
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: State
+      - name: scope
+        in: query
+        required: false
+        schema:
+          type: string
+          default: openid
+          title: Scope
+      - name: code_challenge
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Code Challenge
+      - name: code_challenge_method
+        in: query
+        required: false
+        schema:
+          type: string
+          default: S256
+          title: Code Challenge Method
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /oauth/authorize/login/email:
+    post:
+      tags:
+      - oauth-server
+      summary: Oauth Authorize Email Login
+      description: Handle email/password login from the OAuth authorize page.
+      operationId: oauth_authorize_email_login_oauth_authorize_login_email_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_oauth_authorize_email_login_oauth_authorize_login_email_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /oauth/authorize/enterprise:
+    get:
+      tags:
+      - oauth-server
+      summary: Oauth Authorize Enterprise
+      description: Redirect to Auth0 with a connection hint for enterprise SSO.
+      operationId: oauth_authorize_enterprise_oauth_authorize_enterprise_get
+      parameters:
+      - name: oauth_session
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Oauth Session
+      - name: identifier
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Identifier
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /oauth/authorize/login/{idp_name}:
+    get:
+      tags:
+      - oauth-server
+      summary: Oauth Authorize Oidc Login
+      description: "Begin a standalone upstream-OIDC login (dual-mode).\n\nResolves the IdP's authorization endpoint via discovery, stores PKCE +\nstate, and redirects the browser to the upstream IdP, which returns to\n``/oauth/authorize/callback/{idp_name}``. Two callers:\n\n* **OAuth 2.1 client** (MCP/Slack via ``/oauth/authorize``): passes\n  ``oauth_session``; the callback issues an auth code back to the client.\n* **First-party UI** (``login.tsx``): passes ``next``; the callback sets a\n  JWT cookie and redirects to ``next`` (mirrors ``/accounts/auth0/login/``)."
+      operationId: oauth_authorize_oidc_login_oauth_authorize_login__idp_name__get
+      parameters:
+      - name: idp_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Idp Name
+      - name: oauth_session
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Oauth Session
+      - name: next
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Next
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /oauth/authorize/callback/{idp_name}:
+    get:
+      tags:
+      - oauth-server
+      summary: Oauth Authorize Oidc Callback
+      description: 'Handle the upstream OIDC redirect: exchange code, provision user, issue code.'
+      operationId: oauth_authorize_oidc_callback_oauth_authorize_callback__idp_name__get
+      parameters:
+      - name: idp_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Idp Name
+      - name: code
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Code
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: State
+      - name: error
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Error
+      - name: error_description
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Error Description
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /oauth/token:
+    post:
+      tags:
+      - oauth-server
+      summary: Oauth Token
+      description: 'OAuth 2.1 token endpoint — authorization_code and refresh_token grants.
+
+
+        Supports both ``client_secret_post`` (client_id/client_secret in body) and
+
+        ``client_secret_basic`` (credentials in Authorization header).'
+      operationId: oauth_token_oauth_token_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_oauth_token_oauth_token_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    Body_oauth_authorize_email_login_oauth_authorize_login_email_post:
+      properties:
+        oauth_session:
+          type: string
+          title: Oauth Session
+        username:
+          type: string
+          title: Username
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - oauth_session
+      - username
+      - password
+      title: Body_oauth_authorize_email_login_oauth_authorize_login_email_post
+    Body_oauth_token_oauth_token_post:
+      properties:
+        grant_type:
+          type: string
+          title: Grant Type
+        code:
+          type: string
+          title: Code
+          default: ''
+        redirect_uri:
+          type: string
+          title: Redirect Uri
+          default: ''
+        client_id:
+          type: string
+          title: Client Id
+          default: ''
+        client_secret:
+          type: string
+          title: Client Secret
+          default: ''
+        code_verifier:
+          type: string
+          title: Code Verifier
+          default: ''
+        refresh_token:
+          type: string
+          title: Refresh Token
+          default: ''
+      type: object
+      required:
+      - grant_type
+      title: Body_oauth_token_oauth_token_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

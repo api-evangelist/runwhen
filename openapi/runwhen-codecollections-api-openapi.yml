@@ -1,0 +1,229 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy codecollections API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: codecollections
+paths:
+  /api/v3/codecollections:
+    get:
+      tags:
+      - codecollections
+      summary: List all code collections
+      description: 'List all code collections, ordered by id descending.
+
+
+        Returns a paginated response matching Django''s DRF format:
+
+        ``{count, next, previous, results: [...]}``.
+
+
+        Matches Django''s CodeCollectionViewSet.list() which filters out
+
+        non-public collections. Since FastAPI normalized model doesn''t store
+
+        the public flag, all collections are returned (corestate only syncs
+
+        public collections by default).'
+      operationId: list_code_collections_api_v3_codecollections_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Code Collections Api V3 Codecollections Get
+      security:
+      - BearerAuth: []
+  /api/v3/codecollections/{name}/tmp:
+    get:
+      tags:
+      - codecollections
+      summary: Get codecollection detail with codebundles
+      description: 'Get detailed codecollection info including parsed codebundles.
+
+
+        Clones the codecollection git repo (shallow), walks the codebundles/
+
+        directory, parses .robot files, and returns structured codebundle
+
+        metadata. Mirrors Django ``CodeCollectionViewSet.get_detail()``.
+
+
+        The full unfiltered response is cached in Redis under
+
+        ``cc:detail:{name}`` for ``_CC_DETAIL_CACHE_TTL`` seconds. ``rfns`` is
+
+        applied AFTER the cache lookup so SLI and runbook callers share the
+
+        same cache entry. Cache is best-effort: any Redis error falls through
+
+        to a fresh git clone.
+
+
+        The ``reconcile_single_code_collection`` taskiq job pre-warms this
+
+        cache after each reconcile tick, so first-user latency is only paid
+
+        for collections added between cron ticks.'
+      operationId: get_codecollection_detail_api_v3_codecollections__name__tmp_get
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      - name: rfns
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - enum:
+            - sli
+            - runbook
+            type: string
+          - type: 'null'
+          description: Restrict returned codeBundles to this kind.
+          title: Rfns
+        description: Restrict returned codeBundles to this kind.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Codecollection Detail Api V3 Codecollections  Name  Tmp Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/codecollections/{name}:
+    get:
+      tags:
+      - codecollections
+      summary: Get a code collection by name
+      description: 'Get a single code collection by name.
+
+
+        Matches Django''s CodeCollectionViewSet.retrieve() with lookup_field=''name''.'
+      operationId: get_code_collection_api_v3_codecollections__name__get
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeCollectionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    CodeCollectionResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        repo_web_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Repo Web Url
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+        created:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created
+        modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Modified
+        repo:
+          type: 'null'
+          title: Repo
+      type: object
+      required:
+      - id
+      - name
+      title: CodeCollectionResponse
+      description: 'CodeCollection response matching Django''s CodeCollectionSerializer.
+
+
+        Django serializes: id, name, repo_web_url, spec, status, created, modified, repo.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

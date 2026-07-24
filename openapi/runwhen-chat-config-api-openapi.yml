@@ -1,0 +1,1256 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy chat-config API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: chat-config
+paths:
+  /api/v3/workspaces/{workspace_name}/chat-config/rules:
+    get:
+      tags:
+      - chat-config
+      summary: Ws List Rules
+      description: 'List rules for a workspace.
+
+
+        Omitting ``scope_type`` returns workspace + persona + the caller''s
+
+        own user-scope rules in a single response. See
+
+        ``_list_workspace_chat_objects`` for the full filter contract.'
+      operationId: ws_list_rules_api_v3_workspaces__workspace_name__chat_config_rules_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: scope_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Type
+      - name: scope_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+      - name: is_active
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws List Rules Api V3 Workspaces  Workspace Name  Chat Config Rules Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - chat-config
+      summary: Ws Create Rule
+      description: 'Create a rule scoped to this workspace, its personas, or the
+
+        current user (within this workspace).
+
+
+        Workspace and persona scopes require workspace admin. User scope
+
+        only requires workspace membership (already enforced by the
+
+        ws_router dependency); a workspace member can author personal rules
+
+        against their own email under any workspace they belong to.'
+      operationId: ws_create_rule_api_v3_workspaces__workspace_name__chat_config_rules_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RuleCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Create Rule Api V3 Workspaces  Workspace Name  Chat Config Rules Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/rules/{rule_id}:
+    get:
+      tags:
+      - chat-config
+      summary: Ws Get Rule
+      description: Get a rule by ID.
+      operationId: ws_get_rule_api_v3_workspaces__workspace_name__chat_config_rules__rule_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: rule_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Rule Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Get Rule Api V3 Workspaces  Workspace Name  Chat Config Rules  Rule Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - chat-config
+      summary: Ws Update Rule
+      description: Update a rule.
+      operationId: ws_update_rule_api_v3_workspaces__workspace_name__chat_config_rules__rule_id__put
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: rule_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Rule Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RuleUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Update Rule Api V3 Workspaces  Workspace Name  Chat Config Rules  Rule Id  Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - chat-config
+      summary: Ws Delete Rule
+      description: 'Delete a rule. Admin gate skipped for the rule''s owner deleting
+
+        their own user-scope rule.'
+      operationId: ws_delete_rule_api_v3_workspaces__workspace_name__chat_config_rules__rule_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: rule_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Rule Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/commands:
+    get:
+      tags:
+      - chat-config
+      summary: Ws List Commands
+      description: 'List commands for a workspace.
+
+
+        Omitting ``scope_type`` returns workspace + persona + the caller''s
+
+        own user-scope commands in a single response. See
+
+        ``_list_workspace_chat_objects`` for the full filter contract.'
+      operationId: ws_list_commands_api_v3_workspaces__workspace_name__chat_config_commands_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: scope_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Type
+      - name: scope_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+      - name: is_active
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws List Commands Api V3 Workspaces  Workspace Name  Chat Config Commands Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - chat-config
+      summary: Ws Create Command
+      description: 'Create a command scoped to this workspace, its personas, or the
+
+        current user (within this workspace). Admin gate skipped for
+
+        user scope (the workspace member can author their own personal
+
+        commands).'
+      operationId: ws_create_command_api_v3_workspaces__workspace_name__chat_config_commands_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Create Command Api V3 Workspaces  Workspace Name  Chat Config Commands Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/commands/{command_id}:
+    get:
+      tags:
+      - chat-config
+      summary: Ws Get Command
+      description: Get a command by ID.
+      operationId: ws_get_command_api_v3_workspaces__workspace_name__chat_config_commands__command_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: command_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Command Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Get Command Api V3 Workspaces  Workspace Name  Chat Config Commands  Command Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - chat-config
+      summary: Ws Update Command
+      description: Update a command. Admin gate skipped for user scope.
+      operationId: ws_update_command_api_v3_workspaces__workspace_name__chat_config_commands__command_id__put
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: command_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Command Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Update Command Api V3 Workspaces  Workspace Name  Chat Config Commands  Command Id  Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - chat-config
+      summary: Ws Delete Command
+      description: Delete a command. Admin gate skipped for owner-deletes-own-personal.
+      operationId: ws_delete_command_api_v3_workspaces__workspace_name__chat_config_commands__command_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: command_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Command Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/commands/{command_id}/executions:
+    get:
+      tags:
+      - chat-config
+      summary: Ws List Command Executions
+      description: 'Scheduled-chat execution history for one command (RW-779).
+
+
+        Proxies to agentfarm''s `/commands/{id}/executions`. We verify the command
+
+        belongs to this workspace first so a workspace admin cannot read another
+
+        workspace''s execution history by guessing command IDs.
+
+
+        Permission level is workspace membership (already enforced by the
+
+        ``ws_router``-level ``require_workspace_member`` dependency) — same as
+
+        every other GET in this router (``ws_get_command``, ``ws_list_commands``,
+
+        ``ws_get_rule``). The previous ``_check_workspace_admin`` for non-user
+
+        scopes was a copy-paste from the write paths and surfaced as a confusing
+
+        403 on the studio page: a non-admin could read the command itself but
+
+        got bounced from its execution history. Read on the parent should
+
+        imply read on the children.'
+      operationId: ws_list_command_executions_api_v3_workspaces__workspace_name__chat_config_commands__command_id__executions_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: command_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Command Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Ws List Command Executions Api V3 Workspaces  Workspace Name  Chat Config Commands  Command Id  Executions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/dry-run:
+    post:
+      tags:
+      - chat-config
+      summary: Ws Dry Run Command
+      description: 'Start an async dry-run for the current form state.
+
+
+        Mints a run-as token, calls agentfarm''s ``start_dry_run`` which claims
+
+        a ``scheduled_chat_executions`` row and kicks off a detached worker.
+
+        Returns ``{exec_id, status: "pending"}`` immediately — the UI polls
+
+        ``GET /chat-config/dry-run/{exec_id}`` until terminal.
+
+
+        Splits what was previously a single sync call (which collided with the
+
+        PAPI ingress 60s ``proxy_read_timeout`` and surfaced as CORS-shaped
+
+        504s in the browser).'
+      operationId: ws_dry_run_command_api_v3_workspaces__workspace_name__chat_config_dry_run_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DryRunRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Dry Run Command Api V3 Workspaces  Workspace Name  Chat Config Dry Run Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/dry-run/{exec_id}:
+    get:
+      tags:
+      - chat-config
+      summary: Ws Get Dry Run Status
+      description: 'Poll target for an async dry-run.
+
+
+        Loads the agentfarm execution row by ``exec_id``. When the row is in a
+
+        terminal succeeded status, also runs the dispatcher in ``dry_run=True``
+
+        mode to render per-sink previews (email subject + body, slack mrkdwn).
+
+        Returns the same shape the legacy sync endpoint produced, so the UI''s
+
+        DryRunPreviewDialog needs only minor changes.
+
+
+        ``sink_configs_json`` is a URL-encoded JSON list of sink configs from
+
+        the form state. Passed through on each poll because the admin may
+
+        have edited the form between submission and the row turning terminal
+
+        — the dispatcher should render against whatever the form currently
+
+        holds, not a stale snapshot. ``command_name`` is used purely for
+
+        rendered subjects/headers.
+
+
+        Auth: ``ws_router``-level ``require_workspace_member`` gates the
+
+        caller; we additionally mint a run-as token for ``current_user.email``
+
+        bound to ``workspace_name`` and forward it to agentfarm so its GET
+
+        endpoint can re-validate via PAPI (defense-in-depth, brings the
+
+        poll endpoint in line with the bar set by /dry-run/start).
+
+
+        NOTE: admin gating is intentionally NOT applied here. The POST start
+
+        handler enforces admin for non-user scopes; once a row exists, any
+
+        workspace member can poll its status. Tightening this further (e.g.
+
+        only the requester can read their dry-run) would require tracking
+
+        ``started_by_user_id`` on the executions row — a schema change worth
+
+        its own ticket. Today''s footprint is bounded by the dry-run rate
+
+        limit (admin-gated upstream) plus integer exec_id guessing.'
+      operationId: ws_get_dry_run_status_api_v3_workspaces__workspace_name__chat_config_dry_run__exec_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: exec_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Exec Id
+      - name: sink_configs_json
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sink Configs Json
+      - name: command_name
+        in: query
+        required: false
+        schema:
+          type: string
+          default: <dry-run>
+          title: Command Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Get Dry Run Status Api V3 Workspaces  Workspace Name  Chat Config Dry Run  Exec Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/commands/{command_id}/run-now:
+    post:
+      tags:
+      - chat-config
+      summary: Ws Run Command Now
+      description: "On-demand fire for a saved scheduled command.\n\nSame code path as the cron tier-3 task (``fire_scheduled_chat_session``):\nwe just enqueue it directly. The kiq task handles command lookup, run-as\ntoken mint, agentfarm /fire call, sink dispatch, and dispatch-result\nwrite-back. Each invocation:\n\n* Writes a real ``scheduled_chat_executions`` row (``dry_run=false``).\n* Bumps ``last_fired_at`` and increments ``runs_completed`` on success\n  (counted toward the user's cap, just like a cron tick).\n* Respects the running-row partial unique — a second run-now while one\n  is already in flight surfaces as 409 ``already_running`` from\n  agentfarm and the kiq task no-ops.\n\nThe cron-due check is intentionally bypassed: the whole point is to fire\nimmediately. ``max_runs`` IS enforced here so users can't silently blow\npast their budget; this mirrors the SQL-side filter ``evaluate_due_commands``\napplies to cron candidates."
+      operationId: ws_run_command_now_api_v3_workspaces__workspace_name__chat_config_commands__command_id__run_now_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: command_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Command Id
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Run Command Now Api V3 Workspaces  Workspace Name  Chat Config Commands  Command Id  Run Now Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/commands/{command_id}/preview-artifact-deliveries:
+    post:
+      tags:
+      - chat-config
+      summary: Ws Preview Artifact Deliveries
+      description: 'Render a stored artifact through the command''s current sinks in
+
+        dispatcher dry-run mode.
+
+
+        Used by the execution-history "Inspect deliveries" UI so admins can
+
+        see the actual email HTML / slack text payload a past run produced
+
+        (or would produce, when the original delivery was skipped because
+
+        Mailgun/Slack wasn''t configured locally).
+
+
+        When the caller provides ``sink_configs`` in the body (the snapshot
+
+        persisted in the execution row at fire time), the preview renders
+
+        through those — so admins see what was actually targeted by the
+
+        historical run. When the body omits ``sink_configs``, falls back to
+
+        the command''s CURRENT sinks for back-compat with rows fired before
+
+        the snapshot column existed.
+
+
+        The ``export_url_path`` is the SAME signed-token chat-export URL the
+
+        executions list returned for this row — agentfarm minted the token
+
+        via ``build_export_url_path`` so the link verifies on the
+
+        chat-export view. We just absolute-join it with WEB_BASE_URL here.
+
+        Pass null to suppress the link in the preview.'
+      operationId: ws_preview_artifact_deliveries_api_v3_workspaces__workspace_name__chat_config_commands__command_id__preview_artifact_deliveries_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: command_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Command Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreviewArtifactDeliveriesRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Preview Artifact Deliveries Api V3 Workspaces  Workspace Name  Chat Config Commands  Command Id  Preview Artifact Deliveries Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/sink-suggestions/slack:
+    get:
+      tags:
+      - chat-config
+      summary: Ws Slack Sink Suggestions
+      description: 'Channels (and DMs the bot has been included in) known for this
+
+        workspace''s slack install.
+
+
+        Thin admin-gated proxy to slackbot''s
+
+        ``GET /internal/workspaces/{workspace_name}/slack-channels``. Slackbot
+
+        owns the read path so the directory shape and rules (which channels
+
+        show up, how DMs surface, sort order) live in one place. PAPI keeps
+
+        the workspace-admin role check + the existing ``{installed, channels}``
+
+        response shape so the UI doesn''t need to change.
+
+
+        ``installed`` is false when no slack workspace is linked — the UI
+
+        surfaces a "Connect Slack" prompt rather than an empty list. DM
+
+        channels (``is_im`` — IDs prefixed ``D``) ride in the same list as
+
+        regular channels; the UI distinguishes by ID prefix.'
+      operationId: ws_slack_sink_suggestions_api_v3_workspaces__workspace_name__chat_config_sink_suggestions_slack_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Slack Sink Suggestions Api V3 Workspaces  Workspace Name  Chat Config Sink Suggestions Slack Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/chat-config/resolved:
+    get:
+      tags:
+      - chat-config
+      summary: Ws Resolved Config
+      description: Get resolved chat config for a workspace (all scopes merged).
+      operationId: ws_resolved_config_api_v3_workspaces__workspace_name__chat_config_resolved_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ws Resolved Config Api V3 Workspaces  Workspace Name  Chat Config Resolved Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    CommandUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        command_content:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Command Content
+        scope_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Type
+        scope_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+        cron_schedule:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cron Schedule
+        sink_configs:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Sink Configs
+        run_as_user:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run As User
+        assistant_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assistant Name
+        max_runs:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Runs
+        reset_runs_completed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Reset Runs Completed
+        schedule_paused:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Schedule Paused
+        auto_approve_readonly:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Auto Approve Readonly
+      type: object
+      title: CommandUpdate
+      description: 'Update a chat command.
+
+
+        Partial-update semantics: omitting a field leaves it unchanged. An
+
+        explicit empty / whitespace-only ``command_content`` is the save-
+
+        then-blank mistake — reject so the prompt can''t accidentally be
+
+        overwritten with nothing on save.'
+    PreviewArtifactDeliveriesRequest:
+      properties:
+        artifact_markdown:
+          type: string
+          title: Artifact Markdown
+          default: ''
+        export_url_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Export Url Path
+          description: Relative chat-export URL the executions list returned for this row (e.g. '/workspace/foo/chat-export/<signed-token>?view=pro'). PAPI joins it with WEB_BASE_URL for the absolute 'View full session' link in the preview. Pass null to suppress the link entirely.
+        sink_configs:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Sink Configs
+          description: Optional snapshot of the sinks targeted by THIS run, taken at fire time. When provided, the preview renders through these instead of the command's current sinks — so admins see what was actually delivered (or attempted) for the historical run, not what would be delivered now. When omitted, falls back to the command's current sink_configs.
+      type: object
+      title: PreviewArtifactDeliveriesRequest
+      description: 'Render a saved execution''s artifact through its command''s sinks
+
+        in dispatcher dry-run mode — no email is sent, no slack message
+
+        posted. Returns per-sink rendered payloads so admins can inspect
+
+        exactly what was (or would-be) delivered for a past run.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RuleCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          title: Name
+        rule_content:
+          type: string
+          title: Rule Content
+        scope_type:
+          type: string
+          title: Scope Type
+        scope_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+        is_active:
+          type: boolean
+          title: Is Active
+          default: true
+      type: object
+      required:
+      - name
+      - rule_content
+      - scope_type
+      title: RuleCreate
+      description: Create a chat rule.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DryRunRequest:
+      properties:
+        command_content:
+          type: string
+          minLength: 1
+          title: Command Content
+        sink_configs:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Sink Configs
+        assistant_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assistant Name
+        run_as_user:
+          type: string
+          minLength: 1
+          title: Run As User
+        scope_type:
+          type: string
+          title: Scope Type
+          default: workspace
+        scope_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+        name:
+          type: string
+          title: Name
+          default: <dry-run>
+      type: object
+      required:
+      - command_content
+      - run_as_user
+      title: DryRunRequest
+      description: 'Form-state dry-run for the schedule-config dialog.
+
+
+        ``run_as_user`` is required (RW-931 follow-up) — the dry-run session
+
+        runs AS this user so chat-export and audit show the actual identity.
+
+        Empty / missing ``run_as_user`` yields a 422 here (no silent fallback
+
+        to the requesting admin). ``StringConstraints(strip_whitespace=True)``
+
+        is what makes ``"   "`` count as empty: ``Field(min_length=1)`` checks
+
+        the raw string and would otherwise let three-space input through.'
+    RuleUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        rule_content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rule Content
+        scope_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Type
+        scope_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+      type: object
+      title: RuleUpdate
+      description: Update a chat rule.
+    CommandCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          title: Name
+        command_content:
+          type: string
+          minLength: 1
+          title: Command Content
+        scope_type:
+          type: string
+          title: Scope Type
+        scope_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_active:
+          type: boolean
+          title: Is Active
+          default: true
+        cron_schedule:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cron Schedule
+        sink_configs:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Sink Configs
+        run_as_user:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run As User
+        assistant_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assistant Name
+        max_runs:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Runs
+        schedule_paused:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Schedule Paused
+        auto_approve_readonly:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Auto Approve Readonly
+      type: object
+      required:
+      - name
+      - command_content
+      - scope_type
+      title: CommandCreate
+      description: 'Create a chat command.
+
+
+        ``command_content`` is the prompt that gets shipped to agentfarm and
+
+        runs the agent — empty / whitespace-only would mean the agent runs
+
+        against no instructions, so reject at the schema layer instead of
+
+        bouncing the user off agentfarm''s 422.'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

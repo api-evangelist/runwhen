@@ -1,0 +1,693 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy issue-occurrences API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: issue-occurrences
+paths:
+  /api/v1/workspaces/{workspace_name}/runsessions/{runsession_id}/issueoccurrences:
+    get:
+      tags:
+      - issue-occurrences
+      summary: List issue occurrences for a run session
+      description: "List issue occurrences for a specific run session.\n\nGets occurrences through the RunSessionIssueMap table.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with flattened issue attributes."
+      operationId: list_runsession_issue_occurrences_api_v1_workspaces__workspace_name__runsessions__runsession_id__issueoccurrences_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: runsession_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Runsession Id
+      - name: id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Filter by occurrence ID
+          title: Id
+        description: Filter by occurrence ID
+      - name: issue_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Filter by issue ID
+          title: Issue Id
+        description: Filter by issue ID
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueOccurrenceListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/issueoccurrences:
+    get:
+      tags:
+      - issue-occurrences
+      summary: List issue occurrences for a workspace
+      description: "List issue occurrences at workspace level with optional date filtering.\n\nUsed by agentfarm to list issue occurrences between two timestamps.\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n    observed_at_gte: Filter occurrences observed at or after this time.\n    observed_at_lte: Filter occurrences observed at or before this time.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with workspace-level fields."
+      operationId: list_workspace_issue_occurrences_api_v1_workspaces__workspace_name__issueoccurrences_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: observed_at__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Filter occurrences observed at or after this datetime (ISO 8601)
+          title: Observed At  Gte
+        description: Filter occurrences observed at or after this datetime (ISO 8601)
+      - name: observed_at__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Filter occurrences observed at or before this datetime (ISO 8601)
+          title: Observed At  Lte
+        description: Filter occurrences observed at or before this datetime (ISO 8601)
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceIssueOccurrenceListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/runsessions/{runsession_id}/issueoccurrences/{occurrence_id}:
+    get:
+      tags:
+      - issue-occurrences
+      summary: Get an issue occurrence by ID
+      description: "Get a specific issue occurrence by ID.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    occurrence_id: The issue occurrence ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue occurrence with flattened issue attributes.\n\nRaises:\n    HTTPException: 404 if workspace, run session, or occurrence not found."
+      operationId: get_runsession_issue_occurrence_api_v1_workspaces__workspace_name__runsessions__runsession_id__issueoccurrences__occurrence_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: runsession_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Runsession Id
+      - name: occurrence_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Occurrence Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueOccurrenceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/runsessions/{runsession_id}/issueoccurrences:
+    get:
+      tags:
+      - issue-occurrences
+      summary: List issue occurrences for a run session
+      description: "List issue occurrences for a specific run session.\n\nGets occurrences through the RunSessionIssueMap table.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with flattened issue attributes."
+      operationId: list_runsession_issue_occurrences_api_v3_workspaces__workspace_name__runsessions__runsession_id__issueoccurrences_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: runsession_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Runsession Id
+      - name: id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Filter by occurrence ID
+          title: Id
+        description: Filter by occurrence ID
+      - name: issue_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Filter by issue ID
+          title: Issue Id
+        description: Filter by issue ID
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueOccurrenceListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/issueoccurrences:
+    get:
+      tags:
+      - issue-occurrences
+      summary: List issue occurrences for a workspace
+      description: "List issue occurrences at workspace level with optional date filtering.\n\nUsed by agentfarm to list issue occurrences between two timestamps.\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n    observed_at_gte: Filter occurrences observed at or after this time.\n    observed_at_lte: Filter occurrences observed at or before this time.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with workspace-level fields."
+      operationId: list_workspace_issue_occurrences_api_v3_workspaces__workspace_name__issueoccurrences_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: observed_at__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Filter occurrences observed at or after this datetime (ISO 8601)
+          title: Observed At  Gte
+        description: Filter occurrences observed at or after this datetime (ISO 8601)
+      - name: observed_at__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Filter occurrences observed at or before this datetime (ISO 8601)
+          title: Observed At  Lte
+        description: Filter occurrences observed at or before this datetime (ISO 8601)
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceIssueOccurrenceListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/runsessions/{runsession_id}/issueoccurrences/{occurrence_id}:
+    get:
+      tags:
+      - issue-occurrences
+      summary: Get an issue occurrence by ID
+      description: "Get a specific issue occurrence by ID.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    occurrence_id: The issue occurrence ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue occurrence with flattened issue attributes.\n\nRaises:\n    HTTPException: 404 if workspace, run session, or occurrence not found."
+      operationId: get_runsession_issue_occurrence_api_v3_workspaces__workspace_name__runsessions__runsession_id__issueoccurrences__occurrence_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: runsession_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Runsession Id
+      - name: occurrence_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Occurrence Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueOccurrenceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    WorkspaceIssueOccurrenceListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/WorkspaceIssueOccurrenceResponse'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: WorkspaceIssueOccurrenceListResponse
+      description: Schema for paginated workspace issue occurrence list response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    IssueOccurrenceListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/IssueOccurrenceResponse'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: IssueOccurrenceListResponse
+      description: Schema for paginated issue occurrence list response.
+    WorkspaceIssueOccurrenceResponse:
+      properties:
+        observedAt:
+          type: string
+          format: date-time
+          title: Observedat
+          description: When this occurrence was observed
+        details:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Details
+          description: Detailed description of the occurrence
+        nextSteps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nextsteps
+          description: Suggested next steps
+        expected:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected
+          description: Expected behavior/value
+        actual:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actual
+          description: Actual behavior/value observed
+        reproduceHint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reproducehint
+          description: Hint for reproducing the issue
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+          description: Additional context data
+        occurrenceId:
+          type: integer
+          title: Occurrenceid
+          description: The occurrence ID
+        issueId:
+          type: integer
+          title: Issueid
+          description: The parent issue ID
+        taskTitle:
+          type: string
+          title: Tasktitle
+          description: Task title from the parent issue
+        title:
+          type: string
+          title: Title
+          description: Title from the parent issue
+          default: ''
+        severity:
+          type: integer
+          title: Severity
+          description: Severity from the parent issue (1=critical, 4=warning)
+          default: 0
+        closed:
+          type: boolean
+          title: Closed
+          description: Whether the parent issue is closed (open_since is None)
+        created:
+          type: string
+          format: date-time
+          title: Created
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        slxName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slxname
+          description: SLX name from the parent issue
+        runsessionIds:
+          items:
+            type: integer
+          type: array
+          title: Runsessionids
+          description: List of associated run session IDs
+      type: object
+      required:
+      - observedAt
+      - occurrenceId
+      - issueId
+      - taskTitle
+      - closed
+      - created
+      - modified
+      title: WorkspaceIssueOccurrenceResponse
+      description: 'Schema for workspace-level issue occurrence response.
+
+
+        Extends IssueOccurrenceResponse with additional workspace-level fields.'
+    IssueOccurrenceResponse:
+      properties:
+        observedAt:
+          type: string
+          format: date-time
+          title: Observedat
+          description: When this occurrence was observed
+        details:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Details
+          description: Detailed description of the occurrence
+        nextSteps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nextsteps
+          description: Suggested next steps
+        expected:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected
+          description: Expected behavior/value
+        actual:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actual
+          description: Actual behavior/value observed
+        reproduceHint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reproducehint
+          description: Hint for reproducing the issue
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+          description: Additional context data
+        occurrenceId:
+          type: integer
+          title: Occurrenceid
+          description: The occurrence ID
+        issueId:
+          type: integer
+          title: Issueid
+          description: The parent issue ID
+        taskTitle:
+          type: string
+          title: Tasktitle
+          description: Task title from the parent issue
+        title:
+          type: string
+          title: Title
+          description: Title from the parent issue
+          default: ''
+        severity:
+          type: integer
+          title: Severity
+          description: Severity from the parent issue (1=critical, 4=warning)
+          default: 0
+        closed:
+          type: boolean
+          title: Closed
+          description: Whether the parent issue is closed (open_since is None)
+        created:
+          type: string
+          format: date-time
+          title: Created
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+      type: object
+      required:
+      - observedAt
+      - occurrenceId
+      - issueId
+      - taskTitle
+      - closed
+      - created
+      - modified
+      title: IssueOccurrenceResponse
+      description: 'Schema for issue occurrence response with flattened issue attributes.
+
+
+        Used for RunSession-scoped issue occurrence listings.'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

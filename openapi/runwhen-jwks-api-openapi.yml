@@ -1,0 +1,29 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy jwks API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: jwks
+paths:
+  /.well-known/jwks.json:
+    get:
+      tags:
+      - jwks
+      summary: Jwks Endpoint
+      description: Return the JSON Web Key Set containing the RS256 public key.
+      operationId: jwks_endpoint__well_known_jwks_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

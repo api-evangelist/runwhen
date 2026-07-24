@@ -1,0 +1,1572 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy run-requests API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: run-requests
+paths:
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs:
+    post:
+      tags:
+      - run-requests
+      summary: Create a new RunRequest
+      description: "Create a new RunRequest for an SLX.\n\nIf request_time is None, the RunRequest is staged and waits for /start.\nIf request_time is provided (or default now), the RunRequest starts immediately.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    data: The RunRequest creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 400 if runsession validation fails."
+      operationId: create_run_request_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunRequestCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    get:
+      tags:
+      - run-requests
+      summary: List RunRequests for an SLX
+      description: "List RunRequests for an SLX.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    limit: Maximum number of results.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of RunRequests.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+      operationId: list_run_requests_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum results
+          default: 100
+          title: Limit
+        description: Maximum results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Skip results
+          default: 0
+          title: Offset
+        description: Skip results
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}:
+    get:
+      tags:
+      - run-requests
+      summary: Get a RunRequest by ID
+      description: "Get a RunRequest by its ID.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The RunRequest details.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+      operationId: get_run_request_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - run-requests
+      summary: Record a run response
+      description: "Record results from a completed run.\n\nThis endpoint is called by the runner after task execution completes.\nIt sets response_time and updates the result fields. After recording,\nit enqueues the async issue processing task.\n\nParity with main branch: This matches the behavior of\npapi/views/runrequest.py:RunRequestViewSet.update()\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    data: The response data from the runner.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+      operationId: record_run_response_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunRequestRecordResponse'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - run-requests
+      summary: Delete a RunRequest
+      description: "Delete a RunRequest.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+      operationId: delete_run_request_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/start:
+    post:
+      tags:
+      - run-requests
+      summary: Start a staged RunRequest
+      description: "Start a staged RunRequest by setting its request_time and submitting to TaskSet API.\n\nStaged RunRequests have request_time=None and wait for this endpoint\nto be called before execution begins. This endpoint:\n1. Sets request_time to mark the run as started\n2. Submits the run to the TaskSet API for execution by the runner\n3. Returns the taskset_uuid for tracking\n\nArgs:\n    workspace_name: The workspace name (short name from URL).\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Start confirmation with the request_time and taskset_uuid.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found.\n    HTTPException: 400 if RunRequest is not staged or already started."
+      operationId: start_run_request_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__start_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartRunRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/report:
+    get:
+      tags:
+      - run-requests
+      summary: Get the report for a RunRequest
+      description: "Get the report for a completed RunRequest.\n\nReads report.jsonl from the GCS bucket and returns the parsed JSONL\nas a JSON array, matching Django's behavior.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    raw: If set, return raw JSONL array (Django parity).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    JSON array of report lines (JSONL parsed).\n\nRaises:\n    HTTPException: 404 if workspace, RunRequest, or report not found."
+      operationId: get_run_request_report_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__report_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      - name: raw
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Return raw JSONL data
+          title: Raw
+        description: Return raw JSONL data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/issues:
+    get:
+      tags:
+      - run-requests
+      summary: Get issues from a RunRequest
+      description: "Get issues associated with a RunRequest.\n\nIssues are created by parsing the output files after a run completes.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of issues from this RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+      operationId: get_run_request_issues_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__issues_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestIssuesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/output:
+    get:
+      tags:
+      - run-requests
+      summary: Get parsed output from a RunRequest
+      description: "Get the parsed output from a completed RunRequest.\n\nThe output is parsed from the robot output XML file.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Parsed output data.\n\nRaises:\n    HTTPException: 404 if workspace, RunRequest, or output not found."
+      operationId: get_run_request_output_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__output_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutputResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/runner-status:
+    get:
+      tags:
+      - run-requests
+      summary: Get runner status for a RunRequest
+      description: "Get the runner status for a RunRequest.\n\nThis queries the runner-control service to get the current status\nof the task execution.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Runner status information.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found.\n    HTTPException: 400 if RunRequest has no taskset_uuid."
+      operationId: get_run_request_runner_status_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__runner_status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/staged:
+    get:
+      tags:
+      - run-requests
+      summary: List staged RunRequests
+      description: "List staged (not yet started) RunRequests for an SLX.\n\nStaged RunRequests have request_time=None and are waiting for /start.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    limit: Maximum number of results.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of staged RunRequests.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+      operationId: list_staged_run_requests_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs_staged_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum results
+          default: 100
+          title: Limit
+        description: Maximum results
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/run-requests/{run_request_id}/log:
+    get:
+      tags:
+      - run-requests
+      summary: Get the robot log for a RunRequest (SLX-agnostic)
+      description: "Get the robot log.html for a RunRequest without requiring slx_short_name.\n\nLooks up the RunRequest by ID to derive slx_short_name and runsession_id,\nthen reads log.html from workspace storage. Designed for citation-path\ncallers (e.g. TaskOutputDisplay) that only have a runrequest_id.\n\nArgs:\n    workspace_name: The workspace name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Raw HTML content of log.html.\n\nRaises:\n    HTTPException: 404 if workspace, RunRequest, or log file not found."
+      operationId: get_run_request_log_api_v1_workspaces__workspace_name__run_requests__run_request_id__log_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/plain:
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs:
+    post:
+      tags:
+      - run-requests
+      summary: Create a new RunRequest
+      description: "Create a new RunRequest for an SLX.\n\nIf request_time is None, the RunRequest is staged and waits for /start.\nIf request_time is provided (or default now), the RunRequest starts immediately.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    data: The RunRequest creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 400 if runsession validation fails."
+      operationId: create_run_request_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunRequestCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    get:
+      tags:
+      - run-requests
+      summary: List RunRequests for an SLX
+      description: "List RunRequests for an SLX.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    limit: Maximum number of results.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of RunRequests.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+      operationId: list_run_requests_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum results
+          default: 100
+          title: Limit
+        description: Maximum results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Skip results
+          default: 0
+          title: Offset
+        description: Skip results
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}:
+    get:
+      tags:
+      - run-requests
+      summary: Get a RunRequest by ID
+      description: "Get a RunRequest by its ID.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The RunRequest details.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+      operationId: get_run_request_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - run-requests
+      summary: Record a run response
+      description: "Record results from a completed run.\n\nThis endpoint is called by the runner after task execution completes.\nIt sets response_time and updates the result fields. After recording,\nit enqueues the async issue processing task.\n\nParity with main branch: This matches the behavior of\npapi/views/runrequest.py:RunRequestViewSet.update()\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    data: The response data from the runner.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+      operationId: record_run_response_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__patch
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunRequestRecordResponse'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - run-requests
+      summary: Delete a RunRequest
+      description: "Delete a RunRequest.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+      operationId: delete_run_request_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/start:
+    post:
+      tags:
+      - run-requests
+      summary: Start a staged RunRequest
+      description: "Start a staged RunRequest by setting its request_time and submitting to TaskSet API.\n\nStaged RunRequests have request_time=None and wait for this endpoint\nto be called before execution begins. This endpoint:\n1. Sets request_time to mark the run as started\n2. Submits the run to the TaskSet API for execution by the runner\n3. Returns the taskset_uuid for tracking\n\nArgs:\n    workspace_name: The workspace name (short name from URL).\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Start confirmation with the request_time and taskset_uuid.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found.\n    HTTPException: 400 if RunRequest is not staged or already started."
+      operationId: start_run_request_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__start_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartRunRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/report:
+    get:
+      tags:
+      - run-requests
+      summary: Get the report for a RunRequest
+      description: "Get the report for a completed RunRequest.\n\nReads report.jsonl from the GCS bucket and returns the parsed JSONL\nas a JSON array, matching Django's behavior.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    raw: If set, return raw JSONL array (Django parity).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    JSON array of report lines (JSONL parsed).\n\nRaises:\n    HTTPException: 404 if workspace, RunRequest, or report not found."
+      operationId: get_run_request_report_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__report_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      - name: raw
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Return raw JSONL data
+          title: Raw
+        description: Return raw JSONL data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/issues:
+    get:
+      tags:
+      - run-requests
+      summary: Get issues from a RunRequest
+      description: "Get issues associated with a RunRequest.\n\nIssues are created by parsing the output files after a run completes.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of issues from this RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+      operationId: get_run_request_issues_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__issues_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestIssuesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/output:
+    get:
+      tags:
+      - run-requests
+      summary: Get parsed output from a RunRequest
+      description: "Get the parsed output from a completed RunRequest.\n\nThe output is parsed from the robot output XML file.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Parsed output data.\n\nRaises:\n    HTTPException: 404 if workspace, RunRequest, or output not found."
+      operationId: get_run_request_output_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__output_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutputResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/runner-status:
+    get:
+      tags:
+      - run-requests
+      summary: Get runner status for a RunRequest
+      description: "Get the runner status for a RunRequest.\n\nThis queries the runner-control service to get the current status\nof the task execution.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Runner status information.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found.\n    HTTPException: 400 if RunRequest has no taskset_uuid."
+      operationId: get_run_request_runner_status_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__runner_status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/staged:
+    get:
+      tags:
+      - run-requests
+      summary: List staged RunRequests
+      description: "List staged (not yet started) RunRequests for an SLX.\n\nStaged RunRequests have request_time=None and are waiting for /start.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    limit: Maximum number of results.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of staged RunRequests.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+      operationId: list_staged_run_requests_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs_staged_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum results
+          default: 100
+          title: Limit
+        description: Maximum results
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunRequestListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/run-requests/{run_request_id}/log:
+    get:
+      tags:
+      - run-requests
+      summary: Get the robot log for a RunRequest (SLX-agnostic)
+      description: "Get the robot log.html for a RunRequest without requiring slx_short_name.\n\nLooks up the RunRequest by ID to derive slx_short_name and runsession_id,\nthen reads log.html from workspace storage. Designed for citation-path\ncallers (e.g. TaskOutputDisplay) that only have a runrequest_id.\n\nArgs:\n    workspace_name: The workspace name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Raw HTML content of log.html.\n\nRaises:\n    HTTPException: 404 if workspace, RunRequest, or log file not found."
+      operationId: get_run_request_log_api_v3_workspaces__workspace_name__run_requests__run_request_id__log_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Run Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/plain:
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    RunRequestIssuesResponse:
+      properties:
+        issues:
+          items:
+            $ref: '#/components/schemas/IssueReference'
+          type: array
+          title: Issues
+          description: Issues from this RunRequest
+        total:
+          type: integer
+          title: Total
+          description: Total issue count
+      type: object
+      required:
+      - issues
+      - total
+      title: RunRequestIssuesResponse
+      description: Response for issues endpoint.
+    StartRunRequestResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: RunRequest ID
+        taskset_uuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Taskset Uuid
+          description: UUID from runner-control
+        request_time:
+          type: string
+          format: date-time
+          title: Request Time
+          description: When the run started
+        message:
+          type: string
+          title: Message
+          description: Status message
+      type: object
+      required:
+      - id
+      - request_time
+      - message
+      title: StartRunRequestResponse
+      description: Response for starting a staged RunRequest.
+    RunnerStatusResponse:
+      properties:
+        taskset_uuid:
+          type: string
+          title: Taskset Uuid
+          description: TaskSet UUID
+        status:
+          type: string
+          title: Status
+          description: Runner status
+        details:
+          additionalProperties: true
+          type: object
+          title: Details
+          description: Additional details
+      type: object
+      required:
+      - taskset_uuid
+      - status
+      title: RunnerStatusResponse
+      description: Response for runner status query.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RunRequestRecordResponse:
+      properties:
+        passed_titles:
+          type: string
+          title: Passed Titles
+          description: Pipe-separated list of passed task titles
+          default: ''
+        failed_titles:
+          type: string
+          title: Failed Titles
+          description: Pipe-separated list of failed task titles
+          default: ''
+        skipped_titles:
+          type: string
+          title: Skipped Titles
+          description: Pipe-separated list of skipped task titles
+          default: ''
+        errors:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          title: Errors
+          description: Task errors (dict or pipe-separated string)
+        robot_log_file:
+          type: string
+          title: Robot Log File
+          description: URL to robot log file
+          default: ''
+        robot_stdout_file:
+          type: string
+          title: Robot Stdout File
+          description: URL to robot stdout file
+          default: ''
+        report_file:
+          type: string
+          title: Report File
+          description: URL to report file
+          default: ''
+        issues_file:
+          type: string
+          title: Issues File
+          description: URL to issues file
+          default: ''
+        robot_output:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Robot Output
+          description: Raw robot output XML (legacy format)
+      type: object
+      title: RunRequestRecordResponse
+      description: Schema for recording a run response (runner callback).
+    RunRequestCreate:
+      properties:
+        runsession_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Runsession Id
+          description: Parent RunSession ID (optional)
+        task_titles:
+          type: string
+          title: Task Titles
+          description: Task titles to run ('||' separated, '*' for all)
+          default: '*'
+        request_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Request Time
+          description: When to run. None = staged (wait for /start), omit = now
+        depends_on:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Depends On
+          description: Comma-separated list of RunRequest IDs to wait for
+        memo:
+          additionalProperties: true
+          type: object
+          title: Memo
+          description: Arbitrary JSON for user storage
+        persona_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Persona Id
+          description: Persona ID if run by AI automation
+        from_run_request_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: From Run Request Id
+          description: ID of RunRequest that spawned this one
+        from_issue_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: From Issue Id
+          description: Issue occurrence ID that triggered this run request
+        from_search_query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: From Search Query
+          description: Search query that triggered this run
+        from_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: From Score
+          description: Confidence score from search or persona action
+        from_context:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: From Context
+          description: Additional context about the origin
+      type: object
+      title: RunRequestCreate
+      description: Schema for creating a new RunRequest.
+    IssueReference:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Issue ID
+        title:
+          type: string
+          title: Title
+          description: Issue title
+        severity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity
+          description: Issue severity
+        slx_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slx Name
+          description: SLX name
+      type: object
+      required:
+      - id
+      - title
+      title: IssueReference
+      description: Reference to an issue from a RunRequest.
+    RunRequestResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Unique identifier
+        tasksetUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tasksetuuid
+          description: UUID from runner-control for status tracking
+        runsessionId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Runsessionid
+          description: Parent RunSession ID
+        slxShortName:
+          type: string
+          title: Slxshortname
+          description: SLX short name being executed
+        requesterId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Requesterid
+          description: User who requested this run
+        personaId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Personaid
+          description: Persona ID if AI-initiated
+        taskTitles:
+          type: string
+          title: Tasktitles
+          description: Task titles to run
+        dependsOn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dependson
+          description: Comma-separated RunRequest IDs to wait for
+        requestTime:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Requesttime
+          description: When the run was requested (None = staged)
+        responseTime:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Responsetime
+          description: When the run completed (None = still running)
+        passedTitles:
+          type: string
+          title: Passedtitles
+          description: Passed task titles
+          default: ''
+        failedTitles:
+          type: string
+          title: Failedtitles
+          description: Failed task titles
+          default: ''
+        skippedTitles:
+          type: string
+          title: Skippedtitles
+          description: Skipped task titles
+          default: ''
+        errors:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          title: Errors
+          description: Task errors
+        robotLogFile:
+          type: string
+          title: Robotlogfile
+          description: URL to robot log
+          default: ''
+        robotStdoutFile:
+          type: string
+          title: Robotstdoutfile
+          description: URL to stdout
+          default: ''
+        reportFile:
+          type: string
+          title: Reportfile
+          description: URL to report
+          default: ''
+        issuesFile:
+          type: string
+          title: Issuesfile
+          description: URL to issues
+          default: ''
+        memo:
+          anyOf:
+          - items: {}
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Memo
+          description: Arbitrary JSON
+        fromRunRequestId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fromrunrequestid
+        fromIssueId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fromissueid
+        fromSearchQuery:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fromsearchquery
+        fromScore:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Fromscore
+        fromContext:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Fromcontext
+        processingStatus:
+          anyOf:
+          - $ref: '#/components/schemas/ProcessingStatusResponse'
+          - type: 'null'
+          description: Output processing status
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        slxName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slxname
+          description: Full SLX name
+        isStaged:
+          type: boolean
+          title: Isstaged
+          description: True if request_time is None (waiting for /start)
+          default: false
+        isPending:
+          type: boolean
+          title: Ispending
+          description: True if running (request_time set, response_time None)
+          default: false
+        isCompleted:
+          type: boolean
+          title: Iscompleted
+          description: True if completed (response_time set)
+          default: false
+      type: object
+      required:
+      - id
+      - slxShortName
+      - taskTitles
+      - created
+      - modified
+      title: RunRequestResponse
+      description: Full RunRequest response schema for API responses.
+    ProcessingStatusResponse:
+      properties:
+        status:
+          $ref: '#/components/schemas/OutputProcessingStatusEnum'
+          description: Processing status
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+          description: When processing completed
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+          description: Error message if failed
+        retry_count:
+          type: integer
+          title: Retry Count
+          description: Number of retry attempts
+          default: 0
+      type: object
+      required:
+      - status
+      title: ProcessingStatusResponse
+      description: Schema for RunRequest output processing status.
+    OutputProcessingStatusEnum:
+      type: string
+      enum:
+      - new
+      - processing
+      - successful
+      - failed
+      - retry
+      title: OutputProcessingStatusEnum
+      description: Processing status for RunRequest output.
+    OutputResponse:
+      properties:
+        output:
+          additionalProperties: true
+          type: object
+          title: Output
+          description: Parsed XML output as JSON
+        size_bytes:
+          type: integer
+          title: Size Bytes
+          description: Original file size in bytes
+      type: object
+      required:
+      - output
+      - size_bytes
+      title: OutputResponse
+      description: Response for output endpoint.
+    RunRequestListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/RunRequestResponse'
+          type: array
+          title: Results
+          description: List of RunRequests
+        count:
+          type: integer
+          title: Count
+          description: Total count matching filters
+        limit:
+          type: integer
+          title: Limit
+          description: Maximum items per page
+        offset:
+          type: integer
+          title: Offset
+          description: Number of items skipped
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: RunRequestListResponse
+      description: Paginated list response for RunRequest endpoints.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

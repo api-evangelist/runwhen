@@ -1,0 +1,1899 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy slxs API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: slxs
+paths:
+  /api/v1/workspaces/{workspace_name}/slxs:
+    get:
+      tags:
+      - slxs
+      summary: List SLXs for a workspace
+      description: "List SLXs for a workspace with optional filters.\n\nArgs:\n    workspace_name: The workspace name.\n    request: The incoming request (used to build pagination URLs).\n    session: Database session.\n    current_user: The authenticated user.\n    search: Optional search string.\n    tags: Optional tags to filter by.\n    resource_path_prefix: Optional resource path prefix filter.\n    resource_type: Optional resource type filter.\n    owners: Optional owner filter.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of SLXs."
+      operationId: list_workspace_slxs_api_v1_workspaces__workspace_name__slxs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search in name, short_name, or alias
+          title: Search
+        description: Search in name, short_name, or alias
+      - name: tags
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          description: Filter by tags (any match)
+          title: Tags
+        description: Filter by tags (any match)
+      - name: resource_path_prefix
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by resource path prefix (e.g. 'kubernetes/cluster-01')
+          title: Resource Path Prefix
+        description: Filter by resource path prefix (e.g. 'kubernetes/cluster-01')
+      - name: resource_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by resource type (e.g. 'Deployment')
+          title: Resource Type
+        description: Filter by resource type (e.g. 'Deployment')
+      - name: owners
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          description: Filter by owners (any match)
+          title: Owners
+        description: Filter by owners (any match)
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlxListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}:
+    get:
+      tags:
+      - slxs
+      summary: Get an SLX by short name
+      description: 'Get an SLX by its short name within a workspace.
+
+
+        When history/resolution are provided, enriches the response with live
+
+        Cortex metrics for SLI charts and SLO error budget charts.'
+      operationId: get_workspace_slx_api_v1_workspaces__workspace_name__slxs__slx_short_name__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: history
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^\d+[smhd]$
+          description: PromQL time range for SLI metrics
+          default: 5m
+          title: History
+        description: PromQL time range for SLI metrics
+      - name: resolution
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^\d+[smhd]$
+          description: PromQL step interval for SLI metrics
+          default: 30s
+          title: Resolution
+        description: PromQL step interval for SLI metrics
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(month|\d+[d])$
+          description: 'EBR window: ''month'' for calendar month or Nd for rolling N days'
+          default: month
+          title: Window
+        description: 'EBR window: ''month'' for calendar month or Nd for rolling N days'
+      - name: detail
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Detail level (accepted for Django parity)
+          default: 'False'
+          title: Detail
+        description: Detail level (accepted for Django parity)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlxResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/metrics:
+    get:
+      tags:
+      - slxs
+      summary: Get lightweight metrics for SLX chart widgets
+      description: 'Lightweight metrics endpoint for chart widgets.
+
+
+        Only fires the Cortex queries the requesting chart actually needs.
+
+        SLO resolution is always derived from ``window`` — callers must not send it.
+
+
+        Validation rules (400 Bad Request):
+
+        - types=sli,slo + any of history/resolution/window present
+
+        - types=slo + history present
+
+        - types=sli + window present
+
+        - SLI (history, resolution) not in the 8-pair allowlist
+
+        - SLO window not matching ^(month|since[1-3]|since6)$'
+      operationId: get_workspace_slx_metrics_api_v1_workspaces__workspace_name__slxs__slx_short_name__metrics_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: types
+        in: query
+        required: true
+        schema:
+          type: string
+          description: 'Cortex query types: sli, slo, or sli,slo'
+          title: Types
+        description: 'Cortex query types: sli, slo, or sli,slo'
+      - name: history
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SLI history window (e.g. 5m, 1h)
+          title: History
+        description: SLI history window (e.g. 5m, 1h)
+      - name: resolution
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SLI step interval (e.g. 30s, 6m)
+          title: Resolution
+        description: SLI step interval (e.g. 30s, 6m)
+      - name: window
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SLO calendar window (month, since1-since6)
+          title: Window
+        description: SLO calendar window (month, since1-since6)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlxMetricsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/file-upload-url/{session_id}/{path}:
+    get:
+      tags:
+      - slxs
+      summary: Get a signed URL for uploading a file
+      description: "Get a signed URL for uploading a file to workspace storage.\n\nThis endpoint is used by the robot-runtime platform library when\nuploading files from task runs.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    session_id: The run session ID.\n    path: The file path/name to upload.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    A signed URL that can be used to PUT the file content.\n\nRaises:\n    HTTPException: 404 if workspace or SLX not found.\n    HTTPException: 500 if signed URL generation fails."
+      operationId: get_file_upload_url_api_v1_workspaces__workspace_name__slxs__slx_short_name__file_upload_url__session_id___path__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The session ID
+          title: Session Id
+        description: The session ID
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The file path/name to upload
+          title: Path
+        description: The file path/name to upload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadUrlResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/files/{session_id}:
+    get:
+      tags:
+      - slxs
+      summary: List files for an SLX session
+      description: "List files for an SLX session in workspace storage.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    session_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of filenames."
+      operationId: list_slx_files_api_v1_workspaces__workspace_name__slxs__slx_short_name__files__session_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The session ID
+          title: Session Id
+        description: The session ID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                title: Response List Slx Files Api V1 Workspaces  Workspace Name  Slxs  Slx Short Name  Files  Session Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/files/{session_id}/{path}:
+    get:
+      tags:
+      - slxs
+      summary: Get a file for an SLX session
+      description: "Get a file for an SLX session from workspace storage.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    session_id: The run session ID.\n    path: The file path/name to retrieve.\n    size_limit_bytes: Maximum file size to read (default 240MB).\n    raw: If True, return plain text response instead of JSON.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    File contents as JSON {\"contents\": str} or plain text."
+      operationId: get_slx_file_api_v1_workspaces__workspace_name__slxs__slx_short_name__files__session_id___path__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The session ID
+          title: Session Id
+        description: The session ID
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The file path/name
+          title: Path
+        description: The file path/name
+      - name: sizeLimitBytes
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Max file size in bytes
+          default: 240000000
+          title: Sizelimitbytes
+        description: Max file size in bytes
+      - name: raw
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return raw text instead of JSON wrapper
+          default: false
+          title: Raw
+        description: Return raw text instead of JSON wrapper
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/task-outputs:
+    get:
+      tags:
+      - slxs
+      summary: Get task outputs by task name across recent RunRequests
+      description: 'Get task outputs for a task name across recent RunRequests.
+
+
+        Returns outputs from the report.jsonl files of matching RunRequests.'
+      operationId: get_task_outputs_by_task_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs_task_outputs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: task_name
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Task name to filter by
+          title: Task Name
+        description: Task name to filter by
+      - name: created__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: RunRequests created after this time
+          title: Created  Gte
+        description: RunRequests created after this time
+      - name: created__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: RunRequests created before this time
+          title: Created  Lte
+        description: RunRequests created before this time
+      - name: outputs_limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          description: Max RunRequests to fetch
+          default: 10
+          title: Outputs Limit
+        description: Max RunRequests to fetch
+      - name: exclude_issue_outputs
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Exclude issue-type outputs
+          default: true
+          title: Exclude Issue Outputs
+        description: Exclude issue-type outputs
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Task Outputs By Task Api V1 Workspaces  Workspace Name  Slxs  Slx Short Name  Runbook Runs Task Outputs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/task-outputs:
+    get:
+      tags:
+      - slxs
+      summary: Get task outputs for a specific RunRequest
+      description: 'Get task outputs for a specific RunRequest.
+
+
+        Returns outputs from the report.jsonl file.'
+      operationId: get_task_outputs_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__task_outputs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          description: RunRequest ID
+          title: Run Request Id
+        description: RunRequest ID
+      - name: task_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional task name filter
+          title: Task Name
+        description: Optional task name filter
+      - name: exclude_issue_outputs
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Exclude issue-type outputs
+          default: true
+          title: Exclude Issue Outputs
+        description: Exclude issue-type outputs
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Task Outputs Api V1 Workspaces  Workspace Name  Slxs  Slx Short Name  Runbook Runs  Run Request Id  Task Outputs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs:
+    get:
+      tags:
+      - slxs
+      summary: List SLXs for a workspace
+      description: "List SLXs for a workspace with optional filters.\n\nArgs:\n    workspace_name: The workspace name.\n    request: The incoming request (used to build pagination URLs).\n    session: Database session.\n    current_user: The authenticated user.\n    search: Optional search string.\n    tags: Optional tags to filter by.\n    resource_path_prefix: Optional resource path prefix filter.\n    resource_type: Optional resource type filter.\n    owners: Optional owner filter.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of SLXs."
+      operationId: list_workspace_slxs_api_v3_workspaces__workspace_name__slxs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search in name, short_name, or alias
+          title: Search
+        description: Search in name, short_name, or alias
+      - name: tags
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          description: Filter by tags (any match)
+          title: Tags
+        description: Filter by tags (any match)
+      - name: resource_path_prefix
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by resource path prefix (e.g. 'kubernetes/cluster-01')
+          title: Resource Path Prefix
+        description: Filter by resource path prefix (e.g. 'kubernetes/cluster-01')
+      - name: resource_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by resource type (e.g. 'Deployment')
+          title: Resource Type
+        description: Filter by resource type (e.g. 'Deployment')
+      - name: owners
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          description: Filter by owners (any match)
+          title: Owners
+        description: Filter by owners (any match)
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 250
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlxListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}:
+    get:
+      tags:
+      - slxs
+      summary: Get an SLX by short name
+      description: 'Get an SLX by its short name within a workspace.
+
+
+        When history/resolution are provided, enriches the response with live
+
+        Cortex metrics for SLI charts and SLO error budget charts.'
+      operationId: get_workspace_slx_api_v3_workspaces__workspace_name__slxs__slx_short_name__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: history
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^\d+[smhd]$
+          description: PromQL time range for SLI metrics
+          default: 5m
+          title: History
+        description: PromQL time range for SLI metrics
+      - name: resolution
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^\d+[smhd]$
+          description: PromQL step interval for SLI metrics
+          default: 30s
+          title: Resolution
+        description: PromQL step interval for SLI metrics
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(month|\d+[d])$
+          description: 'EBR window: ''month'' for calendar month or Nd for rolling N days'
+          default: month
+          title: Window
+        description: 'EBR window: ''month'' for calendar month or Nd for rolling N days'
+      - name: detail
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Detail level (accepted for Django parity)
+          default: 'False'
+          title: Detail
+        description: Detail level (accepted for Django parity)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlxResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/metrics:
+    get:
+      tags:
+      - slxs
+      summary: Get lightweight metrics for SLX chart widgets
+      description: 'Lightweight metrics endpoint for chart widgets.
+
+
+        Only fires the Cortex queries the requesting chart actually needs.
+
+        SLO resolution is always derived from ``window`` — callers must not send it.
+
+
+        Validation rules (400 Bad Request):
+
+        - types=sli,slo + any of history/resolution/window present
+
+        - types=slo + history present
+
+        - types=sli + window present
+
+        - SLI (history, resolution) not in the 8-pair allowlist
+
+        - SLO window not matching ^(month|since[1-3]|since6)$'
+      operationId: get_workspace_slx_metrics_api_v3_workspaces__workspace_name__slxs__slx_short_name__metrics_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: types
+        in: query
+        required: true
+        schema:
+          type: string
+          description: 'Cortex query types: sli, slo, or sli,slo'
+          title: Types
+        description: 'Cortex query types: sli, slo, or sli,slo'
+      - name: history
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SLI history window (e.g. 5m, 1h)
+          title: History
+        description: SLI history window (e.g. 5m, 1h)
+      - name: resolution
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SLI step interval (e.g. 30s, 6m)
+          title: Resolution
+        description: SLI step interval (e.g. 30s, 6m)
+      - name: window
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SLO calendar window (month, since1-since6)
+          title: Window
+        description: SLO calendar window (month, since1-since6)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlxMetricsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/file-upload-url/{session_id}/{path}:
+    get:
+      tags:
+      - slxs
+      summary: Get a signed URL for uploading a file
+      description: "Get a signed URL for uploading a file to workspace storage.\n\nThis endpoint is used by the robot-runtime platform library when\nuploading files from task runs.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    session_id: The run session ID.\n    path: The file path/name to upload.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    A signed URL that can be used to PUT the file content.\n\nRaises:\n    HTTPException: 404 if workspace or SLX not found.\n    HTTPException: 500 if signed URL generation fails."
+      operationId: get_file_upload_url_api_v3_workspaces__workspace_name__slxs__slx_short_name__file_upload_url__session_id___path__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The session ID
+          title: Session Id
+        description: The session ID
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The file path/name to upload
+          title: Path
+        description: The file path/name to upload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadUrlResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/files/{session_id}:
+    get:
+      tags:
+      - slxs
+      summary: List files for an SLX session
+      description: "List files for an SLX session in workspace storage.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    session_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of filenames."
+      operationId: list_slx_files_api_v3_workspaces__workspace_name__slxs__slx_short_name__files__session_id__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The session ID
+          title: Session Id
+        description: The session ID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                title: Response List Slx Files Api V3 Workspaces  Workspace Name  Slxs  Slx Short Name  Files  Session Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/files/{session_id}/{path}:
+    get:
+      tags:
+      - slxs
+      summary: Get a file for an SLX session
+      description: "Get a file for an SLX session from workspace storage.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    session_id: The run session ID.\n    path: The file path/name to retrieve.\n    size_limit_bytes: Maximum file size to read (default 240MB).\n    raw: If True, return plain text response instead of JSON.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    File contents as JSON {\"contents\": str} or plain text."
+      operationId: get_slx_file_api_v3_workspaces__workspace_name__slxs__slx_short_name__files__session_id___path__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The session ID
+          title: Session Id
+        description: The session ID
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The file path/name
+          title: Path
+        description: The file path/name
+      - name: sizeLimitBytes
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Max file size in bytes
+          default: 240000000
+          title: Sizelimitbytes
+        description: Max file size in bytes
+      - name: raw
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return raw text instead of JSON wrapper
+          default: false
+          title: Raw
+        description: Return raw text instead of JSON wrapper
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/task-outputs:
+    get:
+      tags:
+      - slxs
+      summary: Get task outputs by task name across recent RunRequests
+      description: 'Get task outputs for a task name across recent RunRequests.
+
+
+        Returns outputs from the report.jsonl files of matching RunRequests.'
+      operationId: get_task_outputs_by_task_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs_task_outputs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: task_name
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Task name to filter by
+          title: Task Name
+        description: Task name to filter by
+      - name: created__gte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: RunRequests created after this time
+          title: Created  Gte
+        description: RunRequests created after this time
+      - name: created__lte
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: RunRequests created before this time
+          title: Created  Lte
+        description: RunRequests created before this time
+      - name: outputs_limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          description: Max RunRequests to fetch
+          default: 10
+          title: Outputs Limit
+        description: Max RunRequests to fetch
+      - name: exclude_issue_outputs
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Exclude issue-type outputs
+          default: true
+          title: Exclude Issue Outputs
+        description: Exclude issue-type outputs
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Task Outputs By Task Api V3 Workspaces  Workspace Name  Slxs  Slx Short Name  Runbook Runs Task Outputs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook/runs/{run_request_id}/task-outputs:
+    get:
+      tags:
+      - slxs
+      summary: Get task outputs for a specific RunRequest
+      description: 'Get task outputs for a specific RunRequest.
+
+
+        Returns outputs from the report.jsonl file.'
+      operationId: get_task_outputs_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_runs__run_request_id__task_outputs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      - name: run_request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          description: RunRequest ID
+          title: Run Request Id
+        description: RunRequest ID
+      - name: task_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional task name filter
+          title: Task Name
+        description: Optional task name filter
+      - name: exclude_issue_outputs
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Exclude issue-type outputs
+          default: true
+          title: Exclude Issue Outputs
+        description: Exclude issue-type outputs
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Task Outputs Api V3 Workspaces  Workspace Name  Slxs  Slx Short Name  Runbook Runs  Run Request Id  Task Outputs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    papi__schemas__slx__SloResponse:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+          description: Parent SLX ID (also serves as SLO ID)
+        sloSpecType:
+          type: string
+          title: Slospectype
+          description: SLO specification type
+          default: simple-mwmb
+        objective:
+          type: number
+          title: Objective
+          description: SLO objective percentage
+          default: 99.9
+        threshold:
+          type: integer
+          title: Threshold
+          description: SLO threshold
+          default: 9
+        operand:
+          type: string
+          title: Operand
+          description: Comparison operand
+          default: eq
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+          description: Code bundle repository URL
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+          description: Code bundle git ref
+        codeBundlePathToYaml:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepathtoyaml
+          description: Path to SLO YAML
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+          description: Repository ID
+        generation:
+          type: integer
+          title: Generation
+          description: Generation number
+          default: 0
+        generationChecksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generationchecksum
+          description: Generation checksum
+        ruleGroups:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Rulegroups
+          description: Rule groups from CRD status (list of Prometheus rule-group dicts)
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+          description: Currently firing SLO alerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+          description: SLO alerts from the last 7 days
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+          description: SLO alert counts grouped by date
+        monthErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Montherrorbudgetremaining
+          description: Calendar month error budget remaining (Prometheus-style response). Values are ratio units (0..1, negative on breach), passed through unchanged from Cortex.
+        thirtyDayErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thirtydayerrorbudgetremaining
+          description: Rolling 30-day error budget remaining (Prometheus-style response). Values are ratio units (0..1, negative on breach), passed through unchanged from Cortex.
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+          description: Recent SLO error budget remaining for an arbitrary history/resolution window (Prometheus-style response). Values are percent units (0..100, negative on breach) — the router multiplies the Cortex ratio by 100 (x100) before serialising. Consumers MUST NOT divide by 100; the existing `month_error_budget_remaining` and `thirty_day_error_budget_remaining` fields on the same response remain in ratio units.
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Spec dict matching Django CoreModelSerializer shape.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Status dict matching Django CoreModelSerializer shape.
+          readOnly: true
+      type: object
+      required:
+      - slxId
+      - created
+      - modified
+      - spec
+      - status
+      title: SloResponse
+      description: SLO (Service Level Objective) response schema.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    papi__schemas__slx__RunbookResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Runbook ID
+        slxId:
+          type: integer
+          title: Slxid
+          description: Parent SLX ID
+        name:
+          type: string
+          title: Name
+          description: Runbook name (same as SLX full name)
+          default: ''
+        runnerUUID:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+          description: Runner UUID
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+          description: Code bundle repository URL
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+          description: Code bundle git ref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+          description: Path to runbook in repository
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+          description: Repository ID
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+          description: Configuration as list of {name, value} objects or dict
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+          description: Secrets configuration
+        tasks:
+          items:
+            $ref: '#/components/schemas/RunbookTaskResponse'
+          type: array
+          title: Tasks
+          description: Runbook tasks
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Spec dict matching Django CoreModelSerializer shape.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Status dict matching Django CoreModelSerializer shape.
+          readOnly: true
+      type: object
+      required:
+      - id
+      - slxId
+      - created
+      - modified
+      - spec
+      - status
+      title: RunbookResponse
+      description: Runbook response schema with tasks.
+    papi__schemas__slx__SliResponse:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+          description: Parent SLX ID (also serves as SLI ID)
+        displayUnitsLong:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitslong
+          description: Long form display units
+        displayUnitsShort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitsshort
+          description: Short form display units
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: SLI description
+        runnerUUID:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+          description: Runner UUID
+        intervalStrategy:
+          type: string
+          title: Intervalstrategy
+          description: Interval strategy
+          default: intermezzo
+        intervalSeconds:
+          type: integer
+          title: Intervalseconds
+          description: Interval in seconds
+          default: 300
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+          description: Code bundle repository URL
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+          description: Code bundle git ref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+          description: Path to SLI in repository
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+          description: Repository ID
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+          description: Configuration as list of {name, value} objects or dict
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+          description: Secrets configuration
+        alertConfig:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Alertconfig
+          description: Alert configuration
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+          description: Currently firing SLI alerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+          description: SLI alerts from the last 7 days
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+          description: SLI alert counts grouped by date
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+          description: Recent SLI metric data from Cortex (Prometheus-style response)
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Spec dict matching Django CoreModelSerializer shape.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Status dict matching Django CoreModelSerializer shape.
+          readOnly: true
+      type: object
+      required:
+      - slxId
+      - created
+      - modified
+      - spec
+      - status
+      title: SliResponse
+      description: SLI (Service Level Indicator) response schema.
+    RunbookTaskResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Task tags
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+          description: Stable platform-owned task id (slx_tasks.id); null until reconciled
+      type: object
+      required:
+      - name
+      - value
+      title: RunbookTaskResponse
+      description: Individual task in a runbook.
+    SlxMetricsResponse:
+      properties:
+        alias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alias
+        created:
+          type: string
+          format: date-time
+          title: Created
+        resourcePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resourcepath
+        sloObjective:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sloobjective
+        sli:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Sli
+        slo:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Slo
+          description: SLO time-series payload. ``slo.recent`` carries percent units (0..100, negative on breach); see class docstring.
+      type: object
+      required:
+      - created
+      title: SlxMetricsResponse
+      description: 'Lightweight response for chart widgets: scalar metadata + selected Cortex time series.
+
+
+        ``slo_objective`` is returned as a ratio (e.g. 0.999), already divided by
+
+        100 from the DB''s percentage value (99.9). Frontend must NOT divide by 100.
+
+
+        ``slo.recent.data.result[*].values[*][1]`` is delivered in **percent units**
+
+        (e.g. ``"99.9"``, ``"-5.0"``) — the router multiplies the Cortex ratio by 100 (x100)
+
+        before serialising. Consumers MUST NOT divide by 100. ``sli.recent`` retains
+
+        Cortex''s native units (ratio in [0, 1] for compliance series).
+
+
+        ``sli`` and ``slo`` are null when the corresponding type was not requested.'
+    SlxTagV4:
+      properties:
+        name:
+          type: string
+          title: Name
+        value:
+          type: string
+          title: Value
+      type: object
+      required:
+      - name
+      - value
+      title: SlxTagV4
+    SlxListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/SlxResponse'
+          type: array
+          title: Results
+          description: List of SLX items
+        count:
+          type: integer
+          title: Count
+          description: Total count of items matching filters
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: URL to next page
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: URL to previous page
+      type: object
+      required:
+      - results
+      - count
+      title: SlxListResponse
+      description: 'Paginated list response for SLX endpoints.
+
+
+        Uses ''results'' key for Django REST Framework compatibility.'
+    MetricTypeV4:
+      type: string
+      enum:
+      - gauge
+      - counter
+      - histogram
+      title: MetricTypeV4
+    FileUploadUrlResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - url
+      title: FileUploadUrlResponse
+      description: Response containing a signed URL for file upload.
+    SlxResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+          description: 'Full SLX name: workspace--slx-short-name'
+        shortName:
+          type: string
+          title: Shortname
+        alias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alias
+        workspace:
+          type: integer
+          title: Workspace
+          description: Parent workspace ID
+        statement:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Statement
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        asMeasuredBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asmeasuredby
+        metricType:
+          $ref: '#/components/schemas/MetricTypeV4'
+          default: gauge
+        owners:
+          items:
+            type: string
+          type: array
+          title: Owners
+        tags:
+          items:
+            $ref: '#/components/schemas/SlxTagV4'
+          type: array
+          title: Tags
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        imageURL:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Imageurl
+        runbook:
+          anyOf:
+          - $ref: '#/components/schemas/papi__schemas__slx__RunbookResponse'
+          - type: 'null'
+          description: Runbook with tasks
+        sli:
+          anyOf:
+          - $ref: '#/components/schemas/papi__schemas__slx__SliResponse'
+          - type: 'null'
+          description: Service Level Indicator
+        slo:
+          anyOf:
+          - $ref: '#/components/schemas/papi__schemas__slx__SloResponse'
+          - type: 'null'
+          description: Service Level Objective
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          readOnly: true
+      type: object
+      required:
+      - id
+      - name
+      - shortName
+      - workspace
+      - created
+      - modified
+      - spec
+      - status
+      title: SlxResponse
+      description: "Legacy V1/V3 shape: V4 fields + computed ``spec`` and ``status`` for Django-era consumers.\n\nSubclassing keeps flat fields in lock-step with V4. Computed fields rebuild the\nCRD-shape sub-objects from flat ones at serialization time. Sunset path: when\nexternal consumers fully migrate to /api/v4, delete this subclass.\n\nLegacy wire keys preserved by overriding three aliased fields:\n  - ``workspace_id`` → alias ``workspace`` (was ``workspaceId`` in V4)\n  - ``created_at``   → alias ``created``   (was ``createdAt`` in V4)\n  - ``modified_at``  → alias ``modified``  (was ``modifiedAt`` in V4)\n  - ``image_url``    → accepts both ``imageURL`` (legacy) and ``imageUrl`` (V4)"
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

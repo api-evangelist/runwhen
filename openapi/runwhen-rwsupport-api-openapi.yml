@@ -1,0 +1,1429 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy rwsupport API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: rwsupport
+paths:
+  /api/v3/rwsupport/orgs:
+    get:
+      tags:
+      - rwsupport
+      summary: List Orgs
+      description: List all organizations ordered by name.
+      operationId: list_orgs_api_v3_rwsupport_orgs_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/OrgResponse'
+                type: array
+                title: Response List Orgs Api V3 Rwsupport Orgs Get
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - rwsupport
+      summary: Create Org
+      description: Create a new organization.
+      operationId: create_org_api_v3_rwsupport_orgs_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/orgs/{org_id}:
+    get:
+      tags:
+      - rwsupport
+      summary: Get Org
+      description: Get an organization by ID.
+      operationId: get_org_api_v3_rwsupport_orgs__org_id__get
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Org Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - rwsupport
+      summary: Update Org
+      description: 'Update an organization.
+
+
+        Changing tenant_type triggers cleanup of associated LLM configs.'
+      operationId: update_org_api_v3_rwsupport_orgs__org_id__patch
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Org Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - rwsupport
+      summary: Update Org
+      description: 'Update an organization.
+
+
+        Changing tenant_type triggers cleanup of associated LLM configs.'
+      operationId: update_org_api_v3_rwsupport_orgs__org_id__put
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Org Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - rwsupport
+      summary: Delete Org
+      description: Delete an organization.
+      operationId: delete_org_api_v3_rwsupport_orgs__org_id__delete
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Org Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/orgs/{org_id}/assign-workspaces:
+    post:
+      tags:
+      - rwsupport
+      summary: Assign Workspaces
+      description: 'Assign workspaces to an organization.
+
+
+        May require confirmation if workspace-scoped LLM configs will be deleted.'
+      operationId: assign_workspaces_api_v3_rwsupport_orgs__org_id__assign_workspaces_post
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Org Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignWorkspacesRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Assign Workspaces Api V3 Rwsupport Orgs  Org Id  Assign Workspaces Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/llm-providers:
+    get:
+      tags:
+      - rwsupport
+      summary: List Llm Providers
+      description: List LLM providers with optional filtering.
+      operationId: list_llm_providers_api_v3_rwsupport_llm_providers_get
+      parameters:
+      - name: llm_tenant_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Llm Tenant Type
+      - name: provider_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Type
+      - name: owner_org
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Owner Org
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/papi__schemas__rwsupport__LLMProviderResponse'
+                title: Response List Llm Providers Api V3 Rwsupport Llm Providers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - rwsupport
+      summary: Create Llm Provider
+      description: Create an LLM provider with auto-generated vault path.
+      operationId: create_llm_provider_api_v3_rwsupport_llm_providers_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMProviderCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMProviderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/llm-providers/{provider_id}:
+    get:
+      tags:
+      - rwsupport
+      summary: Get Llm Provider
+      description: Get an LLM provider by ID.
+      operationId: get_llm_provider_api_v3_rwsupport_llm_providers__provider_id__get
+      parameters:
+      - name: provider_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Provider Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMProviderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - rwsupport
+      summary: Update Llm Provider
+      description: Update an LLM provider. Name is immutable.
+      operationId: update_llm_provider_api_v3_rwsupport_llm_providers__provider_id__patch
+      parameters:
+      - name: provider_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Provider Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMProviderUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMProviderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - rwsupport
+      summary: Update Llm Provider
+      description: Update an LLM provider. Name is immutable.
+      operationId: update_llm_provider_api_v3_rwsupport_llm_providers__provider_id__put
+      parameters:
+      - name: provider_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Provider Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMProviderUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMProviderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - rwsupport
+      summary: Delete Llm Provider
+      description: Delete an LLM provider with protection and vault cleanup.
+      operationId: delete_llm_provider_api_v3_rwsupport_llm_providers__provider_id__delete
+      parameters:
+      - name: provider_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Provider Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/llm-models:
+    get:
+      tags:
+      - rwsupport
+      summary: List Llm Models
+      description: List LLM models with optional provider filter.
+      operationId: list_llm_models_api_v3_rwsupport_llm_models_get
+      parameters:
+      - name: provider
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Provider
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/papi__schemas__rwsupport__LLMModelResponse'
+                title: Response List Llm Models Api V3 Rwsupport Llm Models Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - rwsupport
+      summary: Create Llm Model
+      description: Create an LLM model.
+      operationId: create_llm_model_api_v3_rwsupport_llm_models_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMModelCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMModelResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/llm-models/{model_id}:
+    get:
+      tags:
+      - rwsupport
+      summary: Get Llm Model
+      description: Get an LLM model by ID.
+      operationId: get_llm_model_api_v3_rwsupport_llm_models__model_id__get
+      parameters:
+      - name: model_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Model Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMModelResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - rwsupport
+      summary: Update Llm Model
+      description: Update an LLM model.
+      operationId: update_llm_model_api_v3_rwsupport_llm_models__model_id__patch
+      parameters:
+      - name: model_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Model Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMModelUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMModelResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - rwsupport
+      summary: Update Llm Model
+      description: Update an LLM model.
+      operationId: update_llm_model_api_v3_rwsupport_llm_models__model_id__put
+      parameters:
+      - name: model_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Model Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMModelUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMModelResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - rwsupport
+      summary: Delete Llm Model
+      description: Delete an LLM model with protection (can't delete if used in configs).
+      operationId: delete_llm_model_api_v3_rwsupport_llm_models__model_id__delete
+      parameters:
+      - name: model_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Model Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/llm-configs:
+    get:
+      tags:
+      - rwsupport
+      summary: List Llm Configs
+      description: List LLM configs with optional filtering.
+      operationId: list_llm_configs_api_v3_rwsupport_llm_configs_get
+      parameters:
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+      - name: workspace
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Workspace
+      - name: org
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Org
+      - name: is_platform_default
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Is Platform Default
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/papi__schemas__rwsupport__LLMConfigResponse'
+                title: Response List Llm Configs Api V3 Rwsupport Llm Configs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - rwsupport
+      summary: Create Llm Config
+      description: Create an LLM config with scope enforcement.
+      operationId: create_llm_config_api_v3_rwsupport_llm_configs_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMConfigCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/llm-configs/{config_id}:
+    get:
+      tags:
+      - rwsupport
+      summary: Get Llm Config By Id
+      description: Get an LLM config by ID.
+      operationId: get_llm_config_by_id_api_v3_rwsupport_llm_configs__config_id__get
+      parameters:
+      - name: config_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Config Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - rwsupport
+      summary: Update Llm Config
+      description: Update an LLM config with scope enforcement.
+      operationId: update_llm_config_api_v3_rwsupport_llm_configs__config_id__patch
+      parameters:
+      - name: config_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Config Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMConfigUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - rwsupport
+      summary: Update Llm Config
+      description: Update an LLM config with scope enforcement.
+      operationId: update_llm_config_api_v3_rwsupport_llm_configs__config_id__put
+      parameters:
+      - name: config_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Config Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMConfigUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__schemas__rwsupport__LLMConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - rwsupport
+      summary: Delete Llm Config
+      description: Delete an LLM config.
+      operationId: delete_llm_config_api_v3_rwsupport_llm_configs__config_id__delete
+      parameters:
+      - name: config_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Config Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/llm-configs/bulk-delete:
+    delete:
+      tags:
+      - rwsupport
+      summary: Bulk Delete Llm Configs
+      description: Bulk delete LLM configs for a workspace.
+      operationId: bulk_delete_llm_configs_api_v3_rwsupport_llm_configs_bulk_delete_delete
+      parameters:
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          description: Workspace ID to delete configs for
+          title: Workspace Id
+        description: Workspace ID to delete configs for
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/workspace-deletion:
+    get:
+      tags:
+      - rwsupport
+      summary: List Tombstones
+      description: 'List all workspace tombstones with audit status.
+
+
+        Response matches Django''s WorkspaceDeletionAuditViewSet.list() contract:
+
+        camelCase keys, includes audit_result, uses ''created'' (not ''created_at'').'
+      operationId: list_tombstones_api_v3_rwsupport_workspace_deletion_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                type: array
+                title: Response List Tombstones Api V3 Rwsupport Workspace Deletion Get
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/workspace-deletion/audit/{workspace_name}:
+    post:
+      tags:
+      - rwsupport
+      summary: Run Audit
+      description: Run full deletion audit for a workspace and persist on tombstone.
+      operationId: run_audit_api_v3_rwsupport_workspace_deletion_audit__workspace_name__post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/workspace-deletion/audit/{workspace_name}/status:
+    get:
+      tags:
+      - rwsupport
+      summary: Get Audit Status
+      description: Get the last audit result for a workspace.
+      operationId: get_audit_status_api_v3_rwsupport_workspace_deletion_audit__workspace_name__status_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/rwsupport/workspace-deletion/cleanup/{workspace_name}:
+    post:
+      tags:
+      - rwsupport
+      summary: Retry Cleanup
+      description: 'Retry failed cleanup steps and re-run audit.
+
+
+        Returns a CleanupResult shape matching the frontend contract:
+
+        { workspaceName, cleanupSteps, cleanupSuccess, auditResult }'
+      operationId: retry_cleanup_api_v3_rwsupport_workspace_deletion_cleanup__workspace_name__post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    OrgCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 150
+          title: Name
+        tenantType:
+          type: string
+          title: Tenanttype
+          default: SHARED
+      type: object
+      required:
+      - name
+      title: OrgCreate
+    papi__schemas__rwsupport__LLMModelResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        provider:
+          type: integer
+          title: Provider
+        providerType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Providertype
+        providerName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Providername
+        modelName:
+          type: string
+          title: Modelname
+        maxTokens:
+          type: integer
+          title: Maxtokens
+          default: 0
+        dimension:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Dimension
+        endpointPath:
+          type: string
+          title: Endpointpath
+          default: /chat/completions
+        created:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created
+        modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Modified
+      type: object
+      required:
+      - id
+      - provider
+      - modelName
+      title: LLMModelResponse
+    LLMModelUpdate:
+      properties:
+        provider:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Provider
+        modelName:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Modelname
+        maxTokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Maxtokens
+        dimension:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Dimension
+        endpointPath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Endpointpath
+      type: object
+      title: LLMModelUpdate
+    LLMConfigCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        category:
+          type: string
+          title: Category
+        llmModel:
+          type: integer
+          title: Llmmodel
+        workspace:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Workspace
+        org:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Org
+        isPlatformDefault:
+          type: boolean
+          title: Isplatformdefault
+          default: false
+      type: object
+      required:
+      - name
+      - category
+      - llmModel
+      title: LLMConfigCreate
+    LLMConfigUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        llmModel:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Llmmodel
+        workspace:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Workspace
+        org:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Org
+        isPlatformDefault:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isplatformdefault
+      type: object
+      title: LLMConfigUpdate
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    LLMModelCreate:
+      properties:
+        provider:
+          type: integer
+          title: Provider
+        modelName:
+          type: string
+          maxLength: 100
+          title: Modelname
+        maxTokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Maxtokens
+        dimension:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Dimension
+        endpointPath:
+          type: string
+          title: Endpointpath
+          default: /chat/completions
+      type: object
+      required:
+      - provider
+      - modelName
+      title: LLMModelCreate
+    papi__schemas__rwsupport__LLMProviderResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        providerType:
+          type: string
+          title: Providertype
+        baseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        apiUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Apiurl
+        credentialsVaultPath:
+          type: string
+          title: Credentialsvaultpath
+          default: ''
+        llmTenantType:
+          type: string
+          title: Llmtenanttype
+          default: SHARED
+        ownerOrg:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ownerorg
+        ownerOrgName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ownerorgname
+        created:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created
+        modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Modified
+      type: object
+      required:
+      - id
+      - name
+      - providerType
+      title: LLMProviderResponse
+    OrgUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 150
+          - type: 'null'
+          title: Name
+        tenantType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tenanttype
+      type: object
+      title: OrgUpdate
+    LLMProviderUpdate:
+      properties:
+        providerType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Providertype
+        baseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        apiKey:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Apikey
+        llmTenantType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Llmtenanttype
+        ownerOrg:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ownerorg
+      type: object
+      title: LLMProviderUpdate
+    OrgResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        tenantType:
+          type: string
+          title: Tenanttype
+        created:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created
+        workspaceCount:
+          type: integer
+          title: Workspacecount
+          default: 0
+      type: object
+      required:
+      - id
+      - name
+      - tenantType
+      title: OrgResponse
+    LLMProviderCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          title: Name
+        providerType:
+          type: string
+          title: Providertype
+        baseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        apiKey:
+          type: string
+          title: Apikey
+        llmTenantType:
+          type: string
+          title: Llmtenanttype
+          default: SHARED
+        ownerOrg:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ownerorg
+      type: object
+      required:
+      - name
+      - providerType
+      - apiKey
+      title: LLMProviderCreate
+    papi__schemas__rwsupport__LLMConfigResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        category:
+          type: string
+          title: Category
+        llmModel:
+          type: integer
+          title: Llmmodel
+        modelName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Modelname
+        providerName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Providername
+        workspace:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Workspace
+        workspaceName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspacename
+        org:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Org
+        orgName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Orgname
+        isPlatformDefault:
+          type: boolean
+          title: Isplatformdefault
+          default: false
+        created:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created
+        modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Modified
+        lastModifiedBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastmodifiedby
+      type: object
+      required:
+      - id
+      - name
+      - category
+      - llmModel
+      title: LLMConfigResponse
+    AssignWorkspacesRequest:
+      properties:
+        workspaceIds:
+          items:
+            type: integer
+          type: array
+          title: Workspaceids
+        confirmConfigDeletion:
+          type: boolean
+          title: Confirmconfigdeletion
+          default: false
+      type: object
+      required:
+      - workspaceIds
+      title: AssignWorkspacesRequest
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

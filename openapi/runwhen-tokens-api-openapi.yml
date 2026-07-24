@@ -1,0 +1,373 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy tokens API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: tokens
+paths:
+  /api/v1/users/tokens:
+    get:
+      tags:
+      - tokens
+      summary: List Tokens
+      description: List all personal access tokens for the current user.
+      operationId: list_tokens_api_v1_users_tokens_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PATResponse'
+                type: array
+                title: Response List Tokens Api V1 Users Tokens Get
+      security:
+      - BearerAuth: []
+  /api/v1/users/tokens/create:
+    post:
+      tags:
+      - tokens
+      summary: Create Token
+      description: Create a new personal access token. The full token is returned only once.
+      operationId: create_token_api_v1_users_tokens_create_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PATCreateRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PATCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/users/tokens/{token_id}/revoke:
+    post:
+      tags:
+      - tokens
+      summary: Revoke Token
+      description: Revoke a personal access token.
+      operationId: revoke_token_api_v1_users_tokens__token_id__revoke_post
+      parameters:
+      - name: token_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Token Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PATResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v1/users/tokens/{token_id}:
+    delete:
+      tags:
+      - tokens
+      summary: Delete Token
+      description: Permanently delete a personal access token.
+      operationId: delete_token_api_v1_users_tokens__token_id__delete
+      parameters:
+      - name: token_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Token Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/tokens:
+    get:
+      tags:
+      - tokens
+      summary: List Tokens
+      description: List all personal access tokens for the current user.
+      operationId: list_tokens_api_v3_users_tokens_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PATResponse'
+                type: array
+                title: Response List Tokens Api V3 Users Tokens Get
+      security:
+      - BearerAuth: []
+  /api/v3/users/tokens/create:
+    post:
+      tags:
+      - tokens
+      summary: Create Token
+      description: Create a new personal access token. The full token is returned only once.
+      operationId: create_token_api_v3_users_tokens_create_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PATCreateRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PATCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/tokens/{token_id}/revoke:
+    post:
+      tags:
+      - tokens
+      summary: Revoke Token
+      description: Revoke a personal access token.
+      operationId: revoke_token_api_v3_users_tokens__token_id__revoke_post
+      parameters:
+      - name: token_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Token Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PATResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/users/tokens/{token_id}:
+    delete:
+      tags:
+      - tokens
+      summary: Delete Token
+      description: Permanently delete a personal access token.
+      operationId: delete_token_api_v3_users_tokens__token_id__delete
+      parameters:
+      - name: token_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Token Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    PATCreateResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        tokenSuffix:
+          type: string
+          title: Tokensuffix
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        expiresAt:
+          type: string
+          format: date-time
+          title: Expiresat
+        isRevoked:
+          type: boolean
+          title: Isrevoked
+        isExpired:
+          type: boolean
+          title: Isexpired
+        isActive:
+          type: boolean
+          title: Isactive
+        lastUsedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastusedat
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - id
+      - name
+      - tokenSuffix
+      - createdAt
+      - expiresAt
+      - isRevoked
+      - isExpired
+      - isActive
+      - lastUsedAt
+      - token
+      title: PATCreateResponse
+      description: Returned only at creation time -- includes the full token value.
+    PATResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        tokenSuffix:
+          type: string
+          title: Tokensuffix
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        expiresAt:
+          type: string
+          format: date-time
+          title: Expiresat
+        isRevoked:
+          type: boolean
+          title: Isrevoked
+        isExpired:
+          type: boolean
+          title: Isexpired
+        isActive:
+          type: boolean
+          title: Isactive
+        lastUsedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastusedat
+      type: object
+      required:
+      - id
+      - name
+      - tokenSuffix
+      - createdAt
+      - expiresAt
+      - isRevoked
+      - isExpired
+      - isActive
+      - lastUsedAt
+      title: PATResponse
+    PATCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Name
+        days:
+          type: integer
+          maximum: 180.0
+          minimum: 1.0
+          title: Days
+          default: 30
+      type: object
+      required:
+      - name
+      title: PATCreateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

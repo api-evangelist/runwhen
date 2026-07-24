@@ -1,0 +1,379 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy workflows API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: workflows
+paths:
+  /api/v3/workspaces/{workspace_short_name}/workflows:
+    get:
+      tags:
+      - workflows
+      summary: List workflows for a workspace
+      description: "List all workflows for a workspace.\n\nArgs:\n    request: The HTTP request.\n    workspace_short_name: The short name of the workspace.\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of workflows.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+      operationId: list_workflows_api_v3_workspaces__workspace_short_name__workflows_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/workflows/{workflow_short_name}:
+    get:
+      tags:
+      - workflows
+      summary: Get a workflow by short name
+      description: "Get a workflow by its short name.\n\nArgs:\n    workspace_short_name: The short name of the workspace.\n    workflow_short_name: The short name of the workflow.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The workflow details.\n\nRaises:\n    HTTPException: 404 if workspace or workflow not found."
+      operationId: get_workflow_api_v3_workspaces__workspace_short_name__workflows__workflow_short_name__get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: workflow_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workflow Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/workflows/{workflow_short_name}/webhook-url:
+    get:
+      tags:
+      - workflows
+      summary: Get workflow webhook URL
+      description: "Get the webhook URL for a workflow.\n\nArgs:\n    workspace_short_name: The workspace name.\n    workflow_short_name: The workflow short name.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Webhook URL."
+      operationId: get_workflow_webhook_url_api_v3_workspaces__workspace_short_name__workflows__workflow_short_name__webhook_url_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: workflow_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workflow Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookUrlResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/workflows/{workflow_short_name}/token:
+    get:
+      tags:
+      - workflows
+      summary: Get workflow webhook token (admin only)
+      description: "Get the webhook token for a workflow.\n\nThis endpoint can only be called once. After the token is retrieved,\nyou must rotate it to get a new one.\n\nArgs:\n    workspace_short_name: The workspace name.\n    workflow_short_name: The workflow short name.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Webhook URL and token."
+      operationId: get_workflow_token_api_v3_workspaces__workspace_short_name__workflows__workflow_short_name__token_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: workflow_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workflow Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/workflows/{workflow_short_name}/rotate-token:
+    patch:
+      tags:
+      - workflows
+      summary: Rotate workflow webhook token (admin only)
+      description: "Rotate the webhook token for a workflow.\n\nThis triggers regeneration of the webhook token.\n\nArgs:\n    workspace_short_name: The workspace name.\n    workflow_short_name: The workflow short name.\n    session: Database session.\n    current_user: The authenticated user."
+      operationId: rotate_workflow_token_api_v3_workspaces__workspace_short_name__workflows__workflow_short_name__rotate_token_patch
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: workflow_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workflow Short Name
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/workflows/{workflow_short_name}/run:
+    post:
+      tags:
+      - workflows
+      summary: Run a workflow
+      description: "Run a workflow by sending a webhook event.\n\nArgs:\n    workspace_short_name: The workspace name.\n    workflow_short_name: The workflow short name.\n    request: The HTTP request containing run parameters.\n    session: Database session.\n    current_user: The authenticated user."
+      operationId: run_workflow_api_v3_workspaces__workspace_short_name__workflows__workflow_short_name__run_post
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: workflow_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workflow Short Name
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WorkflowListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/WorkflowResponse'
+          type: array
+          title: Results
+          description: List of workflow items
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: WorkflowListResponse
+      description: 'Paginated list response for Workflow endpoints.
+
+
+        Subclasses WorkflowListResponseV4 but overrides results to use legacy WorkflowResponse items.'
+    WebhookUrlResponse:
+      properties:
+        webhook_url:
+          type: string
+          title: Webhook Url
+      type: object
+      required:
+      - webhook_url
+      title: WebhookUrlResponse
+      description: Response for webhook URL.
+    WebhookTokenResponse:
+      properties:
+        webhook_url:
+          type: string
+          title: Webhook Url
+        webhook_token:
+          type: string
+          title: Webhook Token
+      type: object
+      required:
+      - webhook_url
+      - webhook_token
+      title: WebhookTokenResponse
+      description: Response for webhook token.
+    WorkflowResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+          description: 'Full workflow name: workspace--workflow-short-name'
+        shortName:
+          type: string
+          title: Shortname
+          description: Short name (workspace prefix stripped)
+          default: ''
+        workspace:
+          type: integer
+          title: Workspace
+          description: Parent workspace ID
+        definition:
+          additionalProperties: true
+          type: object
+          title: Definition
+        created:
+          title: Created
+          description: Creation timestamp
+        modified:
+          title: Modified
+          description: Last modification timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Alias for definition — UI reads workflow.spec.fromActivities.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Empty status for Django compatibility.
+          readOnly: true
+      type: object
+      required:
+      - id
+      - name
+      - workspace
+      - created
+      - modified
+      - spec
+      - status
+      title: WorkflowResponse
+      description: "Workflow response schema for API responses (legacy V1/V3 wire shape).\n\nSubclasses WorkflowResponseV4 (flat V4 fields) and layers on:\n  - Legacy wire keys: ``workspace`` (was ``workspaceId``),\n    ``created`` (was ``createdAt``), ``modified`` (was ``modifiedAt``)\n  - Computed ``spec`` and ``status`` for Django-era consumers\n\nspec is the workflow definition (UI reads workflow.spec.fromActivities).\nSunset path: when external consumers fully migrate to /api/v4, delete this subclass."
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

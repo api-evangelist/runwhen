@@ -1,0 +1,273 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy personas API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: personas
+paths:
+  /api/v3/workspaces/{workspace_short_name}/personas:
+    get:
+      tags:
+      - personas
+      summary: List personas for a workspace
+      description: "List all personas for a workspace.\n\nArgs:\n    request: The HTTP request.\n    workspace_short_name: The short name of the workspace.\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of personas.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+      operationId: list_personas_api_v3_workspaces__workspace_short_name__personas_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/personas/{persona_short_name}:
+    get:
+      tags:
+      - personas
+      summary: Get a persona by short name
+      description: "Get a persona by its short name.\n\nArgs:\n    workspace_short_name: The short name of the workspace.\n    persona_short_name: The short name of the persona.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The persona details.\n\nRaises:\n    HTTPException: 404 if workspace or persona not found."
+      operationId: get_persona_api_v3_workspaces__workspace_short_name__personas__persona_short_name__get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: persona_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Persona Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    PersonaListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PersonaResponse'
+          type: array
+          title: Results
+          description: List of persona items
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: PersonaListResponse
+      description: 'Paginated list response for Persona endpoints.
+
+
+        Subclasses PersonaListResponseV4 but overrides results to use legacy PersonaResponse items.'
+    PersonaResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+          description: 'Full persona name: workspace--persona-short-name'
+        shortName:
+          type: string
+          title: Shortname
+          description: Short name (workspace prefix stripped)
+          default: ''
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+          description: Human-readable display name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+          description: Avatar image URL
+        workspace:
+          type: integer
+          title: Workspace
+          description: Parent workspace ID
+        filterConfidenceThreshold:
+          type: number
+          title: Filterconfidencethreshold
+          description: Confidence threshold for filtering results
+          default: 0.5
+        filterIssueSelectionStrategy:
+          type: string
+          title: Filterissueselectionstrategy
+          description: Strategy for selecting issues
+          default: MOST_SEVERE
+        filterCodebundleTaskTags:
+          items:
+            type: string
+          type: array
+          title: Filtercodebundletasktags
+          description: Task tags to filter code bundles
+        filterStopWords:
+          items:
+            type: string
+          type: array
+          title: Filterstopwords
+          description: Words to remove from search queries
+        filterScope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Filterscope
+          description: Scope filter for results
+        searchFilters:
+          additionalProperties: true
+          type: object
+          title: Searchfilters
+          description: Search filter operators for vector search
+        runConfidenceThreshold:
+          type: number
+          title: Runconfidencethreshold
+          description: Confidence threshold for automatic runs
+          default: 0.95
+        runConfig:
+          additionalProperties: true
+          type: object
+          title: Runconfig
+          description: Run configuration (allow/disallow/budget settings)
+        created:
+          title: Created
+          description: Creation timestamp
+        modified:
+          title: Modified
+          description: Last modification timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Return spec dict matching Django's CoreModelSerializer structure.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Return empty status dict matching Django's CoreModelSerializer structure.
+          readOnly: true
+      type: object
+      required:
+      - id
+      - name
+      - workspace
+      - created
+      - modified
+      - spec
+      - status
+      title: PersonaResponse
+      description: "Persona response schema for API responses (legacy V1/V3 wire shape).\n\nSubclasses PersonaResponseV4 (flat V4 fields) and layers on:\n  - Legacy wire keys: ``workspace`` (was ``workspaceId``),\n    ``created`` (was ``createdAt``), ``modified`` (was ``modifiedAt``)\n  - camelCase aliases for filter/run fields\n  - Computed ``spec`` and ``status`` for Django-era consumers\n\nSunset path: when external consumers fully migrate to /api/v4, delete this subclass."
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

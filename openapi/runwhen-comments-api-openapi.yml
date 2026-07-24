@@ -1,0 +1,474 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy comments API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: comments
+paths:
+  /api/v3/workspaces/{workspace_short_name}/runsessions/{runsession_id}/comments:
+    get:
+      tags:
+      - comments
+      summary: List comments for a run session
+      description: List all top-level comments for a run session with their replies.
+      operationId: list_runsession_comments_api_v3_workspaces__workspace_short_name__runsessions__runsession_id__comments_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: runsession_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Runsession Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentResponse'
+                title: Response List Runsession Comments Api V3 Workspaces  Workspace Short Name  Runsessions  Runsession Id  Comments Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/issues/{issue_id}/comments:
+    get:
+      tags:
+      - comments
+      summary: List comments for an issue
+      description: "List all top-level comments for an issue with their replies.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of top-level comments with nested replies."
+      operationId: list_issue_comments_api_v3_workspaces__workspace_short_name__issues__issue_id__comments_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentResponse'
+                title: Response List Issue Comments Api V3 Workspaces  Workspace Short Name  Issues  Issue Id  Comments Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - comments
+      summary: Create a comment on an issue
+      description: "Create a new top-level comment on an issue.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_data: The comment creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created comment."
+      operationId: create_issue_comment_api_v3_workspaces__workspace_short_name__issues__issue_id__comments_post
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/runsessions/{runsession_id}/issueoccurrences/{issue_id}/comments:
+    get:
+      tags:
+      - comments
+      summary: List comments for an issue occurrence (alias)
+      description: 'List comments for an issue via the occurrence URL pattern.
+
+
+        The frontend constructs this URL when viewing issue comments within
+
+        a run session context. Delegates to the same issue comment lookup.'
+      operationId: list_issue_occurrence_comments_api_v3_workspaces__workspace_short_name__runsessions__runsession_id__issueoccurrences__issue_id__comments_get
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: runsession_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Runsession Id
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentResponse'
+                title: Response List Issue Occurrence Comments Api V3 Workspaces  Workspace Short Name  Runsessions  Runsession Id  Issueoccurrences  Issue Id  Comments Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/issues/{issue_id}/comments/{comment_id}/replies:
+    post:
+      tags:
+      - comments
+      summary: Reply to a comment
+      description: "Create a reply to an existing comment.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_id: The parent comment ID to reply to.\n    reply_data: The reply creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created reply comment.\n\nRaises:\n    HTTPException: 404 if parent comment not found."
+      operationId: create_issue_comment_reply_api_v3_workspaces__workspace_short_name__issues__issue_id__comments__comment_id__replies_post
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      - name: comment_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Comment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentReplyCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v3/workspaces/{workspace_short_name}/issues/{issue_id}/comments/{comment_id}:
+    patch:
+      tags:
+      - comments
+      summary: Update a comment
+      description: "Update an existing comment's content.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_id: The comment ID to update.\n    comment_data: The comment update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated comment.\n\nRaises:\n    HTTPException: 404 if comment not found."
+      operationId: update_issue_comment_api_v3_workspaces__workspace_short_name__issues__issue_id__comments__comment_id__patch
+      parameters:
+      - name: workspace_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Short Name
+      - name: issue_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Issue Id
+      - name: comment_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Comment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CommentUpdate:
+      properties:
+        content:
+          type: string
+          title: Content
+          description: Updated comment text content
+      type: object
+      required:
+      - content
+      title: CommentUpdate
+      description: Schema for updating an existing comment.
+    CommentReplyCreate:
+      properties:
+        content:
+          type: string
+          title: Content
+          description: Reply text content (markdown supported)
+        action:
+          anyOf:
+          - $ref: '#/components/schemas/CommentAction'
+          - type: 'null'
+          description: Optional action to take (resolve/reopen thread)
+        escalated:
+          type: boolean
+          title: Escalated
+          description: Whether to escalate the associated entity
+          default: false
+      type: object
+      required:
+      - content
+      title: CommentReplyCreate
+      description: Schema for creating a reply to an existing comment.
+    CommentResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Unique comment identifier
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+          description: Comment text content (markdown)
+        htmlContent:
+          type: string
+          title: Htmlcontent
+          description: Rendered HTML content
+          default: ''
+        deleted:
+          type: boolean
+          title: Deleted
+          description: Whether comment has been soft-deleted
+          default: false
+        resolved:
+          type: boolean
+          title: Resolved
+          description: Whether comment thread is resolved
+          default: false
+        action:
+          anyOf:
+          - $ref: '#/components/schemas/CommentAction'
+          - type: 'null'
+          description: Action taken by this comment (resolve/reopen)
+        author:
+          $ref: '#/components/schemas/CommentAuthorResponse'
+          description: Comment author information
+        replies:
+          items:
+            $ref: '#/components/schemas/CommentResponse'
+          type: array
+          title: Replies
+          description: Child replies to this comment
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last modification timestamp
+      type: object
+      required:
+      - id
+      - author
+      - created
+      - modified
+      title: CommentResponse
+      description: 'Comment response schema for API responses.
+
+
+        Uses camelCase aliases for frontend compatibility.
+
+        Supports nested replies for threaded comments.'
+    CommentCreate:
+      properties:
+        content:
+          type: string
+          title: Content
+          description: Comment text content (markdown supported)
+        escalated:
+          type: boolean
+          title: Escalated
+          description: Whether to escalate the associated entity
+          default: false
+      type: object
+      required:
+      - content
+      title: CommentCreate
+      description: Schema for creating a top-level comment.
+    CommentAuthorResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Unique user identifier
+        username:
+          type: string
+          title: Username
+          description: Username
+        primaryEmail:
+          type: string
+          title: Primaryemail
+          description: User's primary email address
+        fullName:
+          type: string
+          title: Fullname
+          description: User's full display name
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+          description: URL to user's avatar image
+        isStaff:
+          type: boolean
+          title: Isstaff
+          description: Whether user is a staff member
+        isServiceAccount:
+          type: boolean
+          title: Isserviceaccount
+          description: Whether user is a service account
+      type: object
+      required:
+      - id
+      - username
+      - primaryEmail
+      - fullName
+      - isStaff
+      - isServiceAccount
+      title: CommentAuthorResponse
+      description: 'Author information for comment responses.
+
+
+        Uses camelCase aliases for frontend compatibility.'
+    CommentAction:
+      type: string
+      enum:
+      - resolve
+      - reopen
+      title: CommentAction
+      description: Actions that can be taken on a comment thread.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

@@ -1,0 +1,828 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy slx-v4 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: slx-v4
+paths:
+  /api/v4/workspaces/{workspace_name}/slxs:
+    get:
+      tags:
+      - slx-v4
+      summary: List Slxs
+      operationId: list_slxs_api_v4_workspaces__workspace_name__slxs_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlxListResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/slxs/{slx_short_name}:
+    get:
+      tags:
+      - slx-v4
+      summary: Get Slx
+      operationId: get_slx_api_v4_workspaces__workspace_name__slxs__slx_short_name__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlxResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - slx-v4
+      summary: Soft-delete an SLX (V4, short-name URL)
+      description: 'Soft-delete an SLX by its short name (the v4-consistent URL form).
+
+
+        Mirrors the v4 GET pattern: clients pass the short name (e.g. ``my-slx``);
+
+        the handler forms the full DB name (``{workspace}--{short_name}``) before
+
+        invoking ``SlxSyncService.soft_delete``. This matches what the UI already
+
+        sends — the legacy ``sync_router`` DELETE at ``/api/v1/.../slxs/{name}``
+
+        took the full name as the path param, and a UI sending a short name
+
+        against it always landed on ``status="not_found"`` (silent no-op).'
+      operationId: delete_slx_api_v4_workspaces__workspace_name__slxs__slx_short_name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/slxs/sync-typed:
+    post:
+      tags:
+      - slx-v4
+      summary: Upsert an SLX (V4 typed payload)
+      operationId: sync_slx_typed_api_v4_workspaces__workspace_name__slxs_sync_typed_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlxSyncRequestV4'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    RunbookTaskV4:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Task tags
+      type: object
+      required:
+      - name
+      - value
+      title: RunbookTaskV4
+      description: Individual task in a runbook (V4 wire shape).
+    SlxSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/SlxPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: SlxSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/slxs/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+    SliResponseV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        displayUnitsLong:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitslong
+        displayUnitsShort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitsshort
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        intervalStrategy:
+          type: string
+          title: Intervalstrategy
+          default: intermezzo
+        intervalSeconds:
+          type: integer
+          title: Intervalseconds
+          default: 300
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        alertConfig:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Alertconfig
+        lastRunCode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastruncode
+        lastRunMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastrunmessage
+        lastRunAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastrunat
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - slxId
+      - createdAt
+      - modifiedAt
+      title: SliResponseV4
+      description: Flat-shape SLI detail response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SlxPayloadV4:
+      properties:
+        name:
+          type: string
+          title: Name
+        alias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alias
+        statement:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Statement
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        asMeasuredBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asmeasuredby
+        metricType:
+          $ref: '#/components/schemas/MetricTypeV4'
+          default: gauge
+        owners:
+          items:
+            type: string
+          type: array
+          title: Owners
+        tags:
+          items:
+            $ref: '#/components/schemas/SlxTagV4'
+          type: array
+          title: Tags
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        imageUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Imageurl
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: SlxPayloadV4
+      description: Writable subset of SLX (the body of a sync upsert).
+    SloResponseV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        sloSpecType:
+          type: string
+          title: Slospectype
+          default: simple-mwmb
+        objective:
+          type: number
+          title: Objective
+          default: 99.9
+        threshold:
+          type: integer
+          title: Threshold
+          default: 9
+        operand:
+          type: string
+          title: Operand
+          default: eq
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePathToYaml:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepathtoyaml
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        generation:
+          type: integer
+          title: Generation
+          default: 0
+        generationChecksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generationchecksum
+        ruleGroups:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Rulegroups
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+        monthErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Montherrorbudgetremaining
+        thirtyDayErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thirtydayerrorbudgetremaining
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - slxId
+      - createdAt
+      - modifiedAt
+      title: SloResponseV4
+      description: Flat-shape SLO detail response.
+    SlxListResponseV4:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/SlxResponseV4'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: SlxListResponseV4
+      description: Paginated list of SLXs.
+    SlxTagV4:
+      properties:
+        name:
+          type: string
+          title: Name
+        value:
+          type: string
+          title: Value
+      type: object
+      required:
+      - name
+      - value
+      title: SlxTagV4
+    RunbookResponseV4:
+      properties:
+        id:
+          type: integer
+          title: Id
+        slxId:
+          type: integer
+          title: Slxid
+        name:
+          type: string
+          title: Name
+          default: ''
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        runtimeVarsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Runtimevarsprovided
+        requirements:
+          additionalProperties: true
+          type: object
+          title: Requirements
+        lookbackWindow:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lookbackwindow
+        resolvedTasks:
+          items:
+            type: string
+          type: array
+          title: Resolvedtasks
+        taskDetails:
+          additionalProperties: true
+          type: object
+          title: Taskdetails
+        lastRunCode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastruncode
+        lastRunMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastrunmessage
+        lastRunAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastrunat
+        tasks:
+          items:
+            $ref: '#/components/schemas/RunbookTaskV4'
+          type: array
+          title: Tasks
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - id
+      - slxId
+      - createdAt
+      - modifiedAt
+      title: RunbookResponseV4
+      description: Flat-shape Runbook detail response.
+    SlxResponseV4:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+          description: 'Full SLX name: workspace--slx-short-name'
+        shortName:
+          type: string
+          title: Shortname
+        alias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alias
+        workspaceId:
+          type: integer
+          title: Workspaceid
+        statement:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Statement
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        asMeasuredBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asmeasuredby
+        metricType:
+          $ref: '#/components/schemas/MetricTypeV4'
+          default: gauge
+        owners:
+          items:
+            type: string
+          type: array
+          title: Owners
+        tags:
+          items:
+            $ref: '#/components/schemas/SlxTagV4'
+          type: array
+          title: Tags
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        imageUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Imageurl
+        runbook:
+          anyOf:
+          - $ref: '#/components/schemas/RunbookResponseV4'
+          - type: 'null'
+        sli:
+          anyOf:
+          - $ref: '#/components/schemas/SliResponseV4'
+          - type: 'null'
+        slo:
+          anyOf:
+          - $ref: '#/components/schemas/SloResponseV4'
+          - type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - id
+      - name
+      - shortName
+      - workspaceId
+      - createdAt
+      - modifiedAt
+      title: SlxResponseV4
+      description: Flat-shape SLX detail response.
+    MetricTypeV4:
+      type: string
+      enum:
+      - gauge
+      - counter
+      - histogram
+      title: MetricTypeV4
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

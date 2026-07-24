@@ -1,0 +1,335 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy slo-v4 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: slo-v4
+paths:
+  /api/v4/workspaces/{workspace_name}/slxs/{slx_short_name}/slo:
+    get:
+      tags:
+      - slo-v4
+      summary: Get Slo
+      operationId: get_slo_api_v4_workspaces__workspace_name__slxs__slx_short_name__slo_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SloResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - slo-v4
+      summary: Soft-delete the SLO attached to an SLX (V4, short-name URL)
+      description: 'Soft-delete the SLO that belongs to ``{slx_short_name}`` in this workspace.
+
+
+        Mirrors the v4 GET URL (``/slxs/{slx_short_name}/slo``). SLO rows are
+
+        keyed by ``slx_id`` (1-1 with the parent SLX).'
+      operationId: delete_slo_api_v4_workspaces__workspace_name__slxs__slx_short_name__slo_delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: slx_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slx Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/slos/sync-typed:
+    post:
+      tags:
+      - slo-v4
+      summary: Upsert an SLO (V4 typed payload)
+      operationId: sync_slo_typed_api_v4_workspaces__workspace_name__slos_sync_typed_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SloSyncRequestV4'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    SloPayloadV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        sloSpecType:
+          type: string
+          title: Slospectype
+          default: simple-mwmb
+        objective:
+          type: number
+          title: Objective
+          default: 99.9
+        threshold:
+          type: integer
+          title: Threshold
+          default: 9
+        operand:
+          type: string
+          title: Operand
+          default: eq
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePathToYaml:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepathtoyaml
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+      additionalProperties: false
+      type: object
+      required:
+      - slxId
+      title: SloPayloadV4
+      description: Writable subset of SLO (the body of a sync upsert).
+    SloSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/SloPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: SloSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/slos/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SloResponseV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        sloSpecType:
+          type: string
+          title: Slospectype
+          default: simple-mwmb
+        objective:
+          type: number
+          title: Objective
+          default: 99.9
+        threshold:
+          type: integer
+          title: Threshold
+          default: 9
+        operand:
+          type: string
+          title: Operand
+          default: eq
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePathToYaml:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepathtoyaml
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        generation:
+          type: integer
+          title: Generation
+          default: 0
+        generationChecksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generationchecksum
+        ruleGroups:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Rulegroups
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+        monthErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Montherrorbudgetremaining
+        thirtyDayErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thirtydayerrorbudgetremaining
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - slxId
+      - createdAt
+      - modifiedAt
+      title: SloResponseV4
+      description: Flat-shape SLO detail response.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy llm-config API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: llm-config
+paths:
+  /api/v3/llmconfigs:
+    get:
+      tags:
+      - llm-config
+      summary: Get Llm Config
+      description: 'Get LLM configuration.
+
+
+        When ``workspace`` is provided, resolution is workspace → org → platform default.
+
+        When ``workspace`` is omitted, returns the platform default for ``category`` directly.'
+      operationId: get_llm_config_api_v3_llmconfigs_get
+      parameters:
+      - name: workspace
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Workspace short name; omit to fetch the platform default
+          title: Workspace
+        description: Workspace short name; omit to fetch the platform default
+      - name: category
+        in: query
+        required: false
+        schema:
+          type: string
+          description: LLM category
+          default: DEFAULT
+          title: Category
+        description: LLM category
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/papi__routers__llm_config__LLMConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    papi__routers__llm_config__LLMProviderResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        providerType:
+          type: string
+          title: Providertype
+        baseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        apiUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Apiurl
+        credentialsVaultPath:
+          type: string
+          title: Credentialsvaultpath
+          default: ''
+        llmTenantType:
+          type: string
+          title: Llmtenanttype
+          default: SHARED
+      type: object
+      required:
+      - id
+      - name
+      - providerType
+      title: LLMProviderResponse
+      description: LLM Provider response schema.
+    papi__routers__llm_config__LLMModelResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        modelName:
+          type: string
+          title: Modelname
+        maxTokens:
+          type: integer
+          title: Maxtokens
+          default: 0
+        dimension:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Dimension
+        endpointPath:
+          type: string
+          title: Endpointpath
+          default: /chat/completions
+        endpointUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Endpointurl
+        provider:
+          $ref: '#/components/schemas/papi__routers__llm_config__LLMProviderResponse'
+      type: object
+      required:
+      - id
+      - modelName
+      - provider
+      title: LLMModelResponse
+      description: LLM Model response schema.
+    papi__routers__llm_config__LLMConfigResponse:
+      properties:
+        llmModel:
+          $ref: '#/components/schemas/papi__routers__llm_config__LLMModelResponse'
+      type: object
+      required:
+      - llmModel
+      title: LLMConfigResponse
+      description: LLM Config response schema.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login

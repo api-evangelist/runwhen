@@ -1,0 +1,414 @@
+openapi: 3.1.0
+info:
+  title: papi alert-query-proxy persona-v4 API
+  description: RunWhen Platform API
+  version: 2.0.0
+tags:
+- name: persona-v4
+paths:
+  /api/v4/workspaces/{workspace_name}/personas:
+    get:
+      tags:
+      - persona-v4
+      summary: List Personas
+      operationId: list_personas_api_v4_workspaces__workspace_name__personas_get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Maximum number of results
+          default: 100
+          title: Limit
+        description: Maximum number of results
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+          default: 0
+          title: Offset
+        description: Number of results to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaListResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/personas/{persona_short_name}:
+    get:
+      tags:
+      - persona-v4
+      summary: Get Persona
+      operationId: get_persona_api_v4_workspaces__workspace_name__personas__persona_short_name__get
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: persona_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Persona Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaResponseV4'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - persona-v4
+      summary: Soft-delete a Persona (V4, short-name URL)
+      description: Soft-delete a Persona by its short name (mirrors the v4 GET URL).
+      operationId: delete_persona_api_v4_workspaces__workspace_name__personas__persona_short_name__delete
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      - name: persona_short_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Persona Short Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+  /api/v4/workspaces/{workspace_name}/personas/sync-typed:
+    post:
+      tags:
+      - persona-v4
+      summary: Upsert a Persona (V4 typed payload)
+      operationId: sync_persona_typed_api_v4_workspaces__workspace_name__personas_sync_typed_post
+      parameters:
+      - name: workspace_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workspace Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaSyncRequestV4'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PersonaPayloadV4:
+      properties:
+        name:
+          type: string
+          title: Name
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+        workspaceId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Workspaceid
+        filterConfidenceThreshold:
+          type: number
+          title: Filterconfidencethreshold
+          default: 0.5
+        filterIssueSelectionStrategy:
+          type: string
+          title: Filterissueselectionstrategy
+          default: MOST_SEVERE
+        filterCodebundleTaskTags:
+          items:
+            type: string
+          type: array
+          title: Filtercodebundletasktags
+        filterStopWords:
+          items:
+            type: string
+          type: array
+          title: Filterstopwords
+        filterScope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Filterscope
+        searchFilters:
+          additionalProperties: true
+          type: object
+          title: Searchfilters
+        runConfidenceThreshold:
+          type: number
+          title: Runconfidencethreshold
+          default: 0.95
+        runConfig:
+          additionalProperties: true
+          type: object
+          title: Runconfig
+      type: object
+      required:
+      - name
+      title: PersonaPayloadV4
+      description: 'Writable subset of Persona (the body of a sync upsert).
+
+
+        Lenient base on purpose. ``user-pages/utils/resources/useAssistants.ts``
+
+        currently posts nested ``filter`` / ``run`` / ``search`` objects (the
+
+        pre-flat wire shape) plus a ``...templateSpec`` spread of the workspace''s
+
+        default persona manifest. Flipping this class to ``V4RequestModel`` (per
+
+        RW-944''s "extra unknown fields rejected") would 422 every existing UI
+
+        persona write. Tracked as a follow-up: rework the UI to use the flat
+
+        fields produced by ``user-pages/utils/yamlMappers/persona.ts`` and then
+
+        promote this class to ``V4RequestModel``.'
+    PersonaResponseV4:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+          description: 'Full persona name: workspace--persona-short-name'
+        shortName:
+          type: string
+          title: Shortname
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+        workspaceId:
+          type: integer
+          title: Workspaceid
+        filterConfidenceThreshold:
+          type: number
+          title: Filterconfidencethreshold
+          default: 0.5
+        filterIssueSelectionStrategy:
+          type: string
+          title: Filterissueselectionstrategy
+          default: MOST_SEVERE
+        filterCodebundleTaskTags:
+          items:
+            type: string
+          type: array
+          title: Filtercodebundletasktags
+        filterStopWords:
+          items:
+            type: string
+          type: array
+          title: Filterstopwords
+        filterScope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Filterscope
+        searchFilters:
+          additionalProperties: true
+          type: object
+          title: Searchfilters
+        runConfidenceThreshold:
+          type: number
+          title: Runconfidencethreshold
+          default: 0.95
+        runConfig:
+          additionalProperties: true
+          type: object
+          title: Runconfig
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - id
+      - name
+      - shortName
+      - workspaceId
+      - createdAt
+      - modifiedAt
+      title: PersonaResponseV4
+      description: Flat-shape Persona detail response.
+    PersonaSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/PersonaPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: PersonaSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/personas/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+    PersonaListResponseV4:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PersonaResponseV4'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: PersonaListResponseV4
+      description: Paginated list of Personas.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from /api/v3/token/ or Auth0 login
