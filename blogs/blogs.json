@@ -2,13 +2,20 @@
   "repo": "runwhen",
   "feeds": [
     {
+      "source": "https://docs.runwhen.com/blog/rss.xml",
+      "feed_url": "https://docs.runwhen.com/blog/rss.xml",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
       "source": "https://docs.runwhen.com/docs/install/quick-start",
       "feed_url": "https://docs.runwhen.com/blog/rss.xml",
       "title": "",
-      "saved": 1,
+      "saved": 0,
       "method": "discovered"
     }
   ],
-  "post_count": 1,
-  "fetched": "2026-07-25T15:00:33Z"
+  "post_count": 22,
+  "fetched": "2026-08-01T15:49:00Z"
 }
