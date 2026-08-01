@@ -1,0 +1,22 @@
+generated: '2026-07-21'
+method: searched
+source: https://pypi.org/project/runwhen-platform-mcp/ + https://github.com/runwhen-contrib
+note: RunWhen does not publish a general-purpose REST client SDK; the first-party installable package
+  is the Platform MCP server. Open-source code collections (troubleshooting libraries) live in the GitHub
+  org.
+packages:
+- language: python
+  registry: pypi
+  name: runwhen-platform-mcp
+  url: https://pypi.org/project/runwhen-platform-mcp/
+  install: pip install runwhen-platform-mcp
+  version: 2026.7.7.1
+  official: true
+  kind: mcp-server
+- language: docker
+  registry: ghcr
+  name: ghcr.io/runwhen-contrib/runwhen-platform-mcp
+  url: https://github.com/runwhen-contrib/runwhen-platform-mcp/pkgs/container/runwhen-platform-mcp
+  install: docker pull ghcr.io/runwhen-contrib/runwhen-platform-mcp:latest
+  official: true
+  kind: mcp-server

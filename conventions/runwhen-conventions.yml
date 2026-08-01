@@ -1,0 +1,30 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.runwhen.com/docs/use/api-reference + openapi
+authentication:
+  style: bearer-jwt
+  header: 'Authorization: Bearer <token>'
+  token_endpoint: POST /api/v3/token/
+  refresh: POST /api/v3/token/refresh/
+  service_accounts: /api/v3/workspaces/{workspace}/service-account-tokens (scoped, explicit expiry)
+  artifact: authentication/runwhen-authentication.yml
+idempotency:
+  supported: false
+  note: No Idempotency-Key header/parameter is documented or present in the OpenAPI spec.
+versioning:
+  style: uri-path
+  current: v4 (v1/v3 also active)
+  example: /api/v3/...
+  artifact: lifecycle/runwhen-lifecycle.yml
+scoping:
+  model: workspace-scoped
+  note: Most resources are nested under /workspaces/{workspace_name}/...
+error_envelope:
+  field: detail
+  content_type: application/json
+  artifact: errors/runwhen-problem-types.yml
+base_url:
+  saas: https://papi.beta.runwhen.com
+  self_hosted: https://papi.<your-domain>
+rate_limiting:
+  documented: false

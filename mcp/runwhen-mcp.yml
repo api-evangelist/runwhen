@@ -1,0 +1,30 @@
+generated: '2026-07-21'
+method: searched
+status: published
+source: https://github.com/runwhen-contrib/runwhen-platform-mcp
+server:
+  name: runwhen-platform-mcp
+  transport: http
+  url: https://mcp.beta.runwhen.com/mcp
+  also_local: true
+  install:
+    pip: pip install runwhen-platform-mcp
+    docker: ghcr.io/runwhen-contrib/runwhen-platform-mcp:latest
+  package: runwhen-platform-mcp
+  version_seen: 2026.7.7.1
+  auth: RunWhen JWT / Personal Access Token (Bearer); HTTP mode supports OAuth browser sign-in
+  env:
+  - RW_API_URL
+  - RUNWHEN_TOKEN
+  - DEFAULT_WORKSPACE
+clients:
+- Claude
+- Cursor
+- VS Code / Copilot
+tool_count: 35+
+tool_categories:
+- Workspace Intelligence (workspace_chat, list workspaces/issues/SLXs/run-sessions, search tasks/resources)
+- Chat Rules & Slash Commands (create/update/list, scheduling)
+- AI Assistants / Personas
+- CodeBundle Registry (search & deploy; RUNWHEN_AIRGAP)
+- Task Authoring / Tool Builder (write/validate/test/commit bash & Python SLXs)

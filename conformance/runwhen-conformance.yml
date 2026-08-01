@@ -1,0 +1,29 @@
+generated: '2026-07-21'
+method: searched
+source: https://papi.beta.runwhen.com/.well-known/openid-configuration + openapi
+standards:
+- id: oauth2
+  conforms: true
+  evidence: /.well-known/oauth-authorization-server advertises authorization_code + refresh_token grants,
+    PKCE S256
+- id: oidc
+  conforms: true
+  evidence: /.well-known/openid-configuration present; id_token RS256; scopes openid/profile/email
+- id: oauth2-pkce
+  conforms: true
+  evidence: 'code_challenge_methods_supported: [S256]'
+- id: jwt-bearer
+  conforms: true
+  evidence: BearerAuth http/bearer JWT security scheme; JWKS at /.well-known/jwks.json
+- id: rfc8414-oauth-metadata
+  conforms: true
+  evidence: /.well-known/oauth-authorization-server returns RFC 8414 metadata
+- id: openapi-3.1
+  conforms: true
+  evidence: 'openapi: 3.1.0 spec published at /openapi.json'
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors are FastAPI {"detail":...} JSON, not application/problem+json
+- id: soc2-type2
+  conforms: false
+  evidence: runwhen.com/security-information states SOC 2 Type II planned at GA, not yet certified

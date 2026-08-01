@@ -1,0 +1,29 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/runwhen-papi-openapi-original.json
+skills:
+- file: runwhen-triage-workspace-issue.md
+  name: Triage a RunWhen workspace issue
+  api: openapi/runwhen-papi-openapi-original.json
+  operations:
+  - list_workspace_issues
+  - get_workspace_issue
+  - generate_issue_summary
+  - generate_issue_next_steps
+  - close_workspace_issue
+- file: runwhen-run-diagnostic-runbook.md
+  name: Run a RunWhen diagnostic runbook
+  api: openapi/runwhen-papi-openapi-original.json
+  operations:
+  - create_run_request
+  - start_run_request
+  - get_run_request_report
+  - get_run_request_issues
+- file: runwhen-manage-api-tokens.md
+  name: Manage RunWhen API tokens
+  api: openapi/runwhen-papi-openapi-original.json
+  operations:
+  - create_token
+  - list_tokens
+  - revoke_token
+  - delete_token

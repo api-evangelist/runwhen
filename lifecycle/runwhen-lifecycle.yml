@@ -1,0 +1,20 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.runwhen.com/docs/use/api-reference + https://runwhen.statuspage.io
+versioning:
+  scheme: uri-path
+  versions:
+  - v1
+  - v3
+  - v4
+  current: v4
+  docs: https://docs.runwhen.com/docs/use/api-reference
+stability: beta
+note: Platform API served on papi.beta.runwhen.com (beta). SOC 2 Type II audit planned at GA.
+deprecation:
+  observed: true
+  evidence: OpenAPI tags include 'notes (deprecated v3)'; v3 endpoints superseded by v4
+  policy_url: null
+sla:
+  documented: false
+status_page: https://runwhen.statuspage.io

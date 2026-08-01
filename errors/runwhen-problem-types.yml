@@ -1,0 +1,47 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/runwhen-papi-openapi-original.json
+format: plain
+note: 'RunWhen PAPI returns FastAPI-style JSON error bodies ({"detail": ...}); responses are not application/problem+json
+  (RFC 9457).'
+envelope:
+  field: detail
+  content_type: application/json
+problems:
+- status: 422
+  title: Unprocessable Entity
+  description: Validation Error
+  remediation: "Validation failed \u2014 inspect the response body detail[] (FastAPI/Pydantic validation\
+    \ errors) and correct the request payload or query parameters."
+  example_operations:
+  - GET /oauth/authorize#oauth_authorize_oauth_authorize_get
+  - POST /oauth/authorize/login/email#oauth_authorize_email_login_oauth_authorize_login_email_post
+- status: 401
+  title: Unauthorized
+  description: External token is invalid or expired
+  remediation: 'Obtain a fresh JWT via POST /api/v3/token/ (or a service-account token) and send it as
+    Authorization: Bearer <token>.'
+  example_operations:
+  - POST /api/v3/token/exchange/#token_exchange_api_v3_token_exchange__post
+- status: 404
+  title: Not Found
+  description: No PAPI user found for the token's email
+  remediation: Verify the workspace name and resource id in the path; the resource may not exist or may
+    be outside your workspace scope.
+  example_operations:
+  - POST /api/v3/token/exchange/#token_exchange_api_v3_token_exchange__post
+  - GET /api/v3/workspaces/{workspace_name}/tutorials/{tutorial_name}#get_workspace_tutorial_api_v3_workspaces__workspace_name__tutorials__tutorial_name__get
+- status: 501
+  title: Not Implemented
+  description: Token exchange not available (Auth0 not configured)
+  remediation: "The endpoint is not implemented in this deployment/version \u2014 check the API version\
+    \ prefix (/api/v1 vs /api/v3 vs /api/v4)."
+  example_operations:
+  - POST /api/v3/token/exchange/#token_exchange_api_v3_token_exchange__post
+- status: 502
+  title: Bad Gateway
+  description: Failed to validate token with identity provider
+  remediation: "Upstream service (agent runner / AgentFarm) is unavailable \u2014 retry with backoff;\
+    \ check the status page."
+  example_operations:
+  - POST /api/v3/token/exchange/#token_exchange_api_v3_token_exchange__post

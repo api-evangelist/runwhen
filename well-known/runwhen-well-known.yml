@@ -1,0 +1,20 @@
+generated: '2026-07-21'
+method: searched
+host: https://papi.beta.runwhen.com
+documents:
+- path: /.well-known/openid-configuration
+  status: 200
+  file: runwhen-openid-configuration.json
+- path: /.well-known/oauth-authorization-server
+  status: 200
+  file: runwhen-oauth-authorization-server.json
+- path: /.well-known/jwks.json
+  status: 200
+  file: runwhen-jwks.json
+- path: /.well-known/security.txt
+  status: 404
+other_hosts:
+- host: https://runwhen.com
+  probed:
+  - /.well-known/security.txt (404)
+  - /.well-known/openid-configuration (404)

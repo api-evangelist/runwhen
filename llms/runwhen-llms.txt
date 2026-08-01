@@ -1,0 +1,30 @@
+# RunWhen
+
+> RunWhen is an AI platform for building safe-for-production agents that triage alerts, remediate infrastructure, analyze cost, and answer questions about production systems. Teams compose reusable "Skills" (CodeBundles) into agents that run standalone or from Claude, Cursor, and VS Code via the RunWhen Platform MCP server. The Platform API (PAPI) is a versioned REST API over workspaces, SLXs/SLIs/SLOs, runbooks, run sessions, issues, personas, and workflows.
+
+## APIs
+- [RunWhen Platform API (PAPI)](https://docs.runwhen.com/docs/use/api-reference): Versioned REST API at https://papi.beta.runwhen.com (/api/v1, /api/v3, /api/v4). JWT Bearer auth.
+- [OpenAPI 3.1 spec](https://papi.beta.runwhen.com/openapi.json): 417 operations across 338 paths.
+
+## Specs
+- [openapi/runwhen-papi-openapi-original.json](openapi/runwhen-papi-openapi-original.json): OpenAPI 3.1.0, harvested verbatim.
+
+## Auth & Discovery
+- [OpenID configuration](https://papi.beta.runwhen.com/.well-known/openid-configuration): OIDC discovery (scopes openid/profile/email, PKCE S256).
+- [OAuth authorization server](https://papi.beta.runwhen.com/.well-known/oauth-authorization-server): RFC 8414 metadata.
+- [JWKS](https://papi.beta.runwhen.com/.well-known/jwks.json): RS256 signing keys.
+
+## MCP
+- [RunWhen Platform MCP server](https://github.com/runwhen-contrib/runwhen-platform-mcp): Hosted at https://mcp.beta.runwhen.com/mcp; `pip install runwhen-platform-mcp`; 35+ tools.
+
+## Docs
+- [Documentation](https://docs.runwhen.com/public/)
+- [Quick Start](https://docs.runwhen.com/docs/install/quick-start)
+- [API Reference](https://docs.runwhen.com/docs/use/api-reference)
+- [Architecture](https://docs.runwhen.com/public/architecture)
+- [Skills Registry](https://registry.runwhen.com/all-tasks/)
+- [Blog](https://runwhen.com/blog)
+- [Pricing](https://runwhen.com/pricing)
+- [Security Information](https://runwhen.com/security-information)
+- [Status Page](https://runwhen.statuspage.io)
+- [GitHub (runwhen-contrib)](https://github.com/runwhen-contrib)

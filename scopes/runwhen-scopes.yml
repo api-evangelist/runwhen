@@ -1,0 +1,22 @@
+generated: '2026-07-21'
+method: searched
+source: https://papi.beta.runwhen.com/.well-known/openid-configuration
+docs: https://docs.runwhen.com/docs/use/api-reference
+note: RunWhen PAPI resource endpoints authenticate with JWT Bearer tokens (no per-endpoint OAuth scopes).
+  The OAuth/OIDC authorization server advertises the standard OIDC scopes below for interactive login.
+schemes:
+- name: RunWhenOAuth
+  type: oauth2-oidc
+  authorizationUrl: https://papi.beta.runwhen.com/oauth/authorize
+  tokenUrl: https://papi.beta.runwhen.com/oauth/token
+  pkce: S256
+  grants:
+  - authorization_code
+  - refresh_token
+scopes:
+- scope: openid
+  description: OpenID Connect authentication; issue an ID token.
+- scope: profile
+  description: Access the user's basic profile claims.
+- scope: email
+  description: Access the user's email address.
