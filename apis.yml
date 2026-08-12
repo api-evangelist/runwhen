@@ -561,7 +561,7 @@ maintainers:
   email: info@apis.io
 common:
 - type: OpenAPI
-  url: openapi/runwhen-papi-openapi-original.json
+  url: openapi/_original/runwhen-papi-openapi-original.json
 - type: Overlay
   url: overlays/runwhen-papi-overlay.yaml
 - type: Authentication
