@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy jwks API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "jwks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Jwks Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/.well-known/jwks.json"
+          },
+          "docs": "Return the JSON Web Key Set containing the RS256 public key."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

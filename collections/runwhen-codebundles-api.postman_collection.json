@@ -1,0 +1,250 @@
+{
+  "item": [
+    {
+      "id": "571f393a-c3d9-4087-9b71-00ac104e2d5d",
+      "name": "codebundles",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8df64851-9388-464d-9cdd-ee980320401e",
+          "name": "Parse Codebundle",
+          "request": {
+            "name": "Parse Codebundle",
+            "description": {
+              "content": "Parse a code bundle and return its tasks, config schema, and metadata.\n\nUsed by the corestate runbook controller to populate\n``status.codeBundle.tasks`` on Runbook CRDs.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "parsecodebundle"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "repoUrl",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "ref",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "pathToRobot",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "pathToYaml",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "pathInRepo",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "obo",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "37aef4b1-1463-4488-87a2-ed3be27d21de",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "parsecodebundle"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "repoUrl",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "ref",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "pathToRobot",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "pathToYaml",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "pathInRepo",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "obo",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 4219.724977031237\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ad4e29b7-9644-48a5-bee7-ab16d8506502",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "parsecodebundle"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "repoUrl",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "ref",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "pathToRobot",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "pathToYaml",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "pathInRepo",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "obo",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "76a5f96a-03f4-48f1-845c-d6a86de6a1b5",
+    "name": "papi alert-query-proxy codebundles API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

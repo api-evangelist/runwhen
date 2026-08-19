@@ -1,0 +1,98 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy sli-v4 API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "sli-v4",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Sli",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slxs/:slx_short_name/sli",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Sli"
+        },
+        {
+          "info": {
+            "name": "Soft-delete the SLI attached to an SLX (V4, short-name URL)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slxs/:slx_short_name/sli",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete the SLI that belongs to ``{slx_short_name}`` in this workspace.\n\nMirrors the v4 GET URL (``/slxs/{slx_short_name}/sli``). SLI rows are\nkeyed by ``slx_id`` (1-1 with the parent SLX), so the path identifies\nthe parent SLX rather than the SLI itself."
+        },
+        {
+          "info": {
+            "name": "Upsert an SLI (V4 typed payload)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slis/sync-typed",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upsert an SLI (V4 typed payload)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

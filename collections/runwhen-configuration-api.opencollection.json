@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy configuration API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "configuration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get what-knowledge graph",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/configuration/what-knowledge",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the what-knowledge graph used for task search."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

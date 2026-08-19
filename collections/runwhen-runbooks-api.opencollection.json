@@ -1,0 +1,84 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy runbooks API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "runbooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the Runbook for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "detail",
+                "value": "",
+                "type": "query",
+                "description": "Accepted for Django parity; ignored (always returns full detail)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the Runbook for an SLX.\n\nSLX and Runbook have a 1:1 relationship. This endpoint returns the single\nRunbook associated with the specified SLX, or 404 if no Runbook exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The Runbook details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or Runbook not found."
+        },
+        {
+          "info": {
+            "name": "Get the Runbook for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "detail",
+                "value": "",
+                "type": "query",
+                "description": "Accepted for Django parity; ignored (always returns full detail)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the Runbook for an SLX.\n\nSLX and Runbook have a 1:1 relationship. This endpoint returns the single\nRunbook associated with the specified SLX, or 404 if no Runbook exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The Runbook details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or Runbook not found."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

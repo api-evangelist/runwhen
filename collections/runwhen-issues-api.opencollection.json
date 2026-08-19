@@ -1,0 +1,884 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy issues API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "issues",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List issues for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issues",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "severity",
+                "value": "",
+                "type": "query",
+                "description": "Filter by severity (1-4 or SEV1-SEV4, repeatable)"
+              },
+              {
+                "name": "severity__in",
+                "value": "",
+                "type": "query",
+                "description": "Filter by severity (comma-sep, e.g. 1,2,3)"
+              },
+              {
+                "name": "severity__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: severity >= value"
+              },
+              {
+                "name": "severity__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: severity <= value"
+              },
+              {
+                "name": "closed",
+                "value": "",
+                "type": "query",
+                "description": "Filter by closed status - true for closed, false for open"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Search in title, task_title, and slx_name"
+              },
+              {
+                "name": "task_title",
+                "value": "",
+                "type": "query",
+                "description": "Exact match filter on issue.task_title. Use together with slx_name to narrow to all issues belonging to one task within an SLX without scanning the full SLX issue set on the client."
+              },
+              {
+                "name": "latest_occurrence_at__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: latest_occurrence_at >= ISO datetime"
+              },
+              {
+                "name": "modified__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: modified_at >= ISO datetime"
+              },
+              {
+                "name": "modified__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: modified_at <= ISO datetime"
+              },
+              {
+                "name": "created__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: created_at >= ISO datetime"
+              },
+              {
+                "name": "created__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: created_at <= ISO datetime"
+              },
+              {
+                "name": "open_since__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: open_since >= ISO datetime"
+              },
+              {
+                "name": "open_since__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: open_since <= ISO datetime"
+              },
+              {
+                "name": "open_occurrence_count__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: open_occurrence_count >= value"
+              },
+              {
+                "name": "open_occurrence_count__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: open_occurrence_count <= value"
+              },
+              {
+                "name": "total_occurrence_count__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: total_occurrence_count >= value"
+              },
+              {
+                "name": "total_occurrence_count__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: total_occurrence_count <= value"
+              },
+              {
+                "name": "details",
+                "value": "",
+                "type": "query",
+                "description": "Include heavy fields from latest occurrence"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List issues for a workspace with optional filters.\n\nSupports Django-compatible query parameters for filtering and pagination."
+        },
+        {
+          "info": {
+            "name": "Get an issue by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issues/:issue_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "include_occurrence_timestamps",
+                "value": "",
+                "type": "query",
+                "description": "Include occurrence timestamps"
+              },
+              {
+                "name": "occurrence_tail",
+                "value": "",
+                "type": "query",
+                "description": "Return N most recent occurrences"
+              },
+              {
+                "name": "occurrence_from",
+                "value": "",
+                "type": "query",
+                "description": "Slice from (1=latest, inclusive)"
+              },
+              {
+                "name": "occurrence_to",
+                "value": "",
+                "type": "query",
+                "description": "Slice to (1=latest, inclusive)"
+              },
+              {
+                "name": "occurrence_window_gte",
+                "value": "",
+                "type": "query",
+                "description": "Window filter: observed_at >= ISO datetime"
+              },
+              {
+                "name": "occurrence_window_lte",
+                "value": "",
+                "type": "query",
+                "description": "Window filter: observed_at <= ISO datetime"
+              },
+              {
+                "name": "occurrence_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated occurrence fields to include (e.g. observed_at)"
+              },
+              {
+                "name": "occurrence_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order for occurrences: asc or desc (default desc)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get an issue by ID within a workspace.\n\nSupports optional occurrence timestamp slicing via query parameters.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    include_occurrence_timestamps: Opt-in for occurrence timestamps.\n    occurrence_tail: Return N most recent occurrences.\n    occurrence_from: Slice from position (1=latest).\n    occurrence_to: Slice to position (1=latest).\n    occurrence_window_gte: Filter occurrences observed_at >= this datetime.\n    occurrence"
+        },
+        {
+          "info": {
+            "name": "Update an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issues/:issue_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update an issue (partial update).\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    issue_data: The issue update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+        },
+        {
+          "info": {
+            "name": "Delete an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issues/:issue_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete an issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+        },
+        {
+          "info": {
+            "name": "Ignore an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issues/:issue_id/ignore",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Ignore an issue.\n\nSets ignored_by_user, ignored_since, and ignored_until.\nAlso resets open_since and open_occurrence_count to close the issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    ignore_data: The ignore request data with required ignored_until.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The ignored issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+        },
+        {
+          "info": {
+            "name": "Close an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issues/:issue_id/close",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Close an issue, optionally with a comment.\n\nSets the issue's closed_at timestamp and resets open_since\nand open_occurrence_count to 0.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    body: Optional request body with a comment.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The closed issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+        },
+        {
+          "info": {
+            "name": "Generate next steps for an issue using AI",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issues/:issue_id/generate-next-steps",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate intelligent next steps for an issue using sobrain AI service.\n\nThis endpoint calls the sobrain service to generate suggested next steps\nbased on the issue details and optional comment context.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    request_data: Optional request data with comment contents.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated next steps for the"
+        },
+        {
+          "info": {
+            "name": "Generate a summary for an issue using AI",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issues/:issue_id/generate-summary",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate a summary for an issue using sobrain AI service.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated summary for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+        },
+        {
+          "info": {
+            "name": "Generate a just-in-time summary for an issue occurrence in a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id/issues/:issue_id/jit-summary",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate a JIT summary for an issue within a specific run session context.\n\nFinds the latest occurrence of the issue, looks up the RunSessionIssueMap\nentry for the given run session, builds a payload, and calls Sobrain to\ngenerate a summary. Stores the summary in the occurrence's additional_context."
+        },
+        {
+          "info": {
+            "name": "List issues for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issues",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "severity",
+                "value": "",
+                "type": "query",
+                "description": "Filter by severity (1-4 or SEV1-SEV4, repeatable)"
+              },
+              {
+                "name": "severity__in",
+                "value": "",
+                "type": "query",
+                "description": "Filter by severity (comma-sep, e.g. 1,2,3)"
+              },
+              {
+                "name": "severity__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: severity >= value"
+              },
+              {
+                "name": "severity__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: severity <= value"
+              },
+              {
+                "name": "closed",
+                "value": "",
+                "type": "query",
+                "description": "Filter by closed status - true for closed, false for open"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Search in title, task_title, and slx_name"
+              },
+              {
+                "name": "task_title",
+                "value": "",
+                "type": "query",
+                "description": "Exact match filter on issue.task_title. Use together with slx_name to narrow to all issues belonging to one task within an SLX without scanning the full SLX issue set on the client."
+              },
+              {
+                "name": "latest_occurrence_at__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: latest_occurrence_at >= ISO datetime"
+              },
+              {
+                "name": "modified__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: modified_at >= ISO datetime"
+              },
+              {
+                "name": "modified__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: modified_at <= ISO datetime"
+              },
+              {
+                "name": "created__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: created_at >= ISO datetime"
+              },
+              {
+                "name": "created__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: created_at <= ISO datetime"
+              },
+              {
+                "name": "open_since__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: open_since >= ISO datetime"
+              },
+              {
+                "name": "open_since__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: open_since <= ISO datetime"
+              },
+              {
+                "name": "open_occurrence_count__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: open_occurrence_count >= value"
+              },
+              {
+                "name": "open_occurrence_count__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: open_occurrence_count <= value"
+              },
+              {
+                "name": "total_occurrence_count__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: total_occurrence_count >= value"
+              },
+              {
+                "name": "total_occurrence_count__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter: total_occurrence_count <= value"
+              },
+              {
+                "name": "details",
+                "value": "",
+                "type": "query",
+                "description": "Include heavy fields from latest occurrence"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List issues for a workspace with optional filters.\n\nSupports Django-compatible query parameters for filtering and pagination."
+        },
+        {
+          "info": {
+            "name": "Get an issue by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issues/:issue_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "include_occurrence_timestamps",
+                "value": "",
+                "type": "query",
+                "description": "Include occurrence timestamps"
+              },
+              {
+                "name": "occurrence_tail",
+                "value": "",
+                "type": "query",
+                "description": "Return N most recent occurrences"
+              },
+              {
+                "name": "occurrence_from",
+                "value": "",
+                "type": "query",
+                "description": "Slice from (1=latest, inclusive)"
+              },
+              {
+                "name": "occurrence_to",
+                "value": "",
+                "type": "query",
+                "description": "Slice to (1=latest, inclusive)"
+              },
+              {
+                "name": "occurrence_window_gte",
+                "value": "",
+                "type": "query",
+                "description": "Window filter: observed_at >= ISO datetime"
+              },
+              {
+                "name": "occurrence_window_lte",
+                "value": "",
+                "type": "query",
+                "description": "Window filter: observed_at <= ISO datetime"
+              },
+              {
+                "name": "occurrence_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated occurrence fields to include (e.g. observed_at)"
+              },
+              {
+                "name": "occurrence_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order for occurrences: asc or desc (default desc)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get an issue by ID within a workspace.\n\nSupports optional occurrence timestamp slicing via query parameters.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    include_occurrence_timestamps: Opt-in for occurrence timestamps.\n    occurrence_tail: Return N most recent occurrences.\n    occurrence_from: Slice from position (1=latest).\n    occurrence_to: Slice to position (1=latest).\n    occurrence_window_gte: Filter occurrences observed_at >= this datetime.\n    occurrence"
+        },
+        {
+          "info": {
+            "name": "Update an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issues/:issue_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update an issue (partial update).\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    issue_data: The issue update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+        },
+        {
+          "info": {
+            "name": "Delete an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issues/:issue_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete an issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+        },
+        {
+          "info": {
+            "name": "Ignore an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issues/:issue_id/ignore",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Ignore an issue.\n\nSets ignored_by_user, ignored_since, and ignored_until.\nAlso resets open_since and open_occurrence_count to close the issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    ignore_data: The ignore request data with required ignored_until.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The ignored issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+        },
+        {
+          "info": {
+            "name": "Close an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issues/:issue_id/close",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Close an issue, optionally with a comment.\n\nSets the issue's closed_at timestamp and resets open_since\nand open_occurrence_count to 0.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    body: Optional request body with a comment.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The closed issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+        },
+        {
+          "info": {
+            "name": "Generate next steps for an issue using AI",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issues/:issue_id/generate-next-steps",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate intelligent next steps for an issue using sobrain AI service.\n\nThis endpoint calls the sobrain service to generate suggested next steps\nbased on the issue details and optional comment context.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    request_data: Optional request data with comment contents.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated next steps for the"
+        },
+        {
+          "info": {
+            "name": "Generate a summary for an issue using AI",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issues/:issue_id/generate-summary",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate a summary for an issue using sobrain AI service.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated summary for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+        },
+        {
+          "info": {
+            "name": "Generate a just-in-time summary for an issue occurrence in a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id/issues/:issue_id/jit-summary",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate a JIT summary for an issue within a specific run session context.\n\nFinds the latest occurrence of the issue, looks up the RunSessionIssueMap\nentry for the given run session, builds a payload, and calls Sobrain to\ngenerate a summary. Stores the summary in the occurrence's additional_context."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

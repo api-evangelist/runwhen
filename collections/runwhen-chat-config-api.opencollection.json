@@ -1,0 +1,531 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy chat-config API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "chat-config",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ws List Rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/rules",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "scope_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "scope_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "is_active",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List rules for a workspace.\n\nOmitting ``scope_type`` returns workspace + persona + the caller's\nown user-scope rules in a single response. See\n``_list_workspace_chat_objects`` for the full filter contract."
+        },
+        {
+          "info": {
+            "name": "Ws Create Rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/rules",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a rule scoped to this workspace, its personas, or the\ncurrent user (within this workspace).\n\nWorkspace and persona scopes require workspace admin. User scope\nonly requires workspace membership (already enforced by the\nws_router dependency); a workspace member can author personal rules\nagainst their own email under any workspace they belong to."
+        },
+        {
+          "info": {
+            "name": "Ws Get Rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/rules/:rule_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "rule_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a rule by ID."
+        },
+        {
+          "info": {
+            "name": "Ws Update Rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/rules/:rule_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "rule_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a rule."
+        },
+        {
+          "info": {
+            "name": "Ws Delete Rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/rules/:rule_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "rule_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a rule. Admin gate skipped for the rule's owner deleting\ntheir own user-scope rule."
+        },
+        {
+          "info": {
+            "name": "Ws List Commands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/commands",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "scope_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "scope_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "is_active",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List commands for a workspace.\n\nOmitting ``scope_type`` returns workspace + persona + the caller's\nown user-scope commands in a single response. See\n``_list_workspace_chat_objects`` for the full filter contract."
+        },
+        {
+          "info": {
+            "name": "Ws Create Command",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/commands",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a command scoped to this workspace, its personas, or the\ncurrent user (within this workspace). Admin gate skipped for\nuser scope (the workspace member can author their own personal\ncommands)."
+        },
+        {
+          "info": {
+            "name": "Ws Get Command",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/commands/:command_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "command_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a command by ID."
+        },
+        {
+          "info": {
+            "name": "Ws Update Command",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/commands/:command_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "command_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a command. Admin gate skipped for user scope."
+        },
+        {
+          "info": {
+            "name": "Ws Delete Command",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/commands/:command_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "command_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a command. Admin gate skipped for owner-deletes-own-personal."
+        },
+        {
+          "info": {
+            "name": "Ws List Command Executions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/commands/:command_id/executions",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "command_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Scheduled-chat execution history for one command (RW-779).\n\nProxies to agentfarm's `/commands/{id}/executions`. We verify the command\nbelongs to this workspace first so a workspace admin cannot read another\nworkspace's execution history by guessing command IDs.\n\nPermission level is workspace membership (already enforced by the\n``ws_router``-level ``require_workspace_member`` dependency) — same as\nevery other GET in this router (``ws_get_command``, ``ws_list_commands``,\n``ws_get_rule``). The prev"
+        },
+        {
+          "info": {
+            "name": "Ws Dry Run Command",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/dry-run",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Start an async dry-run for the current form state.\n\nMints a run-as token, calls agentfarm's ``start_dry_run`` which claims\na ``scheduled_chat_executions`` row and kicks off a detached worker.\nReturns ``{exec_id, status: \"pending\"}`` immediately — the UI polls\n``GET /chat-config/dry-run/{exec_id}`` until terminal.\n\nSplits what was previously a single sync call (which collided with the\nPAPI ingress 60s ``proxy_read_timeout`` and surfaced as CORS-shaped\n504s in the browser)."
+        },
+        {
+          "info": {
+            "name": "Ws Get Dry Run Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/dry-run/:exec_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "exec_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "sink_configs_json",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "command_name",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Poll target for an async dry-run.\n\nLoads the agentfarm execution row by ``exec_id``. When the row is in a\nterminal succeeded status, also runs the dispatcher in ``dry_run=True``\nmode to render per-sink previews (email subject + body, slack mrkdwn).\nReturns the same shape the legacy sync endpoint produced, so the UI's\nDryRunPreviewDialog needs only minor changes.\n\n``sink_configs_json`` is a URL-encoded JSON list of sink configs from\nthe form state. Passed through on each poll because the admin ma"
+        },
+        {
+          "info": {
+            "name": "Ws Run Command Now",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/commands/:command_id/run-now",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "command_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "On-demand fire for a saved scheduled command.\n\nSame code path as the cron tier-3 task (``fire_scheduled_chat_session``):\nwe just enqueue it directly. The kiq task handles command lookup, run-as\ntoken mint, agentfarm /fire call, sink dispatch, and dispatch-result\nwrite-back. Each invocation:\n\n* Writes a real ``scheduled_chat_executions`` row (``dry_run=false``).\n* Bumps ``last_fired_at`` and increments ``runs_completed`` on success\n  (counted toward the user's cap, just like a cron tick).\n* Respe"
+        },
+        {
+          "info": {
+            "name": "Ws Preview Artifact Deliveries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/commands/:command_id/preview-artifact-deliveries",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "command_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Render a stored artifact through the command's current sinks in\ndispatcher dry-run mode.\n\nUsed by the execution-history \"Inspect deliveries\" UI so admins can\nsee the actual email HTML / slack text payload a past run produced\n(or would produce, when the original delivery was skipped because\nMailgun/Slack wasn't configured locally).\n\nWhen the caller provides ``sink_configs`` in the body (the snapshot\npersisted in the execution row at fire time), the preview renders\nthrough those — so admins see wh"
+        },
+        {
+          "info": {
+            "name": "Ws Slack Sink Suggestions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/sink-suggestions/slack",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Channels (and DMs the bot has been included in) known for this\nworkspace's slack install.\n\nThin admin-gated proxy to slackbot's\n``GET /internal/workspaces/{workspace_name}/slack-channels``. Slackbot\nowns the read path so the directory shape and rules (which channels\nshow up, how DMs surface, sort order) live in one place. PAPI keeps\nthe workspace-admin role check + the existing ``{installed, channels}``\nresponse shape so the UI doesn't need to change.\n\n``installed`` is false when no slack worksp"
+        },
+        {
+          "info": {
+            "name": "Ws Resolved Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/chat-config/resolved",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get resolved chat config for a workspace (all scopes merged)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

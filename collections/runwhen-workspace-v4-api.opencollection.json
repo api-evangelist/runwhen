@@ -1,0 +1,40 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy workspace-v4 API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "workspace-v4",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get workspace configuration (lightweight)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/configuration",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return only the fields the Workspace Configuration page needs.\n\nCheap reads only: WorkspaceModel columns, the eagerly-loaded permissions\nrelationship, the user's effective role, and a ``COUNT(*)`` of SLXs.\nNo SLX list, no firing alerts, no layout, no gallery summaries."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

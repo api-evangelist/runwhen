@@ -1,0 +1,74 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy internal API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "internal",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate upload config (internal)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/internal/upload-config",
+            "headers": [
+              {
+                "name": "RW-Runner-Token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate upload credentials for runner-control.\n\nReturns a short-lived SA token and the public PAPI URL so runner-control\ncan assemble a complete ``uploadInfo`` for workspace-builder.\n\n**Network isolation:** This endpoint MUST be blocked from external access\nvia an ingress deny rule on ``/*/internal/*`` (same pattern as ``/metrics``).\nRunner-control reaches PAPI through the cluster-internal Service URL, which\nbypasses ingress. The ``RW-Runner-Token`` header is required as a secondary\nguard but i"
+        },
+        {
+          "info": {
+            "name": "Generate upload config (internal)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/internal/upload-config",
+            "headers": [
+              {
+                "name": "RW-Runner-Token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate upload credentials for runner-control.\n\nReturns a short-lived SA token and the public PAPI URL so runner-control\ncan assemble a complete ``uploadInfo`` for workspace-builder.\n\n**Network isolation:** This endpoint MUST be blocked from external access\nvia an ingress deny rule on ``/*/internal/*`` (same pattern as ``/metrics``).\nRunner-control reaches PAPI through the cluster-internal Service URL, which\nbypasses ingress. The ``RW-Runner-Token`` header is required as a secondary\nguard but i"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

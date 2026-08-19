@@ -1,0 +1,98 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy slo-v4 API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "slo-v4",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Slo",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slxs/:slx_short_name/slo",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Slo"
+        },
+        {
+          "info": {
+            "name": "Soft-delete the SLO attached to an SLX (V4, short-name URL)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slxs/:slx_short_name/slo",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete the SLO that belongs to ``{slx_short_name}`` in this workspace.\n\nMirrors the v4 GET URL (``/slxs/{slx_short_name}/slo``). SLO rows are\nkeyed by ``slx_id`` (1-1 with the parent SLX)."
+        },
+        {
+          "info": {
+            "name": "Upsert an SLO (V4 typed payload)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slos/sync-typed",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upsert an SLO (V4 typed payload)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

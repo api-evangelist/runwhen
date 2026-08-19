@@ -1,0 +1,450 @@
+{
+  "item": [
+    {
+      "id": "8adbf1a3-7342-4e7b-84b8-687c9d42824e",
+      "name": "runbooks",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "07d6f5ec-f850-4611-900e-6051f5b27683",
+          "name": "Get the Runbook for an SLX",
+          "request": {
+            "name": "Get the Runbook for an SLX",
+            "description": {
+              "content": "Get the Runbook for an SLX.\n\nSLX and Runbook have a 1:1 relationship. This endpoint returns the single\nRunbook associated with the specified SLX, or 404 if no Runbook exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The Runbook details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or Runbook not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name",
+                "runbook"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "detail",
+                  "value": "<string>",
+                  "description": "Accepted for Django parity; ignored (always returns full detail)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "72d9d99f-754b-40f6-8767-f45fa8bcaed9",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "runbook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "detail",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1730,\n  \"slxId\": 2234,\n  \"created\": \"1992-11-15T05:13:55.410Z\",\n  \"modified\": \"1952-05-11T21:44:21.068Z\",\n  \"spec\": {\n    \"key_0\": 2555,\n    \"key_1\": true,\n    \"key_2\": \"string\",\n    \"key_3\": 5509.046752526787\n  },\n  \"status\": {\n    \"key_0\": 8645,\n    \"key_1\": 9187.589446485184\n  },\n  \"name\": \"\",\n  \"description\": \"string\",\n  \"runnerUuid\": \"string\",\n  \"codeBundleRepoUrl\": \"string\",\n  \"codeBundleRef\": \"string\",\n  \"codeBundlePath\": \"string\",\n  \"repositoryId\": 1540,\n  \"configProvided\": [\n    {\n      \"key_0\": 3942,\n      \"key_1\": true,\n      \"key_2\": 6593\n    },\n    {\n      \"key_0\": 5286\n    }\n  ],\n  \"secretsProvided\": [\n    {\n      \"key_0\": 4203.040374139703,\n      \"key_1\": 2011\n    },\n    {\n      \"key_0\": false\n    }\n  ],\n  \"runtimeVarsProvided\": [\n    {\n      \"key_0\": true\n    },\n    {\n      \"key_0\": false,\n      \"key_1\": \"string\",\n      \"key_2\": 214.10759489212893,\n      \"key_3\": 238\n    }\n  ],\n  \"requirements\": {\n    \"key_0\": false,\n    \"key_1\": \"string\"\n  },\n  \"lookbackWindow\": \"string\",\n  \"resolvedTasks\": [\n    \"string\",\n    \"string\"\n  ],\n  \"taskDetails\": {\n    \"key_0\": 4507.955680222576,\n    \"key_1\": \"string\",\n    \"key_2\": 395.3571048248794\n  },\n  \"lastRunCode\": \"string\",\n  \"lastRunMessage\": \"string\",\n  \"lastRunAt\": \"1959-06-23T22:40:08.858Z\",\n  \"tasks\": [\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bb5e4f59-8520-4631-82d4-1b14fe1c78ea",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "runbook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "detail",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "05d6882d-ea4f-4c55-81ce-09abdaa985ba",
+          "name": "Get the Runbook for an SLX",
+          "request": {
+            "name": "Get the Runbook for an SLX",
+            "description": {
+              "content": "Get the Runbook for an SLX.\n\nSLX and Runbook have a 1:1 relationship. This endpoint returns the single\nRunbook associated with the specified SLX, or 404 if no Runbook exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The Runbook details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or Runbook not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name",
+                "runbook"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "detail",
+                  "value": "<string>",
+                  "description": "Accepted for Django parity; ignored (always returns full detail)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "e5c5effa-ec26-4900-b37b-9fe34e12e513",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "runbook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "detail",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1730,\n  \"slxId\": 2234,\n  \"created\": \"1992-11-15T05:13:55.410Z\",\n  \"modified\": \"1952-05-11T21:44:21.068Z\",\n  \"spec\": {\n    \"key_0\": 2555,\n    \"key_1\": true,\n    \"key_2\": \"string\",\n    \"key_3\": 5509.046752526787\n  },\n  \"status\": {\n    \"key_0\": 8645,\n    \"key_1\": 9187.589446485184\n  },\n  \"name\": \"\",\n  \"description\": \"string\",\n  \"runnerUuid\": \"string\",\n  \"codeBundleRepoUrl\": \"string\",\n  \"codeBundleRef\": \"string\",\n  \"codeBundlePath\": \"string\",\n  \"repositoryId\": 1540,\n  \"configProvided\": [\n    {\n      \"key_0\": 3942,\n      \"key_1\": true,\n      \"key_2\": 6593\n    },\n    {\n      \"key_0\": 5286\n    }\n  ],\n  \"secretsProvided\": [\n    {\n      \"key_0\": 4203.040374139703,\n      \"key_1\": 2011\n    },\n    {\n      \"key_0\": false\n    }\n  ],\n  \"runtimeVarsProvided\": [\n    {\n      \"key_0\": true\n    },\n    {\n      \"key_0\": false,\n      \"key_1\": \"string\",\n      \"key_2\": 214.10759489212893,\n      \"key_3\": 238\n    }\n  ],\n  \"requirements\": {\n    \"key_0\": false,\n    \"key_1\": \"string\"\n  },\n  \"lookbackWindow\": \"string\",\n  \"resolvedTasks\": [\n    \"string\",\n    \"string\"\n  ],\n  \"taskDetails\": {\n    \"key_0\": 4507.955680222576,\n    \"key_1\": \"string\",\n    \"key_2\": 395.3571048248794\n  },\n  \"lastRunCode\": \"string\",\n  \"lastRunMessage\": \"string\",\n  \"lastRunAt\": \"1959-06-23T22:40:08.858Z\",\n  \"tasks\": [\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ad6befd1-134e-4687-b6ce-2ae95202cf85",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "runbook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "detail",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "8a9eb7ee-dab7-4761-a6d7-23540bca8868",
+    "name": "papi alert-query-proxy runbooks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

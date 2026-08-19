@@ -1,0 +1,312 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy author API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "author",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create an author run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/author/run",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submit a new author run.\n\nGenerates a UUID, stores the command payload in Redis, and enqueues a\nTaskSet with the runner control plane."
+        },
+        {
+          "info": {
+            "name": "Get stored command for a run (public, for runner/explorer)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/author/run/:run_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "Run UUID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the stored user command for a run.\n\nThis endpoint is public (no auth required) — the runner/explorer service\ncalls it to fetch the command to execute."
+        },
+        {
+          "info": {
+            "name": "Get run status (owner only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/author/run/:run_id/status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "Run UUID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the current status of an author run.\n\nOnly the user who created the run may query its status."
+        },
+        {
+          "info": {
+            "name": "Update run status (runner callback)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/author/run/:run_id/status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "Run UUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Runner callback to update the run status.\n\nDerives SUCCEEDED / FAILED from whether ``passed_titles`` is truthy\n(matches Django's ``RunRequestResponseSerializer`` logic)."
+        },
+        {
+          "info": {
+            "name": "Get signed URLs for run output artifacts (owner only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/author/run/:run_id/output",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "Run UUID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return signed URLs for the primary output artifacts of an author run.\n\nOnly the user who created the run may retrieve its output.  Three artifacts\nare returned: ``report.jsonl``, ``issues.jsonl``, and ``log.html``."
+        },
+        {
+          "info": {
+            "name": "Create an author run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/author/run",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submit a new author run.\n\nGenerates a UUID, stores the command payload in Redis, and enqueues a\nTaskSet with the runner control plane."
+        },
+        {
+          "info": {
+            "name": "Get stored command for a run (public, for runner/explorer)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/author/run/:run_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "Run UUID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the stored user command for a run.\n\nThis endpoint is public (no auth required) — the runner/explorer service\ncalls it to fetch the command to execute."
+        },
+        {
+          "info": {
+            "name": "Get run status (owner only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/author/run/:run_id/status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "Run UUID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the current status of an author run.\n\nOnly the user who created the run may query its status."
+        },
+        {
+          "info": {
+            "name": "Update run status (runner callback)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/author/run/:run_id/status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "Run UUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Runner callback to update the run status.\n\nDerives SUCCEEDED / FAILED from whether ``passed_titles`` is truthy\n(matches Django's ``RunRequestResponseSerializer`` logic)."
+        },
+        {
+          "info": {
+            "name": "Get signed URLs for run output artifacts (owner only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/author/run/:run_id/output",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "Run UUID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return signed URLs for the primary output artifacts of an author run.\n\nOnly the user who created the run may retrieve its output.  Three artifacts\nare returned: ``report.jsonl``, ``issues.jsonl``, and ``log.html``."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

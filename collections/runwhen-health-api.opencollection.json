@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy health API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "health",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Root",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Root endpoint for nginx-ingress backend health checks."
+        },
+        {
+          "info": {
+            "name": "Health",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/healthz"
+          },
+          "docs": "Check overall service health.\n\nUsed by K8s readiness and startup probes.\nReturns 503 during graceful shutdown to drain traffic.\n\nReturns:\n    Health status with version information."
+        },
+        {
+          "info": {
+            "name": "Health",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health"
+          },
+          "docs": "Check overall service health.\n\nUsed by K8s readiness and startup probes.\nReturns 503 during graceful shutdown to drain traffic.\n\nReturns:\n    Health status with version information."
+        },
+        {
+          "info": {
+            "name": "Liveness",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/livez"
+          },
+          "docs": "Liveness probe endpoint.\n\nUsed by K8s liveness probe.\n\nReturns:\n    Liveness status."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

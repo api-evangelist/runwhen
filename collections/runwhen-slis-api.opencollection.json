@@ -1,0 +1,182 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy slis API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "slis",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the SLI for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/sli",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "detail",
+                "value": "",
+                "type": "query",
+                "description": "Accepted for Django parity; ignored (always returns full detail)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the SLI for an SLX.\n\nSLX and SLI have a 1:1 relationship. This endpoint returns the single\nSLI associated with the specified SLX, or 404 if no SLI exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLI details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLI not found."
+        },
+        {
+          "info": {
+            "name": "Push alert rules for all SLIs with alertConfig",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/push-alert-rules",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Push Prometheus alert rules to the metric store for every SLI in the workspace that has an alertConfig.\n\nBypasses the SHA-based sync deduplication — safe to call even when workspace YAML has not changed.\nUseful for bootstrapping alert rules after a new cluster is stood up or after\nMETRIC_STORE_RULER_URL is first configured.\n\nReturns a summary with counts and any per-SLX errors."
+        },
+        {
+          "info": {
+            "name": "List runners for an SLI",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/sli/runners",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get runners and health status for an SLI.\n\nHealth is derived from the freshness of the runner's ``last_heartbeat`` column,\nwhich is updated on every ``POST /runners/status`` from the runner agent. A\nrunner is considered Healthy if its heartbeat is within\n``settings.runner_heartbeat_staleness_seconds`` (default 90s).\n\nNote: the legacy Django implementation (``HasCodeRunLocationsMixin.list_locations``)\nderived health from ``status.runnerLocations[*].status.code`` on the SLI CRD —\na string set by t"
+        },
+        {
+          "info": {
+            "name": "Get the SLI for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/sli",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "detail",
+                "value": "",
+                "type": "query",
+                "description": "Accepted for Django parity; ignored (always returns full detail)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the SLI for an SLX.\n\nSLX and SLI have a 1:1 relationship. This endpoint returns the single\nSLI associated with the specified SLX, or 404 if no SLI exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLI details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLI not found."
+        },
+        {
+          "info": {
+            "name": "Push alert rules for all SLIs with alertConfig",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/push-alert-rules",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Push Prometheus alert rules to the metric store for every SLI in the workspace that has an alertConfig.\n\nBypasses the SHA-based sync deduplication — safe to call even when workspace YAML has not changed.\nUseful for bootstrapping alert rules after a new cluster is stood up or after\nMETRIC_STORE_RULER_URL is first configured.\n\nReturns a summary with counts and any per-SLX errors."
+        },
+        {
+          "info": {
+            "name": "List runners for an SLI",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/sli/runners",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get runners and health status for an SLI.\n\nHealth is derived from the freshness of the runner's ``last_heartbeat`` column,\nwhich is updated on every ``POST /runners/status`` from the runner agent. A\nrunner is considered Healthy if its heartbeat is within\n``settings.runner_heartbeat_staleness_seconds`` (default 90s).\n\nNote: the legacy Django implementation (``HasCodeRunLocationsMixin.list_locations``)\nderived health from ``status.runnerLocations[*].status.code`` on the SLI CRD —\na string set by t"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

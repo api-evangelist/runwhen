@@ -28,3 +28,10 @@ tool_categories:
 - AI Assistants / Personas
 - CodeBundle Registry (search & deploy; RUNWHEN_AIRGAP)
 - Task Authoring / Tool Builder (write/validate/test/commit bash & Python SLXs)
+deployment:
+  mode: remote
+  endpoint: https://mcp.beta.runwhen.com/mcp
+  verified: probed
+  probe: gated
+  checked: '2026-08-12'
+  source: catalog MCP census

@@ -1,0 +1,343 @@
+{
+  "item": [
+    {
+      "id": "0e5a700a-c981-4af5-96c0-0368ff45ab95",
+      "name": "workspace-alerts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "64bda4c0-f5af-4187-9732-cdca4107f834",
+          "name": "List alerts for a workspace",
+          "request": {
+            "name": "List alerts for a workspace",
+            "description": {
+              "content": "List alerts for a workspace with pagination and filtering.\n\nCombines SLI and SLO alerts from the unified alerts table.\nMatches Django WorkspaceViewSet.get_alerts() response shape.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "alerts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "created__gte",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "created__lte",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "modified__gte",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "modified__lte",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "slxNames",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "slxNames",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "slxNames[]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "slxNames[]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "slxName",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0b27a69e-15a0-49fa-b335-56aa90a5a158",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "alerts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "created__gte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "created__lte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "modified__gte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "modified__lte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "slxNames",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slxNames",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slxNames[]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slxNames[]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slxName",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 4459.0675060751055,\n  \"key_1\": \"string\",\n  \"key_2\": false,\n  \"key_3\": 1381,\n  \"key_4\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1aa8335f-6965-4213-9af0-f2873ede889e",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "alerts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "created__gte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "created__lte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "modified__gte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "modified__lte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "slxNames",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slxNames",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slxNames[]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slxNames[]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slxName",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "e4c85624-6dd3-4d02-baf8-fb345e6455e7",
+    "name": "papi alert-query-proxy workspace-alerts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

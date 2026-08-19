@@ -1,0 +1,120 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy notes-import-v4 API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "notes-import-v4",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Remove KB notes from a source",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/notes",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a list of notes (by source_id) from one source. ``dry_run`` previews."
+        },
+        {
+          "info": {
+            "name": "Publish (upsert) a KB note from a source",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/notes/sync",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upsert a note identified by its source. ``dry_run`` validates without writing."
+        },
+        {
+          "info": {
+            "name": "List the workspace's valid resource paths",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/resource-paths",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Resource paths to author/validate `resource_paths` against."
+        },
+        {
+          "info": {
+            "name": "List the workspace's tag keys and values",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/tags",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit_values",
+                "value": "",
+                "type": "query",
+                "description": "Max sample values returned per tag key"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "The workspace's tag keys → values, to author ``match_tags`` selectors against."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

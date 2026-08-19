@@ -1,0 +1,79 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy personas API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "personas",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List personas for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/personas",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all personas for a workspace.\n\nArgs:\n    request: The HTTP request.\n    workspace_short_name: The short name of the workspace.\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of personas.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+        },
+        {
+          "info": {
+            "name": "Get a persona by short name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/personas/:persona_short_name",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "persona_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a persona by its short name.\n\nArgs:\n    workspace_short_name: The short name of the workspace.\n    persona_short_name: The short name of the persona.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The persona details.\n\nRaises:\n    HTTPException: 404 if workspace or persona not found."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

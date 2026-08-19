@@ -1,0 +1,150 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy slos API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "slos",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the SLO for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/slo",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "detail",
+                "value": "",
+                "type": "query",
+                "description": "Accepted for Django parity; ignored (always returns full detail)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the SLO for an SLX.\n\nSLX and SLO have a 1:1 relationship. This endpoint returns the single\nSLO associated with the specified SLX, or 404 if no SLO exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLO details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLO not found."
+        },
+        {
+          "info": {
+            "name": "Get SLO objective recommendation for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/slo/objective-recommendation",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "baseline",
+                "value": "",
+                "type": "query",
+                "description": "PromQL timestring defining the baseline window for the burn-rate calculation (e.g. '2h', '1d'). Defaults to hours elapsed since the 1st of the current month. Only used when an SLO exists. Must not exceed hours since month start."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate a recommended SLO objective for an SLX.\n\nTwo paths:\n- **Has SLO:** Recommends based on the current month's error budget burn rate.\n- **No SLO:** Recommends based on 30 days of historical SLI healthiness data.\n\nMirrors Django's SloViewSet.slo_objective_recommendation()."
+        },
+        {
+          "info": {
+            "name": "Get the SLO for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/slo",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "detail",
+                "value": "",
+                "type": "query",
+                "description": "Accepted for Django parity; ignored (always returns full detail)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the SLO for an SLX.\n\nSLX and SLO have a 1:1 relationship. This endpoint returns the single\nSLO associated with the specified SLX, or 404 if no SLO exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLO details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLO not found."
+        },
+        {
+          "info": {
+            "name": "Get SLO objective recommendation for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/slo/objective-recommendation",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "baseline",
+                "value": "",
+                "type": "query",
+                "description": "PromQL timestring defining the baseline window for the burn-rate calculation (e.g. '2h', '1d'). Defaults to hours elapsed since the 1st of the current month. Only used when an SLO exists. Must not exceed hours since month start."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate a recommended SLO objective for an SLX.\n\nTwo paths:\n- **Has SLO:** Recommends based on the current month's error budget burn rate.\n- **No SLO:** Recommends based on 30 days of historical SLI healthiness data.\n\nMirrors Django's SloViewSet.slo_objective_recommendation()."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

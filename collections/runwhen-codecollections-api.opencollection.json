@@ -1,0 +1,83 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy codecollections API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "codecollections",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all code collections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/codecollections",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all code collections, ordered by id descending.\n\nReturns a paginated response matching Django's DRF format:\n``{count, next, previous, results: [...]}``.\n\nMatches Django's CodeCollectionViewSet.list() which filters out\nnon-public collections. Since FastAPI normalized model doesn't store\nthe public flag, all collections are returned (corestate only syncs\npublic collections by default)."
+        },
+        {
+          "info": {
+            "name": "Get codecollection detail with codebundles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/codecollections/:name/tmp",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "rfns",
+                "value": "",
+                "type": "query",
+                "description": "Restrict returned codeBundles to this kind."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get detailed codecollection info including parsed codebundles.\n\nClones the codecollection git repo (shallow), walks the codebundles/\ndirectory, parses .robot files, and returns structured codebundle\nmetadata. Mirrors Django ``CodeCollectionViewSet.get_detail()``.\n\nThe full unfiltered response is cached in Redis under\n``cc:detail:{name}`` for ``_CC_DETAIL_CACHE_TTL`` seconds. ``rfns`` is\napplied AFTER the cache lookup so SLI and runbook callers share the\nsame cache entry. Cache is best-effort: an"
+        },
+        {
+          "info": {
+            "name": "Get a code collection by name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/codecollections/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a single code collection by name.\n\nMatches Django's CodeCollectionViewSet.retrieve() with lookup_field='name'."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

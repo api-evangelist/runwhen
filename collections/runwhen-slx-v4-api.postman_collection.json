@@ -1,0 +1,794 @@
+{
+  "item": [
+    {
+      "id": "823b41fb-0640-493e-8461-85a3f0c38135",
+      "name": "slx-v4",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5a79d977-9cd8-46e6-9702-12b05a41fcbc",
+          "name": "List Slxs",
+          "request": {
+            "name": "List Slxs",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v4",
+                "workspaces",
+                ":workspace_name",
+                "slxs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Number of results to skip"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9d8d09d1-53ef-4da9-80ba-1e7c7a399ba6",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"id\": 4663,\n      \"name\": \"string\",\n      \"shortName\": \"string\",\n      \"workspaceId\": 9666,\n      \"createdAt\": \"1965-04-20T01:20:31.498Z\",\n      \"modifiedAt\": \"2004-03-11T19:08:51.788Z\",\n      \"alias\": \"string\",\n      \"statement\": \"string\",\n      \"description\": \"string\",\n      \"asMeasuredBy\": \"string\",\n      \"metricType\": \"gauge\",\n      \"owners\": [\n        \"string\",\n        \"string\"\n      ],\n      \"tags\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"configProvided\": [\n        {\n          \"key_0\": 8786,\n          \"key_1\": true\n        },\n        {\n          \"key_0\": 3485,\n          \"key_1\": 1503.6421657760325\n        }\n      ],\n      \"additionalContext\": {\n        \"key_0\": false\n      },\n      \"icon\": \"string\",\n      \"imageUrl\": \"string\",\n      \"runbook\": {\n        \"id\": 6662,\n        \"slxId\": 3957,\n        \"createdAt\": \"1976-04-18T05:33:39.154Z\",\n        \"modifiedAt\": \"1984-06-18T08:54:24.700Z\",\n        \"name\": \"\",\n        \"description\": \"string\",\n        \"runnerUuid\": \"string\",\n        \"codeBundleRepoUrl\": \"string\",\n        \"codeBundleRef\": \"string\",\n        \"codeBundlePath\": \"string\",\n        \"repositoryId\": 3953,\n        \"configProvided\": [\n          {\n            \"key_0\": \"string\",\n            \"key_1\": 6294.102236913326\n          },\n          {\n            \"key_0\": 2727.7740412285743\n          }\n        ],\n        \"secretsProvided\": [\n          {\n            \"key_0\": false,\n            \"key_1\": 8173\n          },\n          {\n            \"key_0\": 4886\n          }\n        ],\n        \"runtimeVarsProvided\": [\n          {\n            \"key_0\": 5592,\n            \"key_1\": 1809.3351511244794\n          },\n          {\n            \"key_0\": \"string\",\n            \"key_1\": true,\n            \"key_2\": \"string\"\n          }\n        ],\n        \"requirements\": {\n          \"key_0\": 8213.02761982932\n        },\n        \"lookbackWindow\": \"string\",\n        \"resolvedTasks\": [\n          \"string\",\n          \"string\"\n        ],\n        \"taskDetails\": {\n          \"key_0\": 5754\n        },\n        \"lastRunCode\": \"string\",\n        \"lastRunMessage\": \"string\",\n        \"lastRunAt\": \"1991-09-17T10:03:42.233Z\",\n        \"tasks\": [\n          {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tags\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tags\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      },\n      \"sli\": {\n        \"slxId\": 6866,\n        \"createdAt\": \"1998-08-23T07:30:24.369Z\",\n        \"modifiedAt\": \"1984-02-22T16:34:53.901Z\",\n        \"displayUnitsLong\": \"string\",\n        \"displayUnitsShort\": \"string\",\n        \"description\": \"string\",\n        \"runnerUuid\": \"string\",\n        \"intervalStrategy\": \"intermezzo\",\n        \"intervalSeconds\": 300,\n        \"codeBundleRepoUrl\": \"string\",\n        \"codeBundleRef\": \"string\",\n        \"codeBundlePath\": \"string\",\n        \"repositoryId\": 9392,\n        \"configProvided\": [\n          {\n            \"key_0\": true\n          },\n          {\n            \"key_0\": 2228.3424543805077,\n            \"key_1\": true\n          }\n        ],\n        \"secretsProvided\": [\n          {\n            \"key_0\": 5270.569470824064\n          },\n          {\n            \"key_0\": \"string\",\n            \"key_1\": 5263.738240089169\n          }\n        ],\n        \"alertConfig\": {\n          \"key_0\": 1736,\n          \"key_1\": 2847.8417800240118\n        },\n        \"lastRunCode\": \"string\",\n        \"lastRunMessage\": \"string\",\n        \"lastRunAt\": \"1971-06-10T23:56:26.027Z\",\n        \"firingAlerts\": [\n          {\n            \"key_0\": \"string\",\n            \"key_1\": 8057,\n            \"key_2\": true\n          },\n          {\n            \"key_0\": true,\n            \"key_1\": \"string\"\n          }\n        ],\n        \"lastSevenDaysAlerts\": [\n          {\n            \"key_0\": false,\n            \"key_1\": 7282,\n            \"key_2\": 7602\n          },\n          {\n            \"key_0\": 1351.017263044778\n          }\n        ],\n        \"alertCount\": [\n          {\n            \"key_0\": 9034\n          },\n          {\n            \"key_0\": false\n          }\n        ],\n        \"recent\": {\n          \"key_0\": 9333.143993030977\n        }\n      },\n      \"slo\": {\n        \"slxId\": 740,\n        \"createdAt\": \"1992-10-03T11:59:47.721Z\",\n        \"modifiedAt\": \"1990-08-30T10:46:30.394Z\",\n        \"sloSpecType\": \"simple-mwmb\",\n        \"objective\": 99.9,\n        \"threshold\": 9,\n        \"operand\": \"eq\",\n        \"codeBundleRepoUrl\": \"string\",\n        \"codeBundleRef\": \"string\",\n        \"codeBundlePathToYaml\": \"string\",\n        \"repositoryId\": 3404,\n        \"generation\": 0,\n        \"generationChecksum\": \"string\",\n        \"ruleGroups\": [\n          {\n            \"key_0\": 4720,\n            \"key_1\": \"string\"\n          },\n          {\n            \"key_0\": true,\n            \"key_1\": \"string\",\n            \"key_2\": false\n          }\n        ],\n        \"firingAlerts\": [\n          {\n            \"key_0\": true\n          },\n          {\n            \"key_0\": 9465,\n            \"key_1\": 6128.756523271338\n          }\n        ],\n        \"lastSevenDaysAlerts\": [\n          {\n            \"key_0\": 9607.791653580316,\n            \"key_1\": 9103\n          },\n          {\n            \"key_0\": 1224,\n            \"key_1\": 7773,\n            \"key_2\": 9602\n          }\n        ],\n        \"alertCount\": [\n          {\n            \"key_0\": 1607,\n            \"key_1\": \"string\",\n            \"key_2\": 6248.988835555778\n          },\n          {\n            \"key_0\": \"string\",\n            \"key_1\": 423\n          }\n        ],\n        \"monthErrorBudgetRemaining\": {\n          \"key_0\": true,\n          \"key_1\": 8994\n        },\n        \"thirtyDayErrorBudgetRemaining\": {\n          \"key_0\": 5871.263580778228,\n          \"key_1\": 6304.307966175892\n        },\n        \"recent\": {\n          \"key_0\": 8421.73104157358,\n          \"key_1\": \"string\",\n          \"key_2\": 6967.183023248656\n        }\n      }\n    },\n    {\n      \"id\": 1883,\n      \"name\": \"string\",\n      \"shortName\": \"string\",\n      \"workspaceId\": 4196,\n      \"createdAt\": \"1959-10-10T14:12:21.762Z\",\n      \"modifiedAt\": \"2013-04-19T08:17:32.251Z\",\n      \"alias\": \"string\",\n      \"statement\": \"string\",\n      \"description\": \"string\",\n      \"asMeasuredBy\": \"string\",\n      \"metricType\": \"gauge\",\n      \"owners\": [\n        \"string\",\n        \"string\"\n      ],\n      \"tags\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"configProvided\": [\n        {\n          \"key_0\": \"string\"\n        },\n        {\n          \"key_0\": \"string\"\n        }\n      ],\n      \"additionalContext\": {\n        \"key_0\": 1866\n      },\n      \"icon\": \"string\",\n      \"imageUrl\": \"string\",\n      \"runbook\": {\n        \"id\": 4669,\n        \"slxId\": 9591,\n        \"createdAt\": \"2016-04-02T21:03:45.098Z\",\n        \"modifiedAt\": \"1969-11-05T21:42:58.149Z\",\n        \"name\": \"\",\n        \"description\": \"string\",\n        \"runnerUuid\": \"string\",\n        \"codeBundleRepoUrl\": \"string\",\n        \"codeBundleRef\": \"string\",\n        \"codeBundlePath\": \"string\",\n        \"repositoryId\": 4002,\n        \"configProvided\": [\n          {\n            \"key_0\": 3351.9027515598277,\n            \"key_1\": 5018.41976486617\n          },\n          {\n            \"key_0\": 9624\n          }\n        ],\n        \"secretsProvided\": [\n          {\n            \"key_0\": 2571.7278635454963,\n            \"key_1\": \"string\",\n            \"key_2\": 5112\n          },\n          {\n            \"key_0\": true,\n            \"key_1\": 9622.305018168388,\n            \"key_2\": 7003.115875639913\n          }\n        ],\n        \"runtimeVarsProvided\": [\n          {\n            \"key_0\": 4716.659753185389\n          },\n          {\n            \"key_0\": 8155.547286625946,\n            \"key_1\": \"string\"\n          }\n        ],\n        \"requirements\": {\n          \"key_0\": true\n        },\n        \"lookbackWindow\": \"string\",\n        \"resolvedTasks\": [\n          \"string\",\n          \"string\"\n        ],\n        \"taskDetails\": {\n          \"key_0\": 8335.37462386524\n        },\n        \"lastRunCode\": \"string\",\n        \"lastRunMessage\": \"string\",\n        \"lastRunAt\": \"2015-02-08T13:04:33.533Z\",\n        \"tasks\": [\n          {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tags\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tags\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      },\n      \"sli\": {\n        \"slxId\": 9637,\n        \"createdAt\": \"2011-10-24T23:31:33.662Z\",\n        \"modifiedAt\": \"1948-02-19T18:13:07.909Z\",\n        \"displayUnitsLong\": \"string\",\n        \"displayUnitsShort\": \"string\",\n        \"description\": \"string\",\n        \"runnerUuid\": \"string\",\n        \"intervalStrategy\": \"intermezzo\",\n        \"intervalSeconds\": 300,\n        \"codeBundleRepoUrl\": \"string\",\n        \"codeBundleRef\": \"string\",\n        \"codeBundlePath\": \"string\",\n        \"repositoryId\": 3959,\n        \"configProvided\": [\n          {\n            \"key_0\": false\n          },\n          {\n            \"key_0\": \"string\",\n            \"key_1\": 8140\n          }\n        ],\n        \"secretsProvided\": [\n          {\n            \"key_0\": 5097,\n            \"key_1\": \"string\"\n          },\n          {\n            \"key_0\": 2810.5401619824734,\n            \"key_1\": true\n          }\n        ],\n        \"alertConfig\": {\n          \"key_0\": 3661,\n          \"key_1\": 503.4729291546636\n        },\n        \"lastRunCode\": \"string\",\n        \"lastRunMessage\": \"string\",\n        \"lastRunAt\": \"1956-04-20T14:27:15.929Z\",\n        \"firingAlerts\": [\n          {\n            \"key_0\": true\n          },\n          {\n            \"key_0\": true\n          }\n        ],\n        \"lastSevenDaysAlerts\": [\n          {\n            \"key_0\": 1204.4596428792565,\n            \"key_1\": \"string\"\n          },\n          {\n            \"key_0\": true,\n            \"key_1\": 8705.165664575366\n          }\n        ],\n        \"alertCount\": [\n          {\n            \"key_0\": \"string\"\n          },\n          {\n            \"key_0\": 9611.889901421002\n          }\n        ],\n        \"recent\": {\n          \"key_0\": \"string\"\n        }\n      },\n      \"slo\": {\n        \"slxId\": 3000,\n        \"createdAt\": \"1957-11-12T03:49:54.306Z\",\n        \"modifiedAt\": \"1972-03-21T00:56:16.453Z\",\n        \"sloSpecType\": \"simple-mwmb\",\n        \"objective\": 99.9,\n        \"threshold\": 9,\n        \"operand\": \"eq\",\n        \"codeBundleRepoUrl\": \"string\",\n        \"codeBundleRef\": \"string\",\n        \"codeBundlePathToYaml\": \"string\",\n        \"repositoryId\": 5073,\n        \"generation\": 0,\n        \"generationChecksum\": \"string\",\n        \"ruleGroups\": [\n          {\n            \"key_0\": 233,\n            \"key_1\": 1223.5489291549252\n          },\n          {\n            \"key_0\": \"string\",\n            \"key_1\": \"string\"\n          }\n        ],\n        \"firingAlerts\": [\n          {\n            \"key_0\": 4807,\n            \"key_1\": 859,\n            \"key_2\": 5789\n          },\n          {\n            \"key_0\": \"string\",\n            \"key_1\": 8489.588149864223\n          }\n        ],\n        \"lastSevenDaysAlerts\": [\n          {\n            \"key_0\": \"string\"\n          },\n          {\n            \"key_0\": 5023\n          }\n        ],\n        \"alertCount\": [\n          {\n            \"key_0\": true,\n            \"key_1\": 8629,\n            \"key_2\": 7319\n          },\n          {\n            \"key_0\": 7087,\n            \"key_1\": 5800\n          }\n        ],\n        \"monthErrorBudgetRemaining\": {\n          \"key_0\": 263.1095041384035,\n          \"key_1\": 5479\n        },\n        \"thirtyDayErrorBudgetRemaining\": {\n          \"key_0\": 8088\n        },\n        \"recent\": {\n          \"key_0\": 1272.212781664882,\n          \"key_1\": 7844,\n          \"key_2\": 8956,\n          \"key_3\": false\n        }\n      }\n    }\n  ],\n  \"count\": 7190,\n  \"next\": \"string\",\n  \"previous\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "796d7762-073d-4894-b5f4-e875d7d8a846",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "262ea72c-425c-41c7-a3c1-3487116f8311",
+          "name": "Get Slx",
+          "request": {
+            "name": "Get Slx",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v4",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b5f28b07-0e3d-4c07-b78b-161619e5842c",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2371,\n  \"name\": \"string\",\n  \"shortName\": \"string\",\n  \"workspaceId\": 1012,\n  \"createdAt\": \"1968-07-06T16:52:51.503Z\",\n  \"modifiedAt\": \"1960-08-27T11:52:42.310Z\",\n  \"alias\": \"string\",\n  \"statement\": \"string\",\n  \"description\": \"string\",\n  \"asMeasuredBy\": \"string\",\n  \"metricType\": \"gauge\",\n  \"owners\": [\n    \"string\",\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"name\": \"string\",\n      \"value\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"value\": \"string\"\n    }\n  ],\n  \"configProvided\": [\n    {\n      \"key_0\": 4357.293837308881,\n      \"key_1\": 7910.683744432614,\n      \"key_2\": \"string\"\n    },\n    {\n      \"key_0\": 4101\n    }\n  ],\n  \"additionalContext\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": true,\n    \"key_3\": 169.49128776475587\n  },\n  \"icon\": \"string\",\n  \"imageUrl\": \"string\",\n  \"runbook\": {\n    \"id\": 8909,\n    \"slxId\": 5633,\n    \"createdAt\": \"1972-09-19T07:56:40.153Z\",\n    \"modifiedAt\": \"1992-11-03T04:55:03.764Z\",\n    \"name\": \"\",\n    \"description\": \"string\",\n    \"runnerUuid\": \"string\",\n    \"codeBundleRepoUrl\": \"string\",\n    \"codeBundleRef\": \"string\",\n    \"codeBundlePath\": \"string\",\n    \"repositoryId\": 2935,\n    \"configProvided\": [\n      {\n        \"key_0\": \"string\",\n        \"key_1\": 6067,\n        \"key_2\": 3657\n      },\n      {\n        \"key_0\": \"string\"\n      }\n    ],\n    \"secretsProvided\": [\n      {\n        \"key_0\": false,\n        \"key_1\": false\n      },\n      {\n        \"key_0\": false,\n        \"key_1\": true,\n        \"key_2\": 6051.68760841369\n      }\n    ],\n    \"runtimeVarsProvided\": [\n      {\n        \"key_0\": true,\n        \"key_1\": 1562.9738920813309\n      },\n      {\n        \"key_0\": 9049,\n        \"key_1\": true,\n        \"key_2\": 4314.463297516728\n      }\n    ],\n    \"requirements\": {\n      \"key_0\": 6015,\n      \"key_1\": 5471\n    },\n    \"lookbackWindow\": \"string\",\n    \"resolvedTasks\": [\n      \"string\",\n      \"string\"\n    ],\n    \"taskDetails\": {\n      \"key_0\": \"string\"\n    },\n    \"lastRunCode\": \"string\",\n    \"lastRunMessage\": \"string\",\n    \"lastRunAt\": \"1961-03-30T20:40:38.029Z\",\n    \"tasks\": [\n      {\n        \"name\": \"string\",\n        \"value\": \"string\",\n        \"tags\": [\n          \"string\",\n          \"string\"\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"value\": \"string\",\n        \"tags\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    ]\n  },\n  \"sli\": {\n    \"slxId\": 1546,\n    \"createdAt\": \"1993-04-25T04:17:02.967Z\",\n    \"modifiedAt\": \"2026-08-09T02:13:25.454Z\",\n    \"displayUnitsLong\": \"string\",\n    \"displayUnitsShort\": \"string\",\n    \"description\": \"string\",\n    \"runnerUuid\": \"string\",\n    \"intervalStrategy\": \"intermezzo\",\n    \"intervalSeconds\": 300,\n    \"codeBundleRepoUrl\": \"string\",\n    \"codeBundleRef\": \"string\",\n    \"codeBundlePath\": \"string\",\n    \"repositoryId\": 9203,\n    \"configProvided\": [\n      {\n        \"key_0\": 4812,\n        \"key_1\": 6510.557545238728,\n        \"key_2\": 7298,\n        \"key_3\": \"string\"\n      },\n      {\n        \"key_0\": false\n      }\n    ],\n    \"secretsProvided\": [\n      {\n        \"key_0\": 5439.021588542914,\n        \"key_1\": \"string\"\n      },\n      {\n        \"key_0\": true,\n        \"key_1\": 3237,\n        \"key_2\": 4538\n      }\n    ],\n    \"alertConfig\": {\n      \"key_0\": \"string\",\n      \"key_1\": 6577,\n      \"key_2\": 7286\n    },\n    \"lastRunCode\": \"string\",\n    \"lastRunMessage\": \"string\",\n    \"lastRunAt\": \"1953-12-26T04:59:00.371Z\",\n    \"firingAlerts\": [\n      {\n        \"key_0\": 4813.959800761867\n      },\n      {\n        \"key_0\": \"string\",\n        \"key_1\": false\n      }\n    ],\n    \"lastSevenDaysAlerts\": [\n      {\n        \"key_0\": \"string\",\n        \"key_1\": 7691.116040261787,\n        \"key_2\": \"string\"\n      },\n      {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\"\n      }\n    ],\n    \"alertCount\": [\n      {\n        \"key_0\": true\n      },\n      {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\"\n      }\n    ],\n    \"recent\": {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  },\n  \"slo\": {\n    \"slxId\": 564,\n    \"createdAt\": \"1986-10-12T09:00:50.296Z\",\n    \"modifiedAt\": \"1957-07-09T07:55:29.217Z\",\n    \"sloSpecType\": \"simple-mwmb\",\n    \"objective\": 99.9,\n    \"threshold\": 9,\n    \"operand\": \"eq\",\n    \"codeBundleRepoUrl\": \"string\",\n    \"codeBundleRef\": \"string\",\n    \"codeBundlePathToYaml\": \"string\",\n    \"repositoryId\": 47,\n    \"generation\": 0,\n    \"generationChecksum\": \"string\",\n    \"ruleGroups\": [\n      {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\"\n      },\n      {\n        \"key_0\": 7904,\n        \"key_1\": false,\n        \"key_2\": \"string\",\n        \"key_3\": 7082.933946346871\n      }\n    ],\n    \"firingAlerts\": [\n      {\n        \"key_0\": \"string\"\n      },\n      {\n        \"key_0\": 1837,\n        \"key_1\": \"string\"\n      }\n    ],\n    \"lastSevenDaysAlerts\": [\n      {\n        \"key_0\": \"string\"\n      },\n      {\n        \"key_0\": 9333\n      }\n    ],\n    \"alertCount\": [\n      {\n        \"key_0\": true\n      },\n      {\n        \"key_0\": 5706.73911844333\n      }\n    ],\n    \"monthErrorBudgetRemaining\": {\n      \"key_0\": \"string\"\n    },\n    \"thirtyDayErrorBudgetRemaining\": {\n      \"key_0\": false,\n      \"key_1\": true\n    },\n    \"recent\": {\n      \"key_0\": 910,\n      \"key_1\": 4296\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "553af6bc-881d-4205-93c3-5eaa61c7ea4c",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "697a18cd-d09c-4035-ac81-8330da360abb",
+          "name": "Soft-delete an SLX (V4, short-name URL)",
+          "request": {
+            "name": "Soft-delete an SLX (V4, short-name URL)",
+            "description": {
+              "content": "Soft-delete an SLX by its short name (the v4-consistent URL form).\n\nMirrors the v4 GET pattern: clients pass the short name (e.g. ``my-slx``);\nthe handler forms the full DB name (``{workspace}--{short_name}``) before\ninvoking ``SlxSyncService.soft_delete``. This matches what the UI already\nsends — the legacy ``sync_router`` DELETE at ``/api/v1/.../slxs/{name}``\ntook the full name as the path param, and a UI sending a short name\nagainst it always landed on ``status=\"not_found\"`` (silent no-op).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v4",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b2e053a4-8600-444c-8812-053ca6793f46",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "22d9c36d-7b30-44c1-ae17-1bbe4b6fe0f4",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "39bf13af-e97f-4e4d-9638-c797c4b2a6bd",
+          "name": "Upsert an SLX (V4 typed payload)",
+          "request": {
+            "name": "Upsert an SLX (V4 typed payload)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v4",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                "sync-typed"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payload\": {\n    \"name\": \"<string>\",\n    \"alias\": \"<string>\",\n    \"statement\": \"<string>\",\n    \"description\": \"<string>\",\n    \"asMeasuredBy\": \"<string>\",\n    \"metricType\": \"gauge\",\n    \"owners\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"tags\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\"\n      }\n    ],\n    \"configProvided\": [\n      {\n        \"key_0\": 1539,\n        \"key_1\": 1253\n      },\n      {\n        \"key_0\": 7035.26152166924,\n        \"key_1\": true\n      }\n    ],\n    \"additionalContext\": {\n      \"key_0\": 2665,\n      \"key_1\": 9634.194399950386\n    },\n    \"icon\": \"<string>\",\n    \"imageUrl\": \"<string>\"\n  },\n  \"lastSyncedAt\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8d06603c-cfd8-4089-9914-73ec418b90e2",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    "sync-typed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payload\": {\n    \"name\": \"string\",\n    \"alias\": \"string\",\n    \"statement\": \"string\",\n    \"description\": \"string\",\n    \"asMeasuredBy\": \"string\",\n    \"metricType\": \"gauge\",\n    \"owners\": [\n      \"string\",\n      \"string\"\n    ],\n    \"tags\": [\n      {\n        \"name\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"name\": \"string\",\n        \"value\": \"string\"\n      }\n    ],\n    \"configProvided\": [\n      {\n        \"key_0\": false\n      },\n      {\n        \"key_0\": 8315.049849322168\n      }\n    ],\n    \"additionalContext\": {\n      \"key_0\": 8692\n    },\n    \"icon\": \"string\",\n    \"imageUrl\": \"string\"\n  },\n  \"lastSyncedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e1176ccb-0005-4b75-9335-6a79fe16cf8d",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    "sync-typed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payload\": {\n    \"name\": \"string\",\n    \"alias\": \"string\",\n    \"statement\": \"string\",\n    \"description\": \"string\",\n    \"asMeasuredBy\": \"string\",\n    \"metricType\": \"gauge\",\n    \"owners\": [\n      \"string\",\n      \"string\"\n    ],\n    \"tags\": [\n      {\n        \"name\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"name\": \"string\",\n        \"value\": \"string\"\n      }\n    ],\n    \"configProvided\": [\n      {\n        \"key_0\": false\n      },\n      {\n        \"key_0\": 8315.049849322168\n      }\n    ],\n    \"additionalContext\": {\n      \"key_0\": 8692\n    },\n    \"icon\": \"string\",\n    \"imageUrl\": \"string\"\n  },\n  \"lastSyncedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "76fe656c-0424-4b03-b6d9-e569fd5bc6f8",
+    "name": "papi alert-query-proxy slx-v4 API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

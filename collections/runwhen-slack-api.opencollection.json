@@ -1,0 +1,93 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy slack API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "slack",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Slack integrations for workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/:workspace_name/slack",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Slack integrations for a workspace.\n\nProxies to the slackbot service to fetch workspace integrations.\n\nArgs:\n    workspace_name: The workspace name from path.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Slack workspace integrations from slackbot service."
+        },
+        {
+          "info": {
+            "name": "Create Slack integration for workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/:workspace_name/slack",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a Slack integration for a workspace.\n\nProxies to the slackbot service to create the integration.\n\nArgs:\n    workspace_name: The workspace name from path.\n    data: Slack integration data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Created integration from slackbot service."
+        },
+        {
+          "info": {
+            "name": "Delete Slack integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/:workspace_name/slack/:integration_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "integration_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a Slack integration for a workspace.\n\nArgs:\n    workspace_name: The workspace name from path.\n    integration_id: The integration ID to delete.\n    session: Database session.\n    current_user: The authenticated user."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

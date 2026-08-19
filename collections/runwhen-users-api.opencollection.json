@@ -1,0 +1,375 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy users API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Register a new user account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/users/register",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new user account and send a verification email.\n\nArgs:\n    data: Registration details (username, email, password).\n    session: Database session.\n\nReturns:\n    The created user's basic info with a confirmation message.\n\nRaises:\n    HTTPException: 409 if username or email already exists."
+        },
+        {
+          "info": {
+            "name": "Verify email address via token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/users/verify-email",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Verify a user's email address using a signed token.\n\nArgs:\n    data: The verification token.\n    session: Database session.\n\nReturns:\n    Confirmation message.\n\nRaises:\n    HTTPException: 400 if token is invalid or expired."
+        },
+        {
+          "info": {
+            "name": "Resend verification email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/users/resend-verification",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Resend verification email for an unverified account.\n\nAlways returns 200 with a generic message to prevent email enumeration."
+        },
+        {
+          "info": {
+            "name": "Request a password reset email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/users/forgot-password",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send a password reset email if the email exists.\n\nAlways returns 200 with a generic message to prevent email enumeration.\n\nArgs:\n    data: The email address to send the reset link to.\n    session: Database session.\n\nReturns:\n    Generic confirmation message (regardless of whether the email exists)."
+        },
+        {
+          "info": {
+            "name": "Reset password using a token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/users/reset-password",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Reset a user's password using a signed, one-time-use token.\n\nArgs:\n    data: The reset token and new password.\n    session: Database session.\n\nReturns:\n    Confirmation message.\n\nRaises:\n    HTTPException: 400 if token is invalid, expired, or already consumed."
+        },
+        {
+          "info": {
+            "name": "Get CSRF token",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/csrf-token"
+          },
+          "docs": "Get a CSRF token for cross-domain requests.\n\nThis endpoint is provided for UI compatibility. With JWT-based\nauthentication, CSRF tokens are not strictly necessary since\nthe auth token is sent in the Authorization header (not cookies).\n\nHowever, the frontend may still expect this endpoint to exist.\n\nReturns:\n    A CSRF token."
+        },
+        {
+          "info": {
+            "name": "Login with username and password",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/users/login",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Authenticate user with username and password.\n\nArgs:\n    data: Login credentials.\n    session: Database session.\n\nReturns:\n    Access and refresh tokens with user info.\n\nRaises:\n    HTTPException: 401 if credentials invalid."
+        },
+        {
+          "info": {
+            "name": "Logout (invalidate session)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/users/logout",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Logout the current user.\n\nClears the JWT cookie so browser-based sessions are terminated immediately."
+        },
+        {
+          "info": {
+            "name": "Get current user info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/whoami",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get information about the currently logged in user.\n\nArgs:\n    current_user: The authenticated user.\n\nReturns:\n    The current user's information."
+        },
+        {
+          "info": {
+            "name": "Search users by name or email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/search",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "Search term"
+              },
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "query",
+                "description": "Workspace name for anonymous mode"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Search users by first name, last name, username, or email.\n\nReturns empty list if search term is less than 3 characters.\nExcludes service accounts from results.\n\nStaff-only for general search (matching Django IsAdminUser).\nNon-staff users may search within an anonymous workspace (returns only\nanonymized results)."
+        },
+        {
+          "info": {
+            "name": "Search users by exact email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/search-email",
+            "params": [
+              {
+                "name": "q[]",
+                "value": "",
+                "type": "query",
+                "description": "Email addresses to search"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Search users by exact email address match.\n\nReturns matching users and list of emails not found.\nUsed for mapping git contributors to user accounts.\n\nNote: Accepts both `q` and `q[]` query parameter formats for compatibility\nwith different frontend frameworks."
+        },
+        {
+          "info": {
+            "name": "Get access token for API usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/get-token",
+            "params": [
+              {
+                "name": "days",
+                "value": "",
+                "type": "query",
+                "description": "Token lifetime in days"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate an access token for the current user.\n\nThe token can be used for API authentication with Bearer scheme."
+        },
+        {
+          "info": {
+            "name": "Get users in current user's network",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/my-network",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "query",
+                "description": "Workspace name (required)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get users who share workspaces with the current user.\n\nWorkspace name to scope results to (required).\nReturns users who have permissions on the specified workspace.\nUseful for autocomplete/mentions.\n\nArgs:\n    workspace: Workspace name to scope results to (required).\n    current_user: The authenticated user.\n    session: Database session.\n\nReturns:\n    List of users in the current user's network."
+        },
+        {
+          "info": {
+            "name": "Get user by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a user by their ID.\n\nArgs:\n    user_id: The ID of the user to retrieve.\n    session: Database session.\n    current_user: The authenticated user (required for auth).\n\nReturns:\n    The user information.\n\nRaises:\n    HTTPException: 404 if user not found."
+        },
+        {
+          "info": {
+            "name": "Update user details",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/users/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update user details.\n\nUsers can only update their own profile. Admins can update any user.\n\nArgs:\n    user_id: The ID of the user to update.\n    update_data: The fields to update.\n    current_user: The authenticated user.\n    session: Database session.\n\nReturns:\n    The updated user information.\n\nRaises:\n    HTTPException: 403 if trying to update another user's profile.\n    HTTPException: 404 if user not found."
+        },
+        {
+          "info": {
+            "name": "Get user's active workspaces",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/:user_id/activeworkspaces",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get workspaces sorted by user's activity count.\n\nArgs:\n    user_id: The user ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of workspaces with activity counts."
+        },
+        {
+          "info": {
+            "name": "Get count of user's activities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/:user_id/activities/count",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the count of activities for a user (heatmap data).\n\nReturns a list of date/count pairs for generating activity heatmaps.\n\nArgs:\n    user_id: The user ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of date/count pairs."
+        },
+        {
+          "info": {
+            "name": "Get user's activity stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/users/:user_id/activities",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page-size",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get activity stream for a user.\n\nArgs:\n    user_id: The user ID.\n    page: Page number.\n    page_size: Items per page.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of activities."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,132 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy slx-v4 API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "slx-v4",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Slxs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slxs",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Slxs"
+        },
+        {
+          "info": {
+            "name": "Get Slx",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slxs/:slx_short_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Slx"
+        },
+        {
+          "info": {
+            "name": "Soft-delete an SLX (V4, short-name URL)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slxs/:slx_short_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete an SLX by its short name (the v4-consistent URL form).\n\nMirrors the v4 GET pattern: clients pass the short name (e.g. ``my-slx``);\nthe handler forms the full DB name (``{workspace}--{short_name}``) before\ninvoking ``SlxSyncService.soft_delete``. This matches what the UI already\nsends — the legacy ``sync_router`` DELETE at ``/api/v1/.../slxs/{name}``\ntook the full name as the path param, and a UI sending a short name\nagainst it always landed on ``status=\"not_found\"`` (silent no-op)."
+        },
+        {
+          "info": {
+            "name": "Upsert an SLX (V4 typed payload)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v4/workspaces/:workspace_name/slxs/sync-typed",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upsert an SLX (V4 typed payload)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,65 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy codebundles API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "codebundles",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Parse Codebundle",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/parsecodebundle",
+            "params": [
+              {
+                "name": "repoUrl",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ref",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "pathToRobot",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "pathToYaml",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "pathInRepo",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "obo",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Parse a code bundle and return its tasks, config schema, and metadata.\n\nUsed by the corestate runbook controller to populate\n``status.codeBundle.tasks`` on Runbook CRDs."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

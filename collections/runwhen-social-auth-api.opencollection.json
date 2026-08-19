@@ -1,0 +1,171 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy social-auth API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "social-auth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Google Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/google/login/",
+            "params": [
+              {
+                "name": "next",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "oauth_session",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Initiate Google OAuth2 login."
+        },
+        {
+          "info": {
+            "name": "Google Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/google/login/callback/",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "error",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Handle Google OAuth2 callback."
+        },
+        {
+          "info": {
+            "name": "Github Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/github/login/",
+            "params": [
+              {
+                "name": "next",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "oauth_session",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Initiate GitHub OAuth2 login."
+        },
+        {
+          "info": {
+            "name": "Github Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/github/login/callback/",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "error",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Handle GitHub OAuth2 callback."
+        },
+        {
+          "info": {
+            "name": "Gitlab Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/gitlab/login/",
+            "params": [
+              {
+                "name": "next",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "oauth_session",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Initiate GitLab OAuth2 login."
+        },
+        {
+          "info": {
+            "name": "Gitlab Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/gitlab/login/callback/",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "error",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Handle GitLab OAuth2 callback."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

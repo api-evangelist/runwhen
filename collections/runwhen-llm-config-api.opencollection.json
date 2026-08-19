@@ -1,0 +1,47 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy llm-config API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "llm-config",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Llm Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/llmconfigs",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "query",
+                "description": "Workspace short name; omit to fetch the platform default"
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "query",
+                "description": "LLM category"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get LLM configuration.\n\nWhen ``workspace`` is provided, resolution is workspace → org → platform default.\nWhen ``workspace`` is omitted, returns the platform default for ``category`` directly."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

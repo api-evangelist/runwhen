@@ -1,0 +1,97 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy auth API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "auth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Obtain Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/token/"
+          },
+          "docs": "Obtain JWT access and refresh tokens.\n\nAccepts either username or email with password for authentication.\nCompatible with Django REST Framework SimpleJWT token endpoint.\nSupports both application/json and application/x-www-form-urlencoded.\n\nArgs:\n    request: The incoming HTTP request.\n\nReturns:\n    TokenResponse with access and refresh JWT tokens.\n\nRaises:\n    HTTPException: 401 if credentials are invalid."
+        },
+        {
+          "info": {
+            "name": "Refresh Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/token/refresh/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Refresh an access token using a refresh token.\n\nAccepts {\"refresh\": \"<token>\"} in the request body, matching Django SimpleJWT.\n\nArgs:\n    body: Request body containing the refresh token.\n\nReturns:\n    TokenResponse with new access and refresh tokens.\n\nRaises:\n    HTTPException: 401 if refresh token is invalid."
+        },
+        {
+          "info": {
+            "name": "Verify Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/token/verify/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Verify a JWT token is valid and not expired.\n\nMirrors Django SimpleJWT TokenVerifyView. Returns {} on success.\n\nArgs:\n    body: Request body containing the token to verify.\n\nReturns:\n    Empty dict on success.\n\nRaises:\n    HTTPException: 401 if token is invalid or expired."
+        },
+        {
+          "info": {
+            "name": "Username Password Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/username-password-login",
+            "params": [
+              {
+                "name": "days",
+                "value": "",
+                "type": "query",
+                "description": "Token lifetime in days"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Authenticate user with username/password and return access token.\n\nThis endpoint is provided for UI login compatibility with Django.\nIt returns an access token with a custom lifetime based on the `days` parameter.\n\nArgs:\n    request: Token request containing username/email and password.\n    days: Token lifetime in days (default 1, max 30).\n\nReturns:\n    UsernamePasswordLoginResponse with access token and lifetime string.\n\nRaises:\n    HTTPException: 400 if credentials are invalid."
+        },
+        {
+          "info": {
+            "name": "Exchange an external token for a PAPI JWT",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/token/exchange/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Exchange an Auth0 access token for a PAPI JWT.\n\nThis endpoint implements a simplified RFC 8693 token exchange. It\nvalidates the Auth0 token against Auth0's /userinfo endpoint, looks up\nthe corresponding PAPI user by email, and issues a PAPI JWT.\n\nIntended for use by the MCP server after completing an OAuth 2.1 flow\nwith Auth0 — the MCP server receives an Auth0 access token from the\ninteractive login and exchanges it here for a PAPI JWT that can be\nused for API calls."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

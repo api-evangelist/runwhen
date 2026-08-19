@@ -1,0 +1,607 @@
+{
+  "item": [
+    {
+      "id": "daffee51-4b1f-4aef-af55-4e2868525139",
+      "name": "sli-v4",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2d5da3b3-3789-4156-bb7b-2aa4e0739a96",
+          "name": "Get Sli",
+          "request": {
+            "name": "Get Sli",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v4",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name",
+                "sli"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "cff642df-0e95-43e1-8876-1f0b0103dfd4",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "sli"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"slxId\": 1387,\n  \"createdAt\": \"1986-02-17T04:56:02.075Z\",\n  \"modifiedAt\": \"1998-11-29T13:23:14.527Z\",\n  \"displayUnitsLong\": \"string\",\n  \"displayUnitsShort\": \"string\",\n  \"description\": \"string\",\n  \"runnerUuid\": \"string\",\n  \"intervalStrategy\": \"intermezzo\",\n  \"intervalSeconds\": 300,\n  \"codeBundleRepoUrl\": \"string\",\n  \"codeBundleRef\": \"string\",\n  \"codeBundlePath\": \"string\",\n  \"repositoryId\": 9436,\n  \"configProvided\": [\n    {\n      \"key_0\": 2164.7769620205104\n    },\n    {\n      \"key_0\": \"string\",\n      \"key_1\": true\n    }\n  ],\n  \"secretsProvided\": [\n    {\n      \"key_0\": true\n    },\n    {\n      \"key_0\": \"string\",\n      \"key_1\": 5152,\n      \"key_2\": 7229\n    }\n  ],\n  \"alertConfig\": {\n    \"key_0\": 2542.040423578926,\n    \"key_1\": true,\n    \"key_2\": 5494\n  },\n  \"lastRunCode\": \"string\",\n  \"lastRunMessage\": \"string\",\n  \"lastRunAt\": \"2013-10-18T05:50:12.723Z\",\n  \"firingAlerts\": [\n    {\n      \"key_0\": false,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 7320,\n      \"key_1\": 3891.2982659207305,\n      \"key_2\": 7264\n    }\n  ],\n  \"lastSevenDaysAlerts\": [\n    {\n      \"key_0\": true\n    },\n    {\n      \"key_0\": 1617,\n      \"key_1\": 7164\n    }\n  ],\n  \"alertCount\": [\n    {\n      \"key_0\": true\n    },\n    {\n      \"key_0\": false,\n      \"key_1\": 2252.173976818762,\n      \"key_2\": false\n    }\n  ],\n  \"recent\": {\n    \"key_0\": 2019\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "732f6c0c-dd74-4102-878c-6e772b72663e",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "sli"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fa136de6-3559-4ddd-86d3-7eef9c260e1c",
+          "name": "Soft-delete the SLI attached to an SLX (V4, short-name URL)",
+          "request": {
+            "name": "Soft-delete the SLI attached to an SLX (V4, short-name URL)",
+            "description": {
+              "content": "Soft-delete the SLI that belongs to ``{slx_short_name}`` in this workspace.\n\nMirrors the v4 GET URL (``/slxs/{slx_short_name}/sli``). SLI rows are\nkeyed by ``slx_id`` (1-1 with the parent SLX), so the path identifies\nthe parent SLX rather than the SLI itself.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v4",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name",
+                "sli"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "16a798e5-f1eb-4869-98cd-b05dc2734144",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "sli"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6546b41b-aa59-4d39-b61b-22e3316d5391",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "sli"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d32a089d-e149-418a-a8e1-3feffe84bda6",
+          "name": "Upsert an SLI (V4 typed payload)",
+          "request": {
+            "name": "Upsert an SLI (V4 typed payload)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v4",
+                "workspaces",
+                ":workspace_name",
+                "slis",
+                "sync-typed"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payload\": {\n    \"slxId\": \"<integer>\",\n    \"displayUnitsLong\": \"<string>\",\n    \"displayUnitsShort\": \"<string>\",\n    \"description\": \"<string>\",\n    \"runnerUuid\": \"<string>\",\n    \"intervalStrategy\": \"intermezzo\",\n    \"intervalSeconds\": 300,\n    \"codeBundleRepoUrl\": \"<string>\",\n    \"codeBundleRef\": \"<string>\",\n    \"codeBundlePath\": \"<string>\",\n    \"repositoryId\": \"<integer>\",\n    \"configProvided\": [\n      {\n        \"key_0\": \"string\",\n        \"key_1\": 6150,\n        \"key_2\": 6928\n      },\n      {\n        \"key_0\": 5632\n      }\n    ],\n    \"secretsProvided\": [\n      {\n        \"key_0\": \"string\",\n        \"key_1\": 8408.39695456455\n      },\n      {\n        \"key_0\": 5702,\n        \"key_1\": false\n      }\n    ],\n    \"alertConfig\": {\n      \"key_0\": 2541.775050727516,\n      \"key_1\": \"string\"\n    }\n  },\n  \"lastSyncedAt\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fe1a913d-fb88-426e-9844-2caa8409c0e4",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slis",
+                    "sync-typed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payload\": {\n    \"slxId\": 9620,\n    \"displayUnitsLong\": \"string\",\n    \"displayUnitsShort\": \"string\",\n    \"description\": \"string\",\n    \"runnerUuid\": \"string\",\n    \"intervalStrategy\": \"intermezzo\",\n    \"intervalSeconds\": 300,\n    \"codeBundleRepoUrl\": \"string\",\n    \"codeBundleRef\": \"string\",\n    \"codeBundlePath\": \"string\",\n    \"repositoryId\": 5033,\n    \"configProvided\": [\n      {\n        \"key_0\": \"string\",\n        \"key_1\": false\n      },\n      {\n        \"key_0\": 8686,\n        \"key_1\": 957.2694091419221\n      }\n    ],\n    \"secretsProvided\": [\n      {\n        \"key_0\": \"string\"\n      },\n      {\n        \"key_0\": 2437,\n        \"key_1\": 3592\n      }\n    ],\n    \"alertConfig\": {\n      \"key_0\": 4431.76441250703\n    }\n  },\n  \"lastSyncedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f074f12b-ff6f-4159-b339-7dafa0c2c8b4",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v4",
+                    "workspaces",
+                    ":workspace_name",
+                    "slis",
+                    "sync-typed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payload\": {\n    \"slxId\": 9620,\n    \"displayUnitsLong\": \"string\",\n    \"displayUnitsShort\": \"string\",\n    \"description\": \"string\",\n    \"runnerUuid\": \"string\",\n    \"intervalStrategy\": \"intermezzo\",\n    \"intervalSeconds\": 300,\n    \"codeBundleRepoUrl\": \"string\",\n    \"codeBundleRef\": \"string\",\n    \"codeBundlePath\": \"string\",\n    \"repositoryId\": 5033,\n    \"configProvided\": [\n      {\n        \"key_0\": \"string\",\n        \"key_1\": false\n      },\n      {\n        \"key_0\": 8686,\n        \"key_1\": 957.2694091419221\n      }\n    ],\n    \"secretsProvided\": [\n      {\n        \"key_0\": \"string\"\n      },\n      {\n        \"key_0\": 2437,\n        \"key_1\": 3592\n      }\n    ],\n    \"alertConfig\": {\n      \"key_0\": 4431.76441250703\n    }\n  },\n  \"lastSyncedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "12fcacff-829e-4840-b9bb-e849fe4750e7",
+    "name": "papi alert-query-proxy sli-v4 API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

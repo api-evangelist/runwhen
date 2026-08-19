@@ -1,0 +1,1414 @@
+{
+  "item": [
+    {
+      "id": "5f6b6401-84f4-45f1-989a-8ec5998310c0",
+      "name": "issue-occurrences",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4c08f432-0e99-4a9f-be46-371c64d2b91e",
+          "name": "List issue occurrences for a run session",
+          "request": {
+            "name": "List issue occurrences for a run session",
+            "description": {
+              "content": "List issue occurrences for a specific run session.\n\nGets occurrences through the RunSessionIssueMap table.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with flattened issue attributes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "workspaces",
+                ":workspace_name",
+                "runsessions",
+                ":runsession_id",
+                "issueoccurrences"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<integer>",
+                  "description": "Filter by occurrence ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "issue_id",
+                  "value": "<integer>",
+                  "description": "Filter by issue ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Number of results to skip"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "runsession_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "5c4e8758-94e4-4972-8301-436c0119b59e",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "issue_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"observedAt\": \"2015-09-14T19:48:11.016Z\",\n      \"occurrenceId\": 1375,\n      \"issueId\": 5501,\n      \"taskTitle\": \"string\",\n      \"closed\": false,\n      \"created\": \"1959-01-12T08:23:20.487Z\",\n      \"modified\": \"1951-01-21T15:03:29.430Z\",\n      \"details\": \"string\",\n      \"nextSteps\": \"string\",\n      \"expected\": \"string\",\n      \"actual\": \"string\",\n      \"reproduceHint\": \"string\",\n      \"additionalContext\": {\n        \"key_0\": \"string\",\n        \"key_1\": true\n      },\n      \"title\": \"\",\n      \"severity\": 0\n    },\n    {\n      \"observedAt\": \"1992-10-13T09:38:14.291Z\",\n      \"occurrenceId\": 5620,\n      \"issueId\": 5341,\n      \"taskTitle\": \"string\",\n      \"closed\": true,\n      \"created\": \"1972-05-20T17:29:34.516Z\",\n      \"modified\": \"2003-05-23T23:29:15.254Z\",\n      \"details\": \"string\",\n      \"nextSteps\": \"string\",\n      \"expected\": \"string\",\n      \"actual\": \"string\",\n      \"reproduceHint\": \"string\",\n      \"additionalContext\": {\n        \"key_0\": 6989.516203044973,\n        \"key_1\": false,\n        \"key_2\": 2502.8674688088736,\n        \"key_3\": true,\n        \"key_4\": 3197.909595520888\n      },\n      \"title\": \"\",\n      \"severity\": 0\n    }\n  ],\n  \"count\": 1246,\n  \"limit\": 7405,\n  \"offset\": 1245,\n  \"next\": \"string\",\n  \"previous\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ad1ff715-4c20-42b9-985c-34d08332dcf9",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "issue_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "abd961bf-b2f7-47e9-9228-62cf82b645e2",
+          "name": "List issue occurrences for a workspace",
+          "request": {
+            "name": "List issue occurrences for a workspace",
+            "description": {
+              "content": "List issue occurrences at workspace level with optional date filtering.\n\nUsed by agentfarm to list issue occurrences between two timestamps.\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n    observed_at_gte: Filter occurrences observed at or after this time.\n    observed_at_lte: Filter occurrences observed at or before this time.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with workspace-level fields.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "workspaces",
+                ":workspace_name",
+                "issueoccurrences"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "observed_at__gte",
+                  "value": "<dateTime>",
+                  "description": "Filter occurrences observed at or after this datetime (ISO 8601)"
+                },
+                {
+                  "disabled": false,
+                  "key": "observed_at__lte",
+                  "value": "<dateTime>",
+                  "description": "Filter occurrences observed at or before this datetime (ISO 8601)"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Number of results to skip"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "7332ac61-5667-4c30-bbf7-cda6bf383b77",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "issueoccurrences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "observed_at__gte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "observed_at__lte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"observedAt\": \"2013-02-06T22:20:08.309Z\",\n      \"occurrenceId\": 1543,\n      \"issueId\": 7446,\n      \"taskTitle\": \"string\",\n      \"closed\": true,\n      \"created\": \"1967-01-05T20:14:05.018Z\",\n      \"modified\": \"1947-01-12T04:00:49.906Z\",\n      \"details\": \"string\",\n      \"nextSteps\": \"string\",\n      \"expected\": \"string\",\n      \"actual\": \"string\",\n      \"reproduceHint\": \"string\",\n      \"additionalContext\": {\n        \"key_0\": \"string\",\n        \"key_1\": 4714,\n        \"key_2\": false,\n        \"key_3\": \"string\"\n      },\n      \"title\": \"\",\n      \"severity\": 0,\n      \"slxName\": \"string\",\n      \"runsessionIds\": [\n        5626,\n        8157\n      ]\n    },\n    {\n      \"observedAt\": \"2010-09-19T09:24:49.408Z\",\n      \"occurrenceId\": 5089,\n      \"issueId\": 8613,\n      \"taskTitle\": \"string\",\n      \"closed\": true,\n      \"created\": \"1971-03-06T08:14:53.434Z\",\n      \"modified\": \"2015-12-03T08:48:22.851Z\",\n      \"details\": \"string\",\n      \"nextSteps\": \"string\",\n      \"expected\": \"string\",\n      \"actual\": \"string\",\n      \"reproduceHint\": \"string\",\n      \"additionalContext\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\",\n        \"key_2\": false,\n        \"key_3\": true\n      },\n      \"title\": \"\",\n      \"severity\": 0,\n      \"slxName\": \"string\",\n      \"runsessionIds\": [\n        5114,\n        5783\n      ]\n    }\n  ],\n  \"count\": 7147,\n  \"limit\": 9186,\n  \"offset\": 8425,\n  \"next\": \"string\",\n  \"previous\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7d4352e9-c227-4383-aac2-802e84542dfe",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "issueoccurrences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "observed_at__gte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "observed_at__lte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8932da6c-4d30-43f6-affc-e8f293188a7d",
+          "name": "Get an issue occurrence by ID",
+          "request": {
+            "name": "Get an issue occurrence by ID",
+            "description": {
+              "content": "Get a specific issue occurrence by ID.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    occurrence_id: The issue occurrence ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue occurrence with flattened issue attributes.\n\nRaises:\n    HTTPException: 404 if workspace, run session, or occurrence not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "workspaces",
+                ":workspace_name",
+                "runsessions",
+                ":runsession_id",
+                "issueoccurrences",
+                ":occurrence_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "runsession_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "occurrence_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "4a40076f-b4e5-4890-a9f2-37d5fb8ea875",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences",
+                    ":occurrence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "occurrence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"observedAt\": \"1950-01-02T06:45:12.886Z\",\n  \"occurrenceId\": 22,\n  \"issueId\": 1535,\n  \"taskTitle\": \"string\",\n  \"closed\": false,\n  \"created\": \"2003-01-15T00:51:53.379Z\",\n  \"modified\": \"2017-01-18T10:59:49.014Z\",\n  \"details\": \"string\",\n  \"nextSteps\": \"string\",\n  \"expected\": \"string\",\n  \"actual\": \"string\",\n  \"reproduceHint\": \"string\",\n  \"additionalContext\": {\n    \"key_0\": true,\n    \"key_1\": true\n  },\n  \"title\": \"\",\n  \"severity\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4c3df2f8-e902-4616-9408-83c511764d19",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences",
+                    ":occurrence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "occurrence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "04f1b038-0214-4a55-8648-a342968d99a5",
+          "name": "List issue occurrences for a run session",
+          "request": {
+            "name": "List issue occurrences for a run session",
+            "description": {
+              "content": "List issue occurrences for a specific run session.\n\nGets occurrences through the RunSessionIssueMap table.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with flattened issue attributes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_name",
+                "runsessions",
+                ":runsession_id",
+                "issueoccurrences"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<integer>",
+                  "description": "Filter by occurrence ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "issue_id",
+                  "value": "<integer>",
+                  "description": "Filter by issue ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Number of results to skip"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "runsession_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "64687bca-bee5-4960-9753-d13c84f99da9",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "issue_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"observedAt\": \"2015-09-14T19:48:11.016Z\",\n      \"occurrenceId\": 1375,\n      \"issueId\": 5501,\n      \"taskTitle\": \"string\",\n      \"closed\": false,\n      \"created\": \"1959-01-12T08:23:20.487Z\",\n      \"modified\": \"1951-01-21T15:03:29.430Z\",\n      \"details\": \"string\",\n      \"nextSteps\": \"string\",\n      \"expected\": \"string\",\n      \"actual\": \"string\",\n      \"reproduceHint\": \"string\",\n      \"additionalContext\": {\n        \"key_0\": \"string\",\n        \"key_1\": true\n      },\n      \"title\": \"\",\n      \"severity\": 0\n    },\n    {\n      \"observedAt\": \"1992-10-13T09:38:14.291Z\",\n      \"occurrenceId\": 5620,\n      \"issueId\": 5341,\n      \"taskTitle\": \"string\",\n      \"closed\": true,\n      \"created\": \"1972-05-20T17:29:34.516Z\",\n      \"modified\": \"2003-05-23T23:29:15.254Z\",\n      \"details\": \"string\",\n      \"nextSteps\": \"string\",\n      \"expected\": \"string\",\n      \"actual\": \"string\",\n      \"reproduceHint\": \"string\",\n      \"additionalContext\": {\n        \"key_0\": 6989.516203044973,\n        \"key_1\": false,\n        \"key_2\": 2502.8674688088736,\n        \"key_3\": true,\n        \"key_4\": 3197.909595520888\n      },\n      \"title\": \"\",\n      \"severity\": 0\n    }\n  ],\n  \"count\": 1246,\n  \"limit\": 7405,\n  \"offset\": 1245,\n  \"next\": \"string\",\n  \"previous\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c9188fe3-3577-454d-9464-177cc224a40f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "issue_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "edd3676e-edfc-4b4c-b30d-df41879e7896",
+          "name": "List issue occurrences for a workspace",
+          "request": {
+            "name": "List issue occurrences for a workspace",
+            "description": {
+              "content": "List issue occurrences at workspace level with optional date filtering.\n\nUsed by agentfarm to list issue occurrences between two timestamps.\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n    observed_at_gte: Filter occurrences observed at or after this time.\n    observed_at_lte: Filter occurrences observed at or before this time.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with workspace-level fields.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_name",
+                "issueoccurrences"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "observed_at__gte",
+                  "value": "<dateTime>",
+                  "description": "Filter occurrences observed at or after this datetime (ISO 8601)"
+                },
+                {
+                  "disabled": false,
+                  "key": "observed_at__lte",
+                  "value": "<dateTime>",
+                  "description": "Filter occurrences observed at or before this datetime (ISO 8601)"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Number of results to skip"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "66d7a4d8-d0a3-4be2-b9e1-00de3c484704",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "issueoccurrences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "observed_at__gte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "observed_at__lte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"observedAt\": \"2013-02-06T22:20:08.309Z\",\n      \"occurrenceId\": 1543,\n      \"issueId\": 7446,\n      \"taskTitle\": \"string\",\n      \"closed\": true,\n      \"created\": \"1967-01-05T20:14:05.018Z\",\n      \"modified\": \"1947-01-12T04:00:49.906Z\",\n      \"details\": \"string\",\n      \"nextSteps\": \"string\",\n      \"expected\": \"string\",\n      \"actual\": \"string\",\n      \"reproduceHint\": \"string\",\n      \"additionalContext\": {\n        \"key_0\": \"string\",\n        \"key_1\": 4714,\n        \"key_2\": false,\n        \"key_3\": \"string\"\n      },\n      \"title\": \"\",\n      \"severity\": 0,\n      \"slxName\": \"string\",\n      \"runsessionIds\": [\n        5626,\n        8157\n      ]\n    },\n    {\n      \"observedAt\": \"2010-09-19T09:24:49.408Z\",\n      \"occurrenceId\": 5089,\n      \"issueId\": 8613,\n      \"taskTitle\": \"string\",\n      \"closed\": true,\n      \"created\": \"1971-03-06T08:14:53.434Z\",\n      \"modified\": \"2015-12-03T08:48:22.851Z\",\n      \"details\": \"string\",\n      \"nextSteps\": \"string\",\n      \"expected\": \"string\",\n      \"actual\": \"string\",\n      \"reproduceHint\": \"string\",\n      \"additionalContext\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\",\n        \"key_2\": false,\n        \"key_3\": true\n      },\n      \"title\": \"\",\n      \"severity\": 0,\n      \"slxName\": \"string\",\n      \"runsessionIds\": [\n        5114,\n        5783\n      ]\n    }\n  ],\n  \"count\": 7147,\n  \"limit\": 9186,\n  \"offset\": 8425,\n  \"next\": \"string\",\n  \"previous\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d10867d9-db8e-4264-8f6c-35b88579db77",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "issueoccurrences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "observed_at__gte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "observed_at__lte",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2fe0f806-3494-4805-920f-811289b0ad95",
+          "name": "Get an issue occurrence by ID",
+          "request": {
+            "name": "Get an issue occurrence by ID",
+            "description": {
+              "content": "Get a specific issue occurrence by ID.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    occurrence_id: The issue occurrence ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue occurrence with flattened issue attributes.\n\nRaises:\n    HTTPException: 404 if workspace, run session, or occurrence not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_name",
+                "runsessions",
+                ":runsession_id",
+                "issueoccurrences",
+                ":occurrence_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "runsession_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "occurrence_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b6b42070-2e66-4252-966b-47db295d8712",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences",
+                    ":occurrence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "occurrence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"observedAt\": \"1950-01-02T06:45:12.886Z\",\n  \"occurrenceId\": 22,\n  \"issueId\": 1535,\n  \"taskTitle\": \"string\",\n  \"closed\": false,\n  \"created\": \"2003-01-15T00:51:53.379Z\",\n  \"modified\": \"2017-01-18T10:59:49.014Z\",\n  \"details\": \"string\",\n  \"nextSteps\": \"string\",\n  \"expected\": \"string\",\n  \"actual\": \"string\",\n  \"reproduceHint\": \"string\",\n  \"additionalContext\": {\n    \"key_0\": true,\n    \"key_1\": true\n  },\n  \"title\": \"\",\n  \"severity\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dfddee19-dba0-4777-b4f7-c42e77267298",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences",
+                    ":occurrence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "occurrence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ba8833f6-eb0d-42eb-b1a0-61693a995337",
+    "name": "papi alert-query-proxy issue-occurrences API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

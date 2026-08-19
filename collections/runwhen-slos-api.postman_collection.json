@@ -1,0 +1,874 @@
+{
+  "item": [
+    {
+      "id": "b58d156d-8c6f-4bb3-bbde-99e6a34afd45",
+      "name": "slos",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "17a3e51e-c9a5-4d32-ae6b-54fbbdcef380",
+          "name": "Get the SLO for an SLX",
+          "request": {
+            "name": "Get the SLO for an SLX",
+            "description": {
+              "content": "Get the SLO for an SLX.\n\nSLX and SLO have a 1:1 relationship. This endpoint returns the single\nSLO associated with the specified SLX, or 404 if no SLO exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLO details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLO not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name",
+                "slo"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "detail",
+                  "value": "<string>",
+                  "description": "Accepted for Django parity; ignored (always returns full detail)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2b740f0d-83b0-4e05-96c1-1a1b174db0ea",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "slo"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "detail",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"slxId\": 8658,\n  \"created\": \"1968-03-02T04:57:51.832Z\",\n  \"modified\": \"2021-07-13T17:40:03.276Z\",\n  \"spec\": {\n    \"key_0\": \"string\",\n    \"key_1\": true\n  },\n  \"status\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": 1159\n  },\n  \"sloSpecType\": \"simple-mwmb\",\n  \"objective\": 99.9,\n  \"threshold\": 9,\n  \"operand\": \"eq\",\n  \"codeBundleRepoUrl\": \"string\",\n  \"codeBundleRef\": \"string\",\n  \"codeBundlePathToYaml\": \"string\",\n  \"repositoryId\": 7634,\n  \"generation\": 0,\n  \"generationChecksum\": \"string\",\n  \"ruleGroups\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": 1227,\n      \"key_2\": 3742\n    },\n    {\n      \"key_0\": 946.2140347232751\n    }\n  ],\n  \"firingAlerts\": [\n    {\n      \"key_0\": \"string\"\n    },\n    {\n      \"key_0\": 4459\n    }\n  ],\n  \"lastSevenDaysAlerts\": [\n    {\n      \"key_0\": 120,\n      \"key_1\": 1684.7155832948536,\n      \"key_2\": 1844.3608070039086\n    },\n    {\n      \"key_0\": 3618.5713367123494\n    }\n  ],\n  \"alertCount\": [\n    {\n      \"key_0\": 9479,\n      \"key_1\": 7028\n    },\n    {\n      \"key_0\": true\n    }\n  ],\n  \"monthErrorBudgetRemaining\": {\n    \"key_0\": true,\n    \"key_1\": 5534\n  },\n  \"thirtyDayErrorBudgetRemaining\": {\n    \"key_0\": true\n  },\n  \"recent\": {\n    \"key_0\": 2644,\n    \"key_1\": 5764\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d5a244fb-0bba-4aea-b67d-2f52c53978a8",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "slo"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "detail",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8b79cb98-e5b4-4d10-a3c9-f2c24b278e61",
+          "name": "Get SLO objective recommendation for an SLX",
+          "request": {
+            "name": "Get SLO objective recommendation for an SLX",
+            "description": {
+              "content": "Calculate a recommended SLO objective for an SLX.\n\nTwo paths:\n- **Has SLO:** Recommends based on the current month's error budget burn rate.\n- **No SLO:** Recommends based on 30 days of historical SLI healthiness data.\n\nMirrors Django's SloViewSet.slo_objective_recommendation().",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name",
+                "slo",
+                "objective-recommendation"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "baseline",
+                  "value": "<string>",
+                  "description": "PromQL timestring defining the baseline window for the burn-rate calculation (e.g. '2h', '1d'). Defaults to hours elapsed since the 1st of the current month. Only used when an SLO exists. Must not exceed hours since month start."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ef4f90e3-73d3-40e8-adc0-a89dcd890532",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "slo",
+                    "objective-recommendation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "baseline",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"monthProgress\": 2618.998381996105,\n  \"recommendedObjective\": 8874.575015365515,\n  \"baselinePeriod\": \"string\",\n  \"hasSlo\": true,\n  \"recommendationSource\": \"string\",\n  \"currentErrorBudget\": 1146.891885426662,\n  \"projectedEndOfMonth\": 7516.729353665151,\n  \"currentObjective\": 5951.884056054054\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "43770bfb-3a8b-4aba-84c3-10aefa3229a0",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "slo",
+                    "objective-recommendation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "baseline",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d1b3fef0-bd75-40d7-aa38-2a8110101daa",
+          "name": "Get the SLO for an SLX",
+          "request": {
+            "name": "Get the SLO for an SLX",
+            "description": {
+              "content": "Get the SLO for an SLX.\n\nSLX and SLO have a 1:1 relationship. This endpoint returns the single\nSLO associated with the specified SLX, or 404 if no SLO exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLO details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLO not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name",
+                "slo"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "detail",
+                  "value": "<string>",
+                  "description": "Accepted for Django parity; ignored (always returns full detail)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "44796b77-9215-42f9-ac6c-917b6435c1ee",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "slo"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "detail",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"slxId\": 8658,\n  \"created\": \"1968-03-02T04:57:51.832Z\",\n  \"modified\": \"2021-07-13T17:40:03.276Z\",\n  \"spec\": {\n    \"key_0\": \"string\",\n    \"key_1\": true\n  },\n  \"status\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": 1159\n  },\n  \"sloSpecType\": \"simple-mwmb\",\n  \"objective\": 99.9,\n  \"threshold\": 9,\n  \"operand\": \"eq\",\n  \"codeBundleRepoUrl\": \"string\",\n  \"codeBundleRef\": \"string\",\n  \"codeBundlePathToYaml\": \"string\",\n  \"repositoryId\": 7634,\n  \"generation\": 0,\n  \"generationChecksum\": \"string\",\n  \"ruleGroups\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": 1227,\n      \"key_2\": 3742\n    },\n    {\n      \"key_0\": 946.2140347232751\n    }\n  ],\n  \"firingAlerts\": [\n    {\n      \"key_0\": \"string\"\n    },\n    {\n      \"key_0\": 4459\n    }\n  ],\n  \"lastSevenDaysAlerts\": [\n    {\n      \"key_0\": 120,\n      \"key_1\": 1684.7155832948536,\n      \"key_2\": 1844.3608070039086\n    },\n    {\n      \"key_0\": 3618.5713367123494\n    }\n  ],\n  \"alertCount\": [\n    {\n      \"key_0\": 9479,\n      \"key_1\": 7028\n    },\n    {\n      \"key_0\": true\n    }\n  ],\n  \"monthErrorBudgetRemaining\": {\n    \"key_0\": true,\n    \"key_1\": 5534\n  },\n  \"thirtyDayErrorBudgetRemaining\": {\n    \"key_0\": true\n  },\n  \"recent\": {\n    \"key_0\": 2644,\n    \"key_1\": 5764\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "de31882c-5bde-4d75-93a7-77bd738122f7",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "slo"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "detail",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1b0aa43e-e2a7-4b63-9227-42cd4f431091",
+          "name": "Get SLO objective recommendation for an SLX",
+          "request": {
+            "name": "Get SLO objective recommendation for an SLX",
+            "description": {
+              "content": "Calculate a recommended SLO objective for an SLX.\n\nTwo paths:\n- **Has SLO:** Recommends based on the current month's error budget burn rate.\n- **No SLO:** Recommends based on 30 days of historical SLI healthiness data.\n\nMirrors Django's SloViewSet.slo_objective_recommendation().",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_name",
+                "slxs",
+                ":slx_short_name",
+                "slo",
+                "objective-recommendation"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "baseline",
+                  "value": "<string>",
+                  "description": "PromQL timestring defining the baseline window for the burn-rate calculation (e.g. '2h', '1d'). Defaults to hours elapsed since the 1st of the current month. Only used when an SLO exists. Must not exceed hours since month start."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slx_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "54185372-1ed7-41f1-9853-35f69d3d59d9",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "slo",
+                    "objective-recommendation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "baseline",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"monthProgress\": 2618.998381996105,\n  \"recommendedObjective\": 8874.575015365515,\n  \"baselinePeriod\": \"string\",\n  \"hasSlo\": true,\n  \"recommendationSource\": \"string\",\n  \"currentErrorBudget\": 1146.891885426662,\n  \"projectedEndOfMonth\": 7516.729353665151,\n  \"currentObjective\": 5951.884056054054\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cc200f70-1e38-4feb-89f6-49218bdf6fae",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_name",
+                    "slxs",
+                    ":slx_short_name",
+                    "slo",
+                    "objective-recommendation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "baseline",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slx_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "6e7ad508-b693-4083-9f56-5e25ffdba0f1",
+    "name": "papi alert-query-proxy slos API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

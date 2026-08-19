@@ -1,0 +1,810 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy run-requests API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "run-requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List RunRequests for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Skip results"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List RunRequests for an SLX.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    limit: Maximum number of results.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of RunRequests.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+        },
+        {
+          "info": {
+            "name": "Create a new RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new RunRequest for an SLX.\n\nIf request_time is None, the RunRequest is staged and waits for /start.\nIf request_time is provided (or default now), the RunRequest starts immediately.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    data: The RunRequest creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPExceptio"
+        },
+        {
+          "info": {
+            "name": "Get a RunRequest by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a RunRequest by its ID.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The RunRequest details.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+        },
+        {
+          "info": {
+            "name": "Record a run response",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Record results from a completed run.\n\nThis endpoint is called by the runner after task execution completes.\nIt sets response_time and updates the result fields. After recording,\nit enqueues the async issue processing task.\n\nParity with main branch: This matches the behavior of\npapi/views/runrequest.py:RunRequestViewSet.update()\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    data: The response data from the runner."
+        },
+        {
+          "info": {
+            "name": "Delete a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a RunRequest.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+        },
+        {
+          "info": {
+            "name": "Start a staged RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/start",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Start a staged RunRequest by setting its request_time and submitting to TaskSet API.\n\nStaged RunRequests have request_time=None and wait for this endpoint\nto be called before execution begins. This endpoint:\n1. Sets request_time to mark the run as started\n2. Submits the run to the TaskSet API for execution by the runner\n3. Returns the taskset_uuid for tracking\n\nArgs:\n    workspace_name: The workspace name (short name from URL).\n    slx_short_name: The SLX short name.\n    run_request_id: The RunR"
+        },
+        {
+          "info": {
+            "name": "Get the report for a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/report",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "raw",
+                "value": "",
+                "type": "query",
+                "description": "Return raw JSONL data"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the report for a completed RunRequest.\n\nReads report.jsonl from the GCS bucket and returns the parsed JSONL\nas a JSON array, matching Django's behavior.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    raw: If set, return raw JSONL array (Django parity).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    JSON array of report lines (JSONL parsed).\n\nRaises:\n    HTTPException: 40"
+        },
+        {
+          "info": {
+            "name": "Get issues from a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/issues",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get issues associated with a RunRequest.\n\nIssues are created by parsing the output files after a run completes.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of issues from this RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+        },
+        {
+          "info": {
+            "name": "Get parsed output from a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/output",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the parsed output from a completed RunRequest.\n\nThe output is parsed from the robot output XML file.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Parsed output data.\n\nRaises:\n    HTTPException: 404 if workspace, RunRequest, or output not found."
+        },
+        {
+          "info": {
+            "name": "Get runner status for a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/runner-status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the runner status for a RunRequest.\n\nThis queries the runner-control service to get the current status\nof the task execution.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Runner status information.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found.\n    HTTPException: 400 if RunRequest has no taskset_uuid."
+        },
+        {
+          "info": {
+            "name": "List staged RunRequests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/staged",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum results"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List staged (not yet started) RunRequests for an SLX.\n\nStaged RunRequests have request_time=None and are waiting for /start.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    limit: Maximum number of results.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of staged RunRequests.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+        },
+        {
+          "info": {
+            "name": "Get the robot log for a RunRequest (SLX-agnostic)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/run-requests/:run_request_id/log",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the robot log.html for a RunRequest without requiring slx_short_name.\n\nLooks up the RunRequest by ID to derive slx_short_name and runsession_id,\nthen reads log.html from workspace storage. Designed for citation-path\ncallers (e.g. TaskOutputDisplay) that only have a runrequest_id.\n\nArgs:\n    workspace_name: The workspace name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Raw HTML content of log.html.\n\nRaises:\n   "
+        },
+        {
+          "info": {
+            "name": "List RunRequests for an SLX",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Skip results"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List RunRequests for an SLX.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    limit: Maximum number of results.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of RunRequests.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+        },
+        {
+          "info": {
+            "name": "Create a new RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new RunRequest for an SLX.\n\nIf request_time is None, the RunRequest is staged and waits for /start.\nIf request_time is provided (or default now), the RunRequest starts immediately.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    data: The RunRequest creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPExceptio"
+        },
+        {
+          "info": {
+            "name": "Get a RunRequest by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a RunRequest by its ID.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The RunRequest details.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+        },
+        {
+          "info": {
+            "name": "Record a run response",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Record results from a completed run.\n\nThis endpoint is called by the runner after task execution completes.\nIt sets response_time and updates the result fields. After recording,\nit enqueues the async issue processing task.\n\nParity with main branch: This matches the behavior of\npapi/views/runrequest.py:RunRequestViewSet.update()\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    data: The response data from the runner."
+        },
+        {
+          "info": {
+            "name": "Delete a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a RunRequest.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+        },
+        {
+          "info": {
+            "name": "Start a staged RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/start",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Start a staged RunRequest by setting its request_time and submitting to TaskSet API.\n\nStaged RunRequests have request_time=None and wait for this endpoint\nto be called before execution begins. This endpoint:\n1. Sets request_time to mark the run as started\n2. Submits the run to the TaskSet API for execution by the runner\n3. Returns the taskset_uuid for tracking\n\nArgs:\n    workspace_name: The workspace name (short name from URL).\n    slx_short_name: The SLX short name.\n    run_request_id: The RunR"
+        },
+        {
+          "info": {
+            "name": "Get the report for a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/report",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "raw",
+                "value": "",
+                "type": "query",
+                "description": "Return raw JSONL data"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the report for a completed RunRequest.\n\nReads report.jsonl from the GCS bucket and returns the parsed JSONL\nas a JSON array, matching Django's behavior.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    raw: If set, return raw JSONL array (Django parity).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    JSON array of report lines (JSONL parsed).\n\nRaises:\n    HTTPException: 40"
+        },
+        {
+          "info": {
+            "name": "Get issues from a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/issues",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get issues associated with a RunRequest.\n\nIssues are created by parsing the output files after a run completes.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of issues from this RunRequest.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found."
+        },
+        {
+          "info": {
+            "name": "Get parsed output from a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/output",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the parsed output from a completed RunRequest.\n\nThe output is parsed from the robot output XML file.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Parsed output data.\n\nRaises:\n    HTTPException: 404 if workspace, RunRequest, or output not found."
+        },
+        {
+          "info": {
+            "name": "Get runner status for a RunRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/:run_request_id/runner-status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the runner status for a RunRequest.\n\nThis queries the runner-control service to get the current status\nof the task execution.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Runner status information.\n\nRaises:\n    HTTPException: 404 if workspace or RunRequest not found.\n    HTTPException: 400 if RunRequest has no taskset_uuid."
+        },
+        {
+          "info": {
+            "name": "List staged RunRequests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/slxs/:slx_short_name/runbook/runs/staged",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "slx_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum results"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List staged (not yet started) RunRequests for an SLX.\n\nStaged RunRequests have request_time=None and are waiting for /start.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    limit: Maximum number of results.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of staged RunRequests.\n\nRaises:\n    HTTPException: 404 if workspace not found."
+        },
+        {
+          "info": {
+            "name": "Get the robot log for a RunRequest (SLX-agnostic)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/run-requests/:run_request_id/log",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_request_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the robot log.html for a RunRequest without requiring slx_short_name.\n\nLooks up the RunRequest by ID to derive slx_short_name and runsession_id,\nthen reads log.html from workspace storage. Designed for citation-path\ncallers (e.g. TaskOutputDisplay) that only have a runrequest_id.\n\nArgs:\n    workspace_name: The workspace name.\n    run_request_id: The RunRequest ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Raw HTML content of log.html.\n\nRaises:\n   "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

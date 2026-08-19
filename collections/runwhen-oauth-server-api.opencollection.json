@@ -1,0 +1,207 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy oauth-server API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "oauth-server",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Oauth As Metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/.well-known/oauth-authorization-server"
+          },
+          "docs": "RFC 8414 — OAuth 2.0 Authorization Server Metadata."
+        },
+        {
+          "info": {
+            "name": "Openid Configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/.well-known/openid-configuration"
+          },
+          "docs": "OIDC Discovery — alias for the same metadata document."
+        },
+        {
+          "info": {
+            "name": "Oauth Authorize",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/oauth/authorize",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "response_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "scope",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "code_challenge",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "code_challenge_method",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Authorization endpoint — renders login page or returns error."
+        },
+        {
+          "info": {
+            "name": "Oauth Authorize Email Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/oauth/authorize/login/email",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            }
+          },
+          "docs": "Handle email/password login from the OAuth authorize page."
+        },
+        {
+          "info": {
+            "name": "Oauth Authorize Enterprise",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/oauth/authorize/enterprise",
+            "params": [
+              {
+                "name": "oauth_session",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "identifier",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Redirect to Auth0 with a connection hint for enterprise SSO."
+        },
+        {
+          "info": {
+            "name": "Oauth Authorize Oidc Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/oauth/authorize/login/:idp_name",
+            "params": [
+              {
+                "name": "idp_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "oauth_session",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "next",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Begin a standalone upstream-OIDC login (dual-mode).\n\nResolves the IdP's authorization endpoint via discovery, stores PKCE +\nstate, and redirects the browser to the upstream IdP, which returns to\n``/oauth/authorize/callback/{idp_name}``. Two callers:\n\n* **OAuth 2.1 client** (MCP/Slack via ``/oauth/authorize``): passes\n  ``oauth_session``; the callback issues an auth code back to the client.\n* **First-party UI** (``login.tsx``): passes ``next``; the callback sets a\n  JWT cookie and redirects to ``"
+        },
+        {
+          "info": {
+            "name": "Oauth Authorize Oidc Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/oauth/authorize/callback/:idp_name",
+            "params": [
+              {
+                "name": "idp_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "error",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "error_description",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Handle the upstream OIDC redirect: exchange code, provision user, issue code."
+        },
+        {
+          "info": {
+            "name": "Oauth Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/oauth/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            }
+          },
+          "docs": "OAuth 2.1 token endpoint — authorization_code and refresh_token grants.\n\nSupports both ``client_secret_post`` (client_id/client_secret in body) and\n``client_secret_basic`` (credentials in Authorization header)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

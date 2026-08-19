@@ -1,0 +1,40 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy rwfs API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "rwfs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Task Vitals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/rwfs/task-vitals",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return per-task run-history vitals for the workspace.\n\nOne entry per (slx_name, task_title) with any completed run_request\nhistory. Tasks that have never run are omitted — the rwfs UI renders\ngrey pips by default for tasks it doesn't see in this response.\n\nThe aggregator caps each partition at the last\n``RECENT_RUNS_WINDOW`` run_requests so cost stays O(N_tasks) even\nwhen individual tasks have thousands of historic runs."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

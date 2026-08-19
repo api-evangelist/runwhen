@@ -1,0 +1,2004 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy workspaces API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "workspaces",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List workspaces for the current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all workspaces the current user has access to.\n\nReturns workspaces where the user is either the owner or has\nexplicit permissions.\n\nArgs:\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of workspaces."
+        },
+        {
+          "info": {
+            "name": "Create a new workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new workspace (synchronous, DB-direct).\n\nThis endpoint:\n1. Auto-suffixes the name if it collides with an existing workspace,\n   tombstone, repository, or K8s CRD (e.g. ``myws`` -> ``myws-2``).\n2. Creates the workspace DB record and provisions runner infrastructure.\n3. Returns with status=\"ready\" on success.\n\nCreation is synchronous — no polling required after a 201 response."
+        },
+        {
+          "info": {
+            "name": "Get a workspace by name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_short_name",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "detail",
+                "value": "",
+                "type": "query",
+                "description": "If true, load SLXs and firing alerts. Default false: fast metadata-only response."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a workspace by its short name.\n\nArgs:\n    workspace_short_name: The workspace short name (e.g., 'pp-04').\n    detail: If true, include additional details (SLXs, alerts, spec). Defaults to false.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The workspace details.\n\nRaises:\n    HTTPException: 404 if workspace not found or user has no access."
+        },
+        {
+          "info": {
+            "name": "Get workspace provisioning progress",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/provisioning-status/:workspace_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get workspace provisioning progress without requiring a DB workspace record.\n\nNon-detail endpoint — bypasses workspace permission checks.\nOnly requires authentication. Returns boolean stage flags and sync status.\nUsed by the UI wizard to poll until all provisioning stages complete.\n\nCRD-less mode: workspace creation is synchronous — all stages are\ncomplete if the workspace exists in the database."
+        },
+        {
+          "info": {
+            "name": "Update a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a workspace (partial update).\n\nAccepts workspace name (slug) as the path parameter. All body fields are\noptional; only non-None values are applied.\n\nSupports updating: alias, description, scrubber_config, enabled_locations,\nconfig_provided, permissions (full replacement), slx_groups, slx_relationships.\n\nRequires admin permission on the workspace.\n\nArgs:\n    workspace_name: The workspace short name (slug, e.g. 'my-workspace').\n    data: The workspace update data.\n    session: Database sess"
+        },
+        {
+          "info": {
+            "name": "Delete a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a workspace with full multi-system cleanup.\n\nPhase 1 (sync): Vault secrets, Slack, K8s CRDs, git repo, DB + tombstone.\nPhase 2 (async): Sobow, USearch, GCS files, email notification.\n\nReturns step-by-step status for each cleanup operation.\nRequires admin permission on the workspace."
+        },
+        {
+          "info": {
+            "name": "Get workspace configuration index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/workspace-configuration-index",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the workspace configuration index from sobow.\n\nThe configuration index contains cached workspace data including:\n- SLX metadata and task information\n- Entity index (Kubernetes resources, cloud resources, etc.)\n- Workspace relationships and hierarchies\n\nThis endpoint proxies to the sobow service which owns the canonical\nworkspace configuration index cached in Redis.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get workspace metadata from sobow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/metadata",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get workspace metadata from sobow service.\n\nReturns metadata about the workspace including index status,\ntask counts, and other operational information.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching metadata.\n\nReturns:\n    The workspace metadata as a dictionary, or None if not available.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow ser"
+        },
+        {
+          "info": {
+            "name": "Get workspace entities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/entities",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get entities (Kubernetes resources, cloud resources, etc.) for a workspace.\n\nEntities are extracted from the workspace configuration and represent\nthe discoverable resources that can be referenced in tasks.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching entities.\n\nReturns:\n    Dictionary containing workspace entities organized by type.\n\nRaises:\n    HTTPException: 404 if workspac"
+        },
+        {
+          "info": {
+            "name": "Get workspace index health",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/index-health",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the health status of the workspace task index.\n\nReturns information about the index's current state, including\nlast update time, task counts, and any indexing errors.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching health status.\n\nReturns:\n    Dictionary containing index health information.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobo"
+        },
+        {
+          "info": {
+            "name": "Get workspace creation status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the status of a workspace creation.\n\nThis endpoint is used to poll for workspace creation completion.\nIt checks:\n1. Whether the workspace exists in the database\n2. Whether the WorkSync has successfully reconciled\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    WorkspaceStatusResponse with workspace and sync booleans."
+        },
+        {
+          "info": {
+            "name": "Get current user's permissions on workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/my-permissions",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the current user's permissions (roles) on a workspace.\n\nReturns a list of role strings the user has on this workspace.\nThis matches the Django implementation which returns a set of roles."
+        },
+        {
+          "info": {
+            "name": "Get workspace sync status from WorkSync CRD",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/sync-status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the sync status for a workspace from the WorkSync Kubernetes CRD.\n\nReturns information about the workspace's GitOps sync status including\nconditions, last applied revision, and related Kubernetes events.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Dictionary containing WorkSync status and events.\n\nRaises:\n    HTTPException: 404 if workspace not found or no WorkSync CRD exists."
+        },
+        {
+          "info": {
+            "name": "List workspace secret keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/secrets-keys",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of secret key names for a workspace.\n\nReturns only the key names, not the secret values.\nRequires read access to the workspace."
+        },
+        {
+          "info": {
+            "name": "Create or update workspace secrets",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/secrets",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create or update workspace secrets in Vault.\n\nRequires admin access to the workspace."
+        },
+        {
+          "info": {
+            "name": "Delete a single workspace secret",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/secrets/:secret_key",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "secret_key",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Permanently delete a single workspace secret by key.\n\nRequires admin access to the workspace. Mirrors Django's\n``WorkspaceViewSet.delete_workspace_secret``."
+        },
+        {
+          "info": {
+            "name": "List where a workspace secret is used",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/secrets/:secret_key/usage",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "secret_key",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the SLIs and Runbooks that reference this workspace secret.\n\nUsed by the UI to warn before deleting a secret that is still in use.\nRequires read access to the workspace. Mirrors Django's\n``WorkspaceViewSet.get_secret_usage``."
+        },
+        {
+          "info": {
+            "name": "Reset or create workspace service account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/reset-service-account",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reset or create the service account for a workspace.\n\nIf a service account exists for this workspace, updates its password.\nIf no service account exists, creates a new one.\n\nAlso writes the credentials to Vault for use by SLI/Runbook containers.\n\nRequires admin access to the workspace."
+        },
+        {
+          "info": {
+            "name": "Get workspace service account token",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/sa-token",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Token to trade for SA token"
+              },
+              {
+                "name": "tokenType",
+                "value": "",
+                "type": "query",
+                "description": "Type of token being traded"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the workspace service account token.\n\nTrades an existing valid token for a workspace service account token.\nThis is used by runners and SLI containers to authenticate with PAPI.\n\nValid tokenTypes:\n- LOCATION_WORKSPACE_SA_TOKEN: Token from location namespace"
+        },
+        {
+          "info": {
+            "name": "Get GitLab service accounts for workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/get-gitlab-sas",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get GitLab service accounts for the workspace repository.\n\nReturns service accounts filtered by the user's access level:\n- Admin/readwrite users get both read and write service accounts\n- Read-only users get only read service accounts\n\nReturns empty list for non-GitLab (e.g. Gitea) environments."
+        },
+        {
+          "info": {
+            "name": "Search workspace tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/task-search",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Search for tasks in a workspace.\n\nSupports scoping to specific SLXs and persona-based query interpretation."
+        },
+        {
+          "info": {
+            "name": "Autocomplete for task search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/autocomplete",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get autocomplete suggestions for task search."
+        },
+        {
+          "info": {
+            "name": "Get runners",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runners",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns runners registered for this workspace."
+        },
+        {
+          "info": {
+            "name": "[DEPRECATED] Generate workspace builder config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/generate-workspace-builder-config",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deprecated: use GET /{workspace_name}/upload-config instead. Returns 410 Gone."
+        },
+        {
+          "info": {
+            "name": "Get search scope options",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/search-scope",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return search scope options for the workspace.\n\nReturns SLX groups, subgroups, and individual SLXs with firing alert status.\nUsed by the workspace chat page to build the scope selector."
+        },
+        {
+          "info": {
+            "name": "Generate upload config for a location",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/upload-config",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "location",
+                "value": "",
+                "type": "query",
+                "description": "Location name"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns an SA-scoped uploadConfig for the given workspace and location. Works for both private and public locations — no runner registration required."
+        },
+        {
+          "info": {
+            "name": "Generate upload config (internal)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/internal/upload-config",
+            "headers": [
+              {
+                "name": "RW-Runner-Token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate upload credentials for runner-control.\n\nReturns a short-lived SA token and the public PAPI URL so runner-control\ncan assemble a complete ``uploadInfo`` for workspace-builder.\n\n**Network isolation:** This endpoint MUST be blocked from external access\nvia an ingress deny rule on ``/*/internal/*`` (same pattern as ``/metrics``).\nRunner-control reaches PAPI through the cluster-internal Service URL, which\nbypasses ingress. The ``RW-Runner-Token`` header is required as a secondary\nguard but i"
+        },
+        {
+          "info": {
+            "name": "Get runner registration token",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runner-token",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "location",
+                "value": "",
+                "type": "query",
+                "description": "Location name for the runner"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a runner registration token for a workspace.\n\nRequires admin permission on the workspace.\nCalls the internal runner service to generate a token.\n\nArgs:\n    workspace_name: The workspace name.\n    location: The location name for the runner.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The runner token response from the runner service.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 403 if user lacks admin permission.\n    HTT"
+        },
+        {
+          "info": {
+            "name": "Get anonymous mode status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/anonymous-mode",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check whether anonymous mode is enabled for a workspace.\n\nAccess: Staff or workspace admin."
+        },
+        {
+          "info": {
+            "name": "Toggle anonymous mode",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/anonymous-mode",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Enable or disable anonymous mode for a workspace.\n\nAccess: Staff or workspace admin."
+        },
+        {
+          "info": {
+            "name": "Get workspace statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_short_name/workspace-stats",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get pre-aggregated workspace statistics for the chat page subtitle.\n\nReturns alias, assistantCount, tasksCount24h, resourceTypeCounts, issuesCount24h."
+        },
+        {
+          "info": {
+            "name": "Get top resources by issue count",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_short_name/top-issue-resources",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "hours",
+                "value": "",
+                "type": "query",
+                "description": "Lookback window in hours"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Max resources to return"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get top resources with most issues in a configurable time window.\n\nReturns resources grouped by SLX hierarchy with issue counts,\nfor ticker display on the workspace chat page."
+        },
+        {
+          "info": {
+            "name": "Get AgentFarm parameters for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/agentfarm-params",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "llm_category",
+                "value": "",
+                "type": "query",
+                "description": "LLM category: DEFAULT, CHAT, BACKGROUND, EMBEDDING"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get parameters for AgentFarm including LLM config, org, user perms, and repo info.\n\nAlso serves to authenticate the user/workspace combination for AgentFarm."
+        },
+        {
+          "info": {
+            "name": "Get workspace activity feed",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/activities",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Proxy workspace activities from the activities service.\n\nDjango parity: WorkspaceViewSet.get_activities proxies to the activities\nservice via activityutils.fetch_workspace_activities()."
+        },
+        {
+          "info": {
+            "name": "Delete a runner",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runners/:runner_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runner_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a runner from the database.\n\nValidates that the runner belongs to the specified workspace,\ndeletes the runner record, and revokes associated upload PATs."
+        },
+        {
+          "info": {
+            "name": "Get workspace layout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/layout",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "alt_layout",
+                "value": "",
+                "type": "query",
+                "description": "Return alt_layout instead of layout"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the workspace layout JSON (or alt_layout when ?alt_layout=true)."
+        },
+        {
+          "info": {
+            "name": "Save workspace layout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/layout",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "alt_layout",
+                "value": "",
+                "type": "query",
+                "description": "Save to alt_layout instead of layout"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Saves an arbitrary JSON body as the workspace layout (or alt_layout when ?alt_layout=true)."
+        },
+        {
+          "info": {
+            "name": "Reprovision workspace runner infrastructure (staff only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/reprovision-workspace-infra",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Re-run workspace-level runner infrastructure provisioning.\n\nCreates or re-creates the Vault AppRole and cert-manager Certificates for\na workspace. Idempotent — safe to call on already-provisioned workspaces.\nReturns per-subsystem status regardless of partial failure (HTTP 200).\n\nAccess: Staff only."
+        },
+        {
+          "info": {
+            "name": "Upload workspace archive",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_short_name/upload",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upload a workspace archive for async processing.\n\nAccepts a base64-encoded tar archive containing workspace configuration.\nThe upload is processed asynchronously via TaskIQ.\n\nArgs:\n    workspace_short_name: The workspace identifier.\n    data: The upload request containing file_content and optional file_hash.\n    current_user: The authenticated user.\n    session: The database session.\n\nReturns:\n    WorkspaceUploadResponse with task_id for status tracking."
+        },
+        {
+          "info": {
+            "name": "Check upload task status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/upload-status/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check the status of an upload task.\n\nArgs:\n    task_id: The task ID returned from the upload endpoint.\n    current_user: The authenticated user.\n\nReturns:\n    UploadStatusResponse with current task status."
+        },
+        {
+          "info": {
+            "name": "Upload workspace archive",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/upload",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upload a workspace archive for async processing.\n\nAccepts a base64-encoded tar archive containing workspace configuration.\nThe upload is processed asynchronously via TaskIQ.\n\nArgs:\n    workspace_short_name: The workspace identifier.\n    data: The upload request containing file_content and optional file_hash.\n    current_user: The authenticated user.\n    session: The database session.\n\nReturns:\n    WorkspaceUploadResponse with task_id for status tracking."
+        },
+        {
+          "info": {
+            "name": "Check upload task status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/upload-status/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check the status of an upload task.\n\nArgs:\n    task_id: The task ID returned from the upload endpoint.\n    current_user: The authenticated user.\n\nReturns:\n    UploadStatusResponse with current task status."
+        },
+        {
+          "info": {
+            "name": "List workspaces for the current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all workspaces the current user has access to.\n\nReturns workspaces where the user is either the owner or has\nexplicit permissions.\n\nArgs:\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of workspaces."
+        },
+        {
+          "info": {
+            "name": "Create a new workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new workspace (synchronous, DB-direct).\n\nThis endpoint:\n1. Auto-suffixes the name if it collides with an existing workspace,\n   tombstone, repository, or K8s CRD (e.g. ``myws`` -> ``myws-2``).\n2. Creates the workspace DB record and provisions runner infrastructure.\n3. Returns with status=\"ready\" on success.\n\nCreation is synchronous — no polling required after a 201 response."
+        },
+        {
+          "info": {
+            "name": "Get a workspace by name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "detail",
+                "value": "",
+                "type": "query",
+                "description": "If true, load SLXs and firing alerts. Default false: fast metadata-only response."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a workspace by its short name.\n\nArgs:\n    workspace_short_name: The workspace short name (e.g., 'pp-04').\n    detail: If true, include additional details (SLXs, alerts, spec). Defaults to false.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The workspace details.\n\nRaises:\n    HTTPException: 404 if workspace not found or user has no access."
+        },
+        {
+          "info": {
+            "name": "Get workspace provisioning progress",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/provisioning-status/:workspace_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get workspace provisioning progress without requiring a DB workspace record.\n\nNon-detail endpoint — bypasses workspace permission checks.\nOnly requires authentication. Returns boolean stage flags and sync status.\nUsed by the UI wizard to poll until all provisioning stages complete.\n\nCRD-less mode: workspace creation is synchronous — all stages are\ncomplete if the workspace exists in the database."
+        },
+        {
+          "info": {
+            "name": "Update a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a workspace (partial update).\n\nAccepts workspace name (slug) as the path parameter. All body fields are\noptional; only non-None values are applied.\n\nSupports updating: alias, description, scrubber_config, enabled_locations,\nconfig_provided, permissions (full replacement), slx_groups, slx_relationships.\n\nRequires admin permission on the workspace.\n\nArgs:\n    workspace_name: The workspace short name (slug, e.g. 'my-workspace').\n    data: The workspace update data.\n    session: Database sess"
+        },
+        {
+          "info": {
+            "name": "Delete a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a workspace with full multi-system cleanup.\n\nPhase 1 (sync): Vault secrets, Slack, K8s CRDs, git repo, DB + tombstone.\nPhase 2 (async): Sobow, USearch, GCS files, email notification.\n\nReturns step-by-step status for each cleanup operation.\nRequires admin permission on the workspace."
+        },
+        {
+          "info": {
+            "name": "Get workspace configuration index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/workspace-configuration-index",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the workspace configuration index from sobow.\n\nThe configuration index contains cached workspace data including:\n- SLX metadata and task information\n- Entity index (Kubernetes resources, cloud resources, etc.)\n- Workspace relationships and hierarchies\n\nThis endpoint proxies to the sobow service which owns the canonical\nworkspace configuration index cached in Redis.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get workspace metadata from sobow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/metadata",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get workspace metadata from sobow service.\n\nReturns metadata about the workspace including index status,\ntask counts, and other operational information.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching metadata.\n\nReturns:\n    The workspace metadata as a dictionary, or None if not available.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobow ser"
+        },
+        {
+          "info": {
+            "name": "Get workspace entities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/entities",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get entities (Kubernetes resources, cloud resources, etc.) for a workspace.\n\nEntities are extracted from the workspace configuration and represent\nthe discoverable resources that can be referenced in tasks.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching entities.\n\nReturns:\n    Dictionary containing workspace entities organized by type.\n\nRaises:\n    HTTPException: 404 if workspac"
+        },
+        {
+          "info": {
+            "name": "Get workspace index health",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/index-health",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the health status of the workspace task index.\n\nReturns information about the index's current state, including\nlast update time, task counts, and any indexing errors.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n    sobow: Sobow client for fetching health status.\n\nReturns:\n    Dictionary containing index health information.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 503 if sobo"
+        },
+        {
+          "info": {
+            "name": "Get workspace creation status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the status of a workspace creation.\n\nThis endpoint is used to poll for workspace creation completion.\nIt checks:\n1. Whether the workspace exists in the database\n2. Whether the WorkSync has successfully reconciled\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    WorkspaceStatusResponse with workspace and sync booleans."
+        },
+        {
+          "info": {
+            "name": "Get current user's permissions on workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/my-permissions",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the current user's permissions (roles) on a workspace.\n\nReturns a list of role strings the user has on this workspace.\nThis matches the Django implementation which returns a set of roles."
+        },
+        {
+          "info": {
+            "name": "Get workspace sync status from WorkSync CRD",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/sync-status",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the sync status for a workspace from the WorkSync Kubernetes CRD.\n\nReturns information about the workspace's GitOps sync status including\nconditions, last applied revision, and related Kubernetes events.\n\nArgs:\n    workspace_name: The workspace name (not ID).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Dictionary containing WorkSync status and events.\n\nRaises:\n    HTTPException: 404 if workspace not found or no WorkSync CRD exists."
+        },
+        {
+          "info": {
+            "name": "List workspace secret keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/secrets-keys",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of secret key names for a workspace.\n\nReturns only the key names, not the secret values.\nRequires read access to the workspace."
+        },
+        {
+          "info": {
+            "name": "Create or update workspace secrets",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/secrets",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create or update workspace secrets in Vault.\n\nRequires admin access to the workspace."
+        },
+        {
+          "info": {
+            "name": "Delete a single workspace secret",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/secrets/:secret_key",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "secret_key",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Permanently delete a single workspace secret by key.\n\nRequires admin access to the workspace. Mirrors Django's\n``WorkspaceViewSet.delete_workspace_secret``."
+        },
+        {
+          "info": {
+            "name": "List where a workspace secret is used",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/secrets/:secret_key/usage",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "secret_key",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the SLIs and Runbooks that reference this workspace secret.\n\nUsed by the UI to warn before deleting a secret that is still in use.\nRequires read access to the workspace. Mirrors Django's\n``WorkspaceViewSet.get_secret_usage``."
+        },
+        {
+          "info": {
+            "name": "Reset or create workspace service account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/reset-service-account",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reset or create the service account for a workspace.\n\nIf a service account exists for this workspace, updates its password.\nIf no service account exists, creates a new one.\n\nAlso writes the credentials to Vault for use by SLI/Runbook containers.\n\nRequires admin access to the workspace."
+        },
+        {
+          "info": {
+            "name": "Get workspace service account token",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/sa-token",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Token to trade for SA token"
+              },
+              {
+                "name": "tokenType",
+                "value": "",
+                "type": "query",
+                "description": "Type of token being traded"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the workspace service account token.\n\nTrades an existing valid token for a workspace service account token.\nThis is used by runners and SLI containers to authenticate with PAPI.\n\nValid tokenTypes:\n- LOCATION_WORKSPACE_SA_TOKEN: Token from location namespace"
+        },
+        {
+          "info": {
+            "name": "Get GitLab service accounts for workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/get-gitlab-sas",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get GitLab service accounts for the workspace repository.\n\nReturns service accounts filtered by the user's access level:\n- Admin/readwrite users get both read and write service accounts\n- Read-only users get only read service accounts\n\nReturns empty list for non-GitLab (e.g. Gitea) environments."
+        },
+        {
+          "info": {
+            "name": "Search workspace tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/task-search",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Search for tasks in a workspace.\n\nSupports scoping to specific SLXs and persona-based query interpretation."
+        },
+        {
+          "info": {
+            "name": "Autocomplete for task search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/autocomplete",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get autocomplete suggestions for task search."
+        },
+        {
+          "info": {
+            "name": "Get runners",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runners",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns runners registered for this workspace."
+        },
+        {
+          "info": {
+            "name": "[DEPRECATED] Generate workspace builder config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/generate-workspace-builder-config",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deprecated: use GET /{workspace_name}/upload-config instead. Returns 410 Gone."
+        },
+        {
+          "info": {
+            "name": "Get search scope options",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/search-scope",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return search scope options for the workspace.\n\nReturns SLX groups, subgroups, and individual SLXs with firing alert status.\nUsed by the workspace chat page to build the scope selector."
+        },
+        {
+          "info": {
+            "name": "Generate upload config for a location",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/upload-config",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "location",
+                "value": "",
+                "type": "query",
+                "description": "Location name"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns an SA-scoped uploadConfig for the given workspace and location. Works for both private and public locations — no runner registration required."
+        },
+        {
+          "info": {
+            "name": "Generate upload config (internal)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/internal/upload-config",
+            "headers": [
+              {
+                "name": "RW-Runner-Token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate upload credentials for runner-control.\n\nReturns a short-lived SA token and the public PAPI URL so runner-control\ncan assemble a complete ``uploadInfo`` for workspace-builder.\n\n**Network isolation:** This endpoint MUST be blocked from external access\nvia an ingress deny rule on ``/*/internal/*`` (same pattern as ``/metrics``).\nRunner-control reaches PAPI through the cluster-internal Service URL, which\nbypasses ingress. The ``RW-Runner-Token`` header is required as a secondary\nguard but i"
+        },
+        {
+          "info": {
+            "name": "Get runner registration token",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runner-token",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "location",
+                "value": "",
+                "type": "query",
+                "description": "Location name for the runner"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a runner registration token for a workspace.\n\nRequires admin permission on the workspace.\nCalls the internal runner service to generate a token.\n\nArgs:\n    workspace_name: The workspace name.\n    location: The location name for the runner.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The runner token response from the runner service.\n\nRaises:\n    HTTPException: 404 if workspace not found.\n    HTTPException: 403 if user lacks admin permission.\n    HTT"
+        },
+        {
+          "info": {
+            "name": "Get anonymous mode status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/anonymous-mode",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check whether anonymous mode is enabled for a workspace.\n\nAccess: Staff or workspace admin."
+        },
+        {
+          "info": {
+            "name": "Toggle anonymous mode",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/anonymous-mode",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Enable or disable anonymous mode for a workspace.\n\nAccess: Staff or workspace admin."
+        },
+        {
+          "info": {
+            "name": "Get workspace statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/workspace-stats",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get pre-aggregated workspace statistics for the chat page subtitle.\n\nReturns alias, assistantCount, tasksCount24h, resourceTypeCounts, issuesCount24h."
+        },
+        {
+          "info": {
+            "name": "Get top resources by issue count",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/top-issue-resources",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "hours",
+                "value": "",
+                "type": "query",
+                "description": "Lookback window in hours"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Max resources to return"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get top resources with most issues in a configurable time window.\n\nReturns resources grouped by SLX hierarchy with issue counts,\nfor ticker display on the workspace chat page."
+        },
+        {
+          "info": {
+            "name": "Get AgentFarm parameters for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/agentfarm-params",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "llm_category",
+                "value": "",
+                "type": "query",
+                "description": "LLM category: DEFAULT, CHAT, BACKGROUND, EMBEDDING"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get parameters for AgentFarm including LLM config, org, user perms, and repo info.\n\nAlso serves to authenticate the user/workspace combination for AgentFarm."
+        },
+        {
+          "info": {
+            "name": "Get workspace activity feed",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/activities",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Proxy workspace activities from the activities service.\n\nDjango parity: WorkspaceViewSet.get_activities proxies to the activities\nservice via activityutils.fetch_workspace_activities()."
+        },
+        {
+          "info": {
+            "name": "Delete a runner",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runners/:runner_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runner_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a runner from the database.\n\nValidates that the runner belongs to the specified workspace,\ndeletes the runner record, and revokes associated upload PATs."
+        },
+        {
+          "info": {
+            "name": "Get workspace layout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/layout",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "alt_layout",
+                "value": "",
+                "type": "query",
+                "description": "Return alt_layout instead of layout"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the workspace layout JSON (or alt_layout when ?alt_layout=true)."
+        },
+        {
+          "info": {
+            "name": "Save workspace layout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/layout",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "alt_layout",
+                "value": "",
+                "type": "query",
+                "description": "Save to alt_layout instead of layout"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Saves an arbitrary JSON body as the workspace layout (or alt_layout when ?alt_layout=true)."
+        },
+        {
+          "info": {
+            "name": "Reprovision workspace runner infrastructure (staff only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/reprovision-workspace-infra",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Re-run workspace-level runner infrastructure provisioning.\n\nCreates or re-creates the Vault AppRole and cert-manager Certificates for\na workspace. Idempotent — safe to call on already-provisioned workspaces.\nReturns per-subsystem status regardless of partial failure (HTTP 200).\n\nAccess: Staff only."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

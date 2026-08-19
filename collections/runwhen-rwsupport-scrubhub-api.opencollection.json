@@ -1,0 +1,358 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy rwsupport-scrubhub API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "rwsupport-scrubhub",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Recognizers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/workspaces/:workspace_name/recognizers",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Recognizers"
+        },
+        {
+          "info": {
+            "name": "Create Recognizer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/workspaces/:workspace_name/recognizers",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Staff-only proxy. `workspace_name` is the URL primary scope — never\nin the body (matches the platform-wide `{workspace_name}` URL\nconvention; lets logging/anonymization middleware bind cleanly)."
+        },
+        {
+          "info": {
+            "name": "Bulk Create Recognizers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/workspaces/:workspace_name/recognizers/bulk",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Staff-only thin proxy for bulk recognizer creation (multipart/form-data).\n\n`workspace_name` is in the URL path, NOT a form field. Reads the\nuploaded CSV bytes and forwards them via the SDK to the scrubber\nservice, which parses + validates server-side."
+        },
+        {
+          "info": {
+            "name": "Scrub Preview",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/workspaces/:workspace_name/scrub-preview",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Staff-only proxy for the ScrubHub Scrub Tester dry-run.\n\nRuns the live detection pipeline for `workspace_name` and returns the\nscrubbed text, a descrub round-trip, and the per-detection detail —\nminting no pseudonyms and writing no audit row. `workspace_name` is the\nURL primary scope; the body carries only `{ \"text\": ... }`."
+        },
+        {
+          "info": {
+            "name": "Update Recognizer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/recognizers/:recognizer_id",
+            "params": [
+              {
+                "name": "recognizer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update Recognizer"
+        },
+        {
+          "info": {
+            "name": "Delete Recognizer",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/recognizers/:recognizer_id",
+            "params": [
+              {
+                "name": "recognizer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete Recognizer"
+        },
+        {
+          "info": {
+            "name": "List Assignments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/assignments",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Assignments"
+        },
+        {
+          "info": {
+            "name": "Get Assignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/assignments/:workspace_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Assignment"
+        },
+        {
+          "info": {
+            "name": "Update Assignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/assignments/:workspace_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update Assignment"
+        },
+        {
+          "info": {
+            "name": "Reset Assignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/assignments/:workspace_name/reset",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reset Assignment"
+        },
+        {
+          "info": {
+            "name": "List Audit Workspaces Summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/audit/workspaces-summary",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Section 2 of the mockup — workspace-summary list landing view."
+        },
+        {
+          "info": {
+            "name": "Get Audit Summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/audit/:workspace_id/summary",
+            "params": [
+              {
+                "name": "workspace_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Audit Summary"
+        },
+        {
+          "info": {
+            "name": "Get Audit Sample Rate",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/audit/:workspace_id/sample-rate",
+            "params": [
+              {
+                "name": "workspace_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Audit Sample Rate"
+        },
+        {
+          "info": {
+            "name": "Set Audit Sample Rate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/audit/:workspace_id/sample-rate",
+            "params": [
+              {
+                "name": "workspace_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Set Audit Sample Rate"
+        },
+        {
+          "info": {
+            "name": "Query Audit",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/scrubhub/audit/:workspace_id",
+            "params": [
+              {
+                "name": "workspace_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Query Audit"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

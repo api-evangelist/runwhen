@@ -1,0 +1,276 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy issue-occurrences API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "issue-occurrences",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List issue occurrences for a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id/issueoccurrences",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by occurrence ID"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue ID"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List issue occurrences for a specific run session.\n\nGets occurrences through the RunSessionIssueMap table.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with flattened issue attributes."
+        },
+        {
+          "info": {
+            "name": "List issue occurrences for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/issueoccurrences",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "observed_at__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter occurrences observed at or after this datetime (ISO 8601)"
+              },
+              {
+                "name": "observed_at__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter occurrences observed at or before this datetime (ISO 8601)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List issue occurrences at workspace level with optional date filtering.\n\nUsed by agentfarm to list issue occurrences between two timestamps.\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n    observed_at_gte: Filter occurrences observed at or after this time.\n    observed_at_lte: Filter occurrences observed at or before this time.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to "
+        },
+        {
+          "info": {
+            "name": "Get an issue occurrence by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id/issueoccurrences/:occurrence_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "occurrence_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific issue occurrence by ID.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    occurrence_id: The issue occurrence ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue occurrence with flattened issue attributes.\n\nRaises:\n    HTTPException: 404 if workspace, run session, or occurrence not found."
+        },
+        {
+          "info": {
+            "name": "List issue occurrences for a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id/issueoccurrences",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by occurrence ID"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue ID"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List issue occurrences for a specific run session.\n\nGets occurrences through the RunSessionIssueMap table.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to skip.\n\nReturns:\n    Paginated list of issue occurrences with flattened issue attributes."
+        },
+        {
+          "info": {
+            "name": "List issue occurrences for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/issueoccurrences",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "observed_at__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter occurrences observed at or after this datetime (ISO 8601)"
+              },
+              {
+                "name": "observed_at__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter occurrences observed at or before this datetime (ISO 8601)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List issue occurrences at workspace level with optional date filtering.\n\nUsed by agentfarm to list issue occurrences between two timestamps.\n\nArgs:\n    workspace_name: The workspace name.\n    session: Database session.\n    current_user: The authenticated user.\n    observed_at_gte: Filter occurrences observed at or after this time.\n    observed_at_lte: Filter occurrences observed at or before this time.\n    limit: Maximum number of results (default 100, max 250).\n    offset: Number of results to "
+        },
+        {
+          "info": {
+            "name": "Get an issue occurrence by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id/issueoccurrences/:occurrence_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "occurrence_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific issue occurrence by ID.\n\nArgs:\n    workspace_name: The workspace name.\n    runsession_id: The run session ID.\n    occurrence_id: The issue occurrence ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue occurrence with flattened issue attributes.\n\nRaises:\n    HTTPException: 404 if workspace, run session, or occurrence not found."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

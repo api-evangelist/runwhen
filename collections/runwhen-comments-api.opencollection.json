@@ -1,0 +1,207 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy comments API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "comments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List comments for a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/runsessions/:runsession_id/comments",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all top-level comments for a run session with their replies."
+        },
+        {
+          "info": {
+            "name": "List comments for an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/issues/:issue_id/comments",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all top-level comments for an issue with their replies.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of top-level comments with nested replies."
+        },
+        {
+          "info": {
+            "name": "Create a comment on an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/issues/:issue_id/comments",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new top-level comment on an issue.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_data: The comment creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created comment."
+        },
+        {
+          "info": {
+            "name": "List comments for an issue occurrence (alias)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/runsessions/:runsession_id/issueoccurrences/:issue_id/comments",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List comments for an issue via the occurrence URL pattern.\n\nThe frontend constructs this URL when viewing issue comments within\na run session context. Delegates to the same issue comment lookup."
+        },
+        {
+          "info": {
+            "name": "Reply to a comment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/issues/:issue_id/comments/:comment_id/replies",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "comment_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a reply to an existing comment.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_id: The parent comment ID to reply to.\n    reply_data: The reply creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created reply comment.\n\nRaises:\n    HTTPException: 404 if parent comment not found."
+        },
+        {
+          "info": {
+            "name": "Update a comment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/issues/:issue_id/comments/:comment_id",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "issue_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "comment_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update an existing comment's content.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_id: The comment ID to update.\n    comment_data: The comment update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated comment.\n\nRaises:\n    HTTPException: 404 if comment not found."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

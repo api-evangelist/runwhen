@@ -1,0 +1,119 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy auth0 API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "auth0",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Auth0 Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/auth0/login/",
+            "params": [
+              {
+                "name": "next",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "auth_params",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "oauth_session",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Initiate Auth0 OAuth2 login flow with PKCE.\n\nBuilds the Auth0 authorize URL, stores state in Redis, and redirects\nthe browser to Auth0 for authentication.\n\nArgs:\n    request: The incoming request.\n    next: URL to redirect to after login (e.g. /rd/<b64_url>).\n    auth_params: Auth0 connection parameters (e.g. [connection]=runwhen).\n    oauth_session: OAuth 2.1 AS session ID — when present, the callback\n        issues an authorization code and redirects to the OAuth client\n        instead of sett"
+        },
+        {
+          "info": {
+            "name": "Auth0 Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/auth0/login/callback/",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "error",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "error_description",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Handle Auth0 OAuth2 callback.\n\nExchanges authorization code for tokens, fetches userinfo, creates or\nlinks the user, issues a JWT cookie, and redirects to the next URL.\n\nArgs:\n    request: The incoming request.\n    code: Authorization code from Auth0.\n    state: State parameter for CSRF validation.\n    error: Error code from Auth0 (if any).\n    error_description: Error description from Auth0 (if any).\n\nReturns:\n    Redirect to next URL with JWT cookie set."
+        },
+        {
+          "info": {
+            "name": "Generic Logout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/logout/"
+          },
+          "docs": "Log out — clears JWT cookie and delegates to Auth0 federated logout.\n\nThis is the path the UI redirects to (pages/logout.tsx).\nDelegates to the Auth0 logout flow."
+        },
+        {
+          "info": {
+            "name": "Auth0 Logout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/auth0/logout/"
+          },
+          "docs": "Log out via Auth0 federated logout.\n\nRedirects to Auth0's /v2/logout endpoint which clears the Auth0 session\nand the upstream SAML/OIDC provider session, then redirects back to\nthe user pages login page.\n\nReturns:\n    Redirect to Auth0 logout URL or direct to login page."
+        },
+        {
+          "info": {
+            "name": "Login Redirect",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/rd/:nxt_raw",
+            "params": [
+              {
+                "name": "nxt_raw",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Redirect to a base64-encoded URL after login, with host whitelist validation.\n\nThis matches Django's core/login.py:rd() view exactly. The URL is base64-encoded\nto avoid issues with OAuth providers stripping query parameters.\n\nArgs:\n    nxt_raw: Base64-encoded absolute URL to redirect to.\n\nReturns:\n    Redirect to the decoded URL if host is allowed, or to an error page."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

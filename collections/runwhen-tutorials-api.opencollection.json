@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy tutorials API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "tutorials",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List tutorials (deprecated)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/tutorials",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Tutorials feature is deprecated. Returns empty list for backwards compatibility."
+        },
+        {
+          "info": {
+            "name": "Get tutorial (deprecated)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/tutorials/:tutorial_name",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "tutorial_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Tutorials feature is deprecated. Returns 404."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

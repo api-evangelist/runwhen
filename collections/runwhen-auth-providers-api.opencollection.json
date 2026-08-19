@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy auth-providers API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "auth-providers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Auth Providers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/auth/providers"
+          },
+          "docs": "Return the categorised list of enabled login methods.\n\nThe Web UI login page fetches this on mount to render social buttons,\nenterprise SSO, and email/password sections dynamically."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy workspace-alerts API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "workspace-alerts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List alerts for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_short_name/alerts",
+            "params": [
+              {
+                "name": "workspace_short_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "created__gte",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created__lte",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "modified__gte",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "modified__lte",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "slxNames",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "slxNames[]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "slxName",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List alerts for a workspace with pagination and filtering.\n\nCombines SLI and SLO alerts from the unified alerts table.\nMatches Django WorkspaceViewSet.get_alerts() response shape."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

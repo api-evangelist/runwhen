@@ -1,0 +1,226 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy rwsupport-prompt-hub API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "rwsupport-prompt-hub",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/prompt-hub/agents/:agent_name/categories",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Categories"
+        },
+        {
+          "info": {
+            "name": "List Sections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/prompt-hub/agents/:agent_name/sections",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Sections"
+        },
+        {
+          "info": {
+            "name": "List Section Overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/prompt-hub/agents/:agent_name/sections/:section_id/overrides",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "section_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Section Overrides"
+        },
+        {
+          "info": {
+            "name": "Create Section Override",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/rwsupport/prompt-hub/agents/:agent_name/sections/:section_id/overrides",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "section_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create Section Override"
+        },
+        {
+          "info": {
+            "name": "Reset Section",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v3/rwsupport/prompt-hub/agents/:agent_name/sections/:section_id/overrides",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "section_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-reset the platform-default cell so the runtime falls back to code default.\n\nMirrors the existing platform restore proxy — staff-gated, rate-limited,\naudit-logged. Returns 204 on success."
+        },
+        {
+          "info": {
+            "name": "Restore Override",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/rwsupport/prompt-hub/agents/:agent_name/sections/:section_id/overrides/:override_id/restore",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "section_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "override_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Restore Override"
+        },
+        {
+          "info": {
+            "name": "Preview",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/rwsupport/prompt-hub/agents/:agent_name/preview",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "workspace_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Preview"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,1349 @@
+{
+  "item": [
+    {
+      "id": "5da51634-6282-4514-985a-f6499230eeb8",
+      "name": "comments",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c6b59b59-ce3d-4b9f-a999-f081a69575d4",
+          "name": "List comments for a run session",
+          "request": {
+            "name": "List comments for a run session",
+            "description": {
+              "content": "List all top-level comments for a run session with their replies.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "runsessions",
+                ":runsession_id",
+                "comments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "runsession_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "afbd5427-5662-48eb-94a7-620a30431c5b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "comments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 5532,\n    \"author\": {\n      \"id\": 3609,\n      \"username\": \"string\",\n      \"primaryEmail\": \"string\",\n      \"fullName\": \"string\",\n      \"isStaff\": true,\n      \"isServiceAccount\": true,\n      \"avatarUrl\": \"string\"\n    },\n    \"created\": \"1994-09-29T09:53:50.506Z\",\n    \"modified\": \"1996-04-01T09:19:04.087Z\",\n    \"content\": \"string\",\n    \"htmlContent\": \"\",\n    \"deleted\": false,\n    \"resolved\": false,\n    \"action\": \"reopen\",\n    \"replies\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      }\n    ]\n  },\n  {\n    \"id\": 8428,\n    \"author\": {\n      \"id\": 2693,\n      \"username\": \"string\",\n      \"primaryEmail\": \"string\",\n      \"fullName\": \"string\",\n      \"isStaff\": false,\n      \"isServiceAccount\": true,\n      \"avatarUrl\": \"string\"\n    },\n    \"created\": \"1978-06-22T11:22:11.149Z\",\n    \"modified\": \"1974-02-01T14:59:06.571Z\",\n    \"content\": \"string\",\n    \"htmlContent\": \"\",\n    \"deleted\": false,\n    \"resolved\": false,\n    \"action\": \"reopen\",\n    \"replies\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f21b511b-144b-42fa-8392-ff2fb1aa1672",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "comments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8ec87b9e-3ecc-40e5-a0ad-8a89ca26a096",
+          "name": "List comments for an issue",
+          "request": {
+            "name": "List comments for an issue",
+            "description": {
+              "content": "List all top-level comments for an issue with their replies.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of top-level comments with nested replies.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "issues",
+                ":issue_id",
+                "comments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "issue_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ae809c81-4adb-411f-8bb3-dc13d9099e0a",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "issues",
+                    ":issue_id",
+                    "comments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 1599,\n    \"author\": {\n      \"id\": 995,\n      \"username\": \"string\",\n      \"primaryEmail\": \"string\",\n      \"fullName\": \"string\",\n      \"isStaff\": true,\n      \"isServiceAccount\": false,\n      \"avatarUrl\": \"string\"\n    },\n    \"created\": \"2011-05-16T00:55:22.413Z\",\n    \"modified\": \"2012-12-11T12:20:46.652Z\",\n    \"content\": \"string\",\n    \"htmlContent\": \"\",\n    \"deleted\": false,\n    \"resolved\": false,\n    \"action\": \"resolve\",\n    \"replies\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      }\n    ]\n  },\n  {\n    \"id\": 4674,\n    \"author\": {\n      \"id\": 3341,\n      \"username\": \"string\",\n      \"primaryEmail\": \"string\",\n      \"fullName\": \"string\",\n      \"isStaff\": true,\n      \"isServiceAccount\": false,\n      \"avatarUrl\": \"string\"\n    },\n    \"created\": \"2024-04-23T15:50:50.107Z\",\n    \"modified\": \"1999-09-25T11:21:43.259Z\",\n    \"content\": \"string\",\n    \"htmlContent\": \"\",\n    \"deleted\": false,\n    \"resolved\": false,\n    \"action\": \"resolve\",\n    \"replies\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "57354efd-8f9a-4ab6-b85c-4eac17014d43",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "issues",
+                    ":issue_id",
+                    "comments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4fe2ff6f-b50a-4b3b-87f6-d3f1a9158f6b",
+          "name": "Create a comment on an issue",
+          "request": {
+            "name": "Create a comment on an issue",
+            "description": {
+              "content": "Create a new top-level comment on an issue.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_data: The comment creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created comment.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "issues",
+                ":issue_id",
+                "comments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "issue_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"<string>\",\n  \"escalated\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2ca52000-2f7b-49e2-98c3-d88ec90f7cad",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "issues",
+                    ":issue_id",
+                    "comments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"<string>\",\n  \"escalated\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8609,\n  \"author\": {\n    \"id\": 2936,\n    \"username\": \"string\",\n    \"primaryEmail\": \"string\",\n    \"fullName\": \"string\",\n    \"isStaff\": true,\n    \"isServiceAccount\": true,\n    \"avatarUrl\": \"string\"\n  },\n  \"created\": \"1967-01-14T03:21:22.026Z\",\n  \"modified\": \"1974-09-21T19:41:11.752Z\",\n  \"content\": \"string\",\n  \"htmlContent\": \"\",\n  \"deleted\": false,\n  \"resolved\": false,\n  \"action\": \"reopen\",\n  \"replies\": [\n    {\n      \"id\": 6390,\n      \"author\": {\n        \"id\": 9789,\n        \"username\": \"string\",\n        \"primaryEmail\": \"string\",\n        \"fullName\": \"string\",\n        \"isStaff\": true,\n        \"isServiceAccount\": true,\n        \"avatarUrl\": \"string\"\n      },\n      \"created\": \"1971-05-18T01:12:11.686Z\",\n      \"modified\": \"1957-12-08T08:41:41.076Z\",\n      \"content\": \"string\",\n      \"htmlContent\": \"\",\n      \"deleted\": false,\n      \"resolved\": false,\n      \"action\": \"reopen\",\n      \"replies\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        }\n      ]\n    },\n    {\n      \"id\": 9024,\n      \"author\": {\n        \"id\": 615,\n        \"username\": \"string\",\n        \"primaryEmail\": \"string\",\n        \"fullName\": \"string\",\n        \"isStaff\": false,\n        \"isServiceAccount\": false,\n        \"avatarUrl\": \"string\"\n      },\n      \"created\": \"2015-11-07T20:51:23.919Z\",\n      \"modified\": \"1995-08-16T13:10:20.128Z\",\n      \"content\": \"string\",\n      \"htmlContent\": \"\",\n      \"deleted\": false,\n      \"resolved\": false,\n      \"action\": \"reopen\",\n      \"replies\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5aa41d51-79ed-4c4d-a456-a4b9f938fc67",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "issues",
+                    ":issue_id",
+                    "comments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"<string>\",\n  \"escalated\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e7baf2d3-c9b3-4fa3-80cd-6643e23c0350",
+          "name": "List comments for an issue occurrence (alias)",
+          "request": {
+            "name": "List comments for an issue occurrence (alias)",
+            "description": {
+              "content": "List comments for an issue via the occurrence URL pattern.\n\nThe frontend constructs this URL when viewing issue comments within\na run session context. Delegates to the same issue comment lookup.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "runsessions",
+                ":runsession_id",
+                "issueoccurrences",
+                ":issue_id",
+                "comments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "runsession_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "issue_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9b4c1fcd-6fa9-4355-a87f-f37573f3e98a",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences",
+                    ":issue_id",
+                    "comments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 4853,\n    \"author\": {\n      \"id\": 4956,\n      \"username\": \"string\",\n      \"primaryEmail\": \"string\",\n      \"fullName\": \"string\",\n      \"isStaff\": true,\n      \"isServiceAccount\": true,\n      \"avatarUrl\": \"string\"\n    },\n    \"created\": \"1981-10-14T21:33:06.814Z\",\n    \"modified\": \"2019-01-24T05:51:47.645Z\",\n    \"content\": \"string\",\n    \"htmlContent\": \"\",\n    \"deleted\": false,\n    \"resolved\": false,\n    \"action\": \"resolve\",\n    \"replies\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      }\n    ]\n  },\n  {\n    \"id\": 1554,\n    \"author\": {\n      \"id\": 5630,\n      \"username\": \"string\",\n      \"primaryEmail\": \"string\",\n      \"fullName\": \"string\",\n      \"isStaff\": false,\n      \"isServiceAccount\": true,\n      \"avatarUrl\": \"string\"\n    },\n    \"created\": \"1971-04-20T19:04:29.616Z\",\n    \"modified\": \"1979-01-01T08:24:55.973Z\",\n    \"content\": \"string\",\n    \"htmlContent\": \"\",\n    \"deleted\": false,\n    \"resolved\": false,\n    \"action\": \"resolve\",\n    \"replies\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "47bc1745-cf4b-4af8-bb0f-c5cfdc46292a",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "runsessions",
+                    ":runsession_id",
+                    "issueoccurrences",
+                    ":issue_id",
+                    "comments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "runsession_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "19f82bc3-1e28-402e-887d-74c8d47f7b40",
+          "name": "Reply to a comment",
+          "request": {
+            "name": "Reply to a comment",
+            "description": {
+              "content": "Create a reply to an existing comment.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_id: The parent comment ID to reply to.\n    reply_data: The reply creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created reply comment.\n\nRaises:\n    HTTPException: 404 if parent comment not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "issues",
+                ":issue_id",
+                "comments",
+                ":comment_id",
+                "replies"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "issue_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "comment_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"<string>\",\n  \"action\": \"<string>\",\n  \"escalated\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6895cae5-94d2-42c9-a229-bac76744515f",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "issues",
+                    ":issue_id",
+                    "comments",
+                    ":comment_id",
+                    "replies"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "comment_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"<string>\",\n  \"action\": \"reopen\",\n  \"escalated\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8609,\n  \"author\": {\n    \"id\": 2936,\n    \"username\": \"string\",\n    \"primaryEmail\": \"string\",\n    \"fullName\": \"string\",\n    \"isStaff\": true,\n    \"isServiceAccount\": true,\n    \"avatarUrl\": \"string\"\n  },\n  \"created\": \"1967-01-14T03:21:22.026Z\",\n  \"modified\": \"1974-09-21T19:41:11.752Z\",\n  \"content\": \"string\",\n  \"htmlContent\": \"\",\n  \"deleted\": false,\n  \"resolved\": false,\n  \"action\": \"reopen\",\n  \"replies\": [\n    {\n      \"id\": 6390,\n      \"author\": {\n        \"id\": 9789,\n        \"username\": \"string\",\n        \"primaryEmail\": \"string\",\n        \"fullName\": \"string\",\n        \"isStaff\": true,\n        \"isServiceAccount\": true,\n        \"avatarUrl\": \"string\"\n      },\n      \"created\": \"1971-05-18T01:12:11.686Z\",\n      \"modified\": \"1957-12-08T08:41:41.076Z\",\n      \"content\": \"string\",\n      \"htmlContent\": \"\",\n      \"deleted\": false,\n      \"resolved\": false,\n      \"action\": \"reopen\",\n      \"replies\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        }\n      ]\n    },\n    {\n      \"id\": 9024,\n      \"author\": {\n        \"id\": 615,\n        \"username\": \"string\",\n        \"primaryEmail\": \"string\",\n        \"fullName\": \"string\",\n        \"isStaff\": false,\n        \"isServiceAccount\": false,\n        \"avatarUrl\": \"string\"\n      },\n      \"created\": \"2015-11-07T20:51:23.919Z\",\n      \"modified\": \"1995-08-16T13:10:20.128Z\",\n      \"content\": \"string\",\n      \"htmlContent\": \"\",\n      \"deleted\": false,\n      \"resolved\": false,\n      \"action\": \"reopen\",\n      \"replies\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "750a8036-a05d-46e5-836b-5737766bced5",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "issues",
+                    ":issue_id",
+                    "comments",
+                    ":comment_id",
+                    "replies"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "comment_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"<string>\",\n  \"action\": \"reopen\",\n  \"escalated\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "219c737c-d121-4069-be3a-f044576781a9",
+          "name": "Update a comment",
+          "request": {
+            "name": "Update a comment",
+            "description": {
+              "content": "Update an existing comment's content.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_id: The comment ID to update.\n    comment_data: The comment update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated comment.\n\nRaises:\n    HTTPException: 404 if comment not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "issues",
+                ":issue_id",
+                "comments",
+                ":comment_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "issue_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "comment_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cb28d8cc-d48e-4639-997d-a46900699dfa",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "issues",
+                    ":issue_id",
+                    "comments",
+                    ":comment_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "comment_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8609,\n  \"author\": {\n    \"id\": 2936,\n    \"username\": \"string\",\n    \"primaryEmail\": \"string\",\n    \"fullName\": \"string\",\n    \"isStaff\": true,\n    \"isServiceAccount\": true,\n    \"avatarUrl\": \"string\"\n  },\n  \"created\": \"1967-01-14T03:21:22.026Z\",\n  \"modified\": \"1974-09-21T19:41:11.752Z\",\n  \"content\": \"string\",\n  \"htmlContent\": \"\",\n  \"deleted\": false,\n  \"resolved\": false,\n  \"action\": \"reopen\",\n  \"replies\": [\n    {\n      \"id\": 6390,\n      \"author\": {\n        \"id\": 9789,\n        \"username\": \"string\",\n        \"primaryEmail\": \"string\",\n        \"fullName\": \"string\",\n        \"isStaff\": true,\n        \"isServiceAccount\": true,\n        \"avatarUrl\": \"string\"\n      },\n      \"created\": \"1971-05-18T01:12:11.686Z\",\n      \"modified\": \"1957-12-08T08:41:41.076Z\",\n      \"content\": \"string\",\n      \"htmlContent\": \"\",\n      \"deleted\": false,\n      \"resolved\": false,\n      \"action\": \"reopen\",\n      \"replies\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        }\n      ]\n    },\n    {\n      \"id\": 9024,\n      \"author\": {\n        \"id\": 615,\n        \"username\": \"string\",\n        \"primaryEmail\": \"string\",\n        \"fullName\": \"string\",\n        \"isStaff\": false,\n        \"isServiceAccount\": false,\n        \"avatarUrl\": \"string\"\n      },\n      \"created\": \"2015-11-07T20:51:23.919Z\",\n      \"modified\": \"1995-08-16T13:10:20.128Z\",\n      \"content\": \"string\",\n      \"htmlContent\": \"\",\n      \"deleted\": false,\n      \"resolved\": false,\n      \"action\": \"reopen\",\n      \"replies\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/CommentResponse detected>\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "813699b5-1065-4451-8d3f-ec809696797f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "issues",
+                    ":issue_id",
+                    "comments",
+                    ":comment_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "issue_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "comment_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "5c2f3255-8bb7-47f8-9d4a-74dc28be3db0",
+    "name": "papi alert-query-proxy comments API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

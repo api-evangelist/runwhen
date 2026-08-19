@@ -1,0 +1,417 @@
+{
+  "item": [
+    {
+      "id": "85139ea6-edfc-4935-911e-56352818f482",
+      "name": "personas",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "82ed0d0a-943d-46d3-8011-6e627bb42bf0",
+          "name": "List personas for a workspace",
+          "request": {
+            "name": "List personas for a workspace",
+            "description": {
+              "content": "List all personas for a workspace.\n\nArgs:\n    request: The HTTP request.\n    workspace_short_name: The short name of the workspace.\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of personas.\n\nRaises:\n    HTTPException: 404 if workspace not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "personas"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Number of results to skip"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8c6a610f-ddf8-42d2-8676-a3cbe33bde9a",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "personas"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"id\": 2602,\n      \"name\": \"string\",\n      \"workspace\": 7675,\n      \"created\": {},\n      \"modified\": {},\n      \"spec\": {\n        \"key_0\": \"string\",\n        \"key_1\": 7634.037000446381\n      },\n      \"status\": {\n        \"key_0\": \"string\"\n      },\n      \"shortName\": \"\",\n      \"fullName\": \"string\",\n      \"description\": \"string\",\n      \"avatarUrl\": \"string\",\n      \"filterConfidenceThreshold\": 0.5,\n      \"filterIssueSelectionStrategy\": \"MOST_SEVERE\",\n      \"filterCodebundleTaskTags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"filterStopWords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"filterScope\": \"string\",\n      \"searchFilters\": {\n        \"key_0\": false\n      },\n      \"runConfidenceThreshold\": 0.95,\n      \"runConfig\": {\n        \"key_0\": 1258\n      }\n    },\n    {\n      \"id\": 7631,\n      \"name\": \"string\",\n      \"workspace\": 5824,\n      \"created\": {},\n      \"modified\": {},\n      \"spec\": {\n        \"key_0\": true\n      },\n      \"status\": {\n        \"key_0\": 4526.698470244422,\n        \"key_1\": \"string\"\n      },\n      \"shortName\": \"\",\n      \"fullName\": \"string\",\n      \"description\": \"string\",\n      \"avatarUrl\": \"string\",\n      \"filterConfidenceThreshold\": 0.5,\n      \"filterIssueSelectionStrategy\": \"MOST_SEVERE\",\n      \"filterCodebundleTaskTags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"filterStopWords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"filterScope\": \"string\",\n      \"searchFilters\": {\n        \"key_0\": false\n      },\n      \"runConfidenceThreshold\": 0.95,\n      \"runConfig\": {\n        \"key_0\": 5917.253579032463\n      }\n    }\n  ],\n  \"count\": 5626,\n  \"next\": \"string\",\n  \"previous\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b64d1d10-1141-45c2-988e-e0239284b1d6",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "personas"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2a859790-53c3-440b-8624-70263482ad3b",
+          "name": "Get a persona by short name",
+          "request": {
+            "name": "Get a persona by short name",
+            "description": {
+              "content": "Get a persona by its short name.\n\nArgs:\n    workspace_short_name: The short name of the workspace.\n    persona_short_name: The short name of the persona.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The persona details.\n\nRaises:\n    HTTPException: 404 if workspace or persona not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "workspaces",
+                ":workspace_short_name",
+                "personas",
+                ":persona_short_name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace_short_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "persona_short_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0d62f13a-ba3d-43b6-99cc-16f7a4cd0157",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "personas",
+                    ":persona_short_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "persona_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 5761,\n  \"name\": \"string\",\n  \"workspace\": 1276,\n  \"created\": {},\n  \"modified\": {},\n  \"spec\": {\n    \"key_0\": \"string\"\n  },\n  \"status\": {\n    \"key_0\": false,\n    \"key_1\": true\n  },\n  \"shortName\": \"\",\n  \"fullName\": \"string\",\n  \"description\": \"string\",\n  \"avatarUrl\": \"string\",\n  \"filterConfidenceThreshold\": 0.5,\n  \"filterIssueSelectionStrategy\": \"MOST_SEVERE\",\n  \"filterCodebundleTaskTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"filterStopWords\": [\n    \"string\",\n    \"string\"\n  ],\n  \"filterScope\": \"string\",\n  \"searchFilters\": {\n    \"key_0\": 1134.087337932529\n  },\n  \"runConfidenceThreshold\": 0.95,\n  \"runConfig\": {\n    \"key_0\": true,\n    \"key_1\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6308c41a-e309-4eb5-8356-f83f0e80602b",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "workspaces",
+                    ":workspace_short_name",
+                    "personas",
+                    ":persona_short_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace_short_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "persona_short_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "f5b6486c-36ce-438b-b04a-06874d32e507",
+    "name": "papi alert-query-proxy personas API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "RunWhen Platform API",
+      "type": "text/plain"
+    }
+  }
+}

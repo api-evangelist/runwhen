@@ -1,0 +1,862 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "papi alert-query-proxy run-sessions API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "run-sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List run sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/run-sessions",
+            "params": [
+              {
+                "name": "workspace_id",
+                "value": "",
+                "type": "query",
+                "description": "Workspace ID to filter sessions"
+              },
+              {
+                "name": "active_only",
+                "value": "",
+                "type": "query",
+                "description": "Filter to active sessions only"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List run sessions for a workspace.\n\nArgs:\n    workspace_id: The workspace ID to filter by.\n    active_only: If True, return only active sessions.\n    limit: Maximum number of results to return.\n    offset: Number of results to skip.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Paginated list of run sessions.\n\nRaises:\n    HTTPException: 400 if workspace not found."
+        },
+        {
+          "info": {
+            "name": "Create a new run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/run-sessions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new run session.\n\nA RunSession tracks a series of RunRequests for a troubleshooting session.\nIf no name is provided and generate_name is True, a unique name will be generated.\n\nArgs:\n    data: The run session creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created run session.\n\nRaises:\n    HTTPException: 400 if workspace not found or name already exists."
+        },
+        {
+          "info": {
+            "name": "Get a run session by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/run-sessions/:session_id",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a run session by ID.\n\nArgs:\n    session_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The run session details.\n\nRaises:\n    HTTPException: 404 if session not found."
+        },
+        {
+          "info": {
+            "name": "Update a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/run-sessions/:session_id",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a run session (partial update).\n\nArgs:\n    session_id: The run session ID.\n    data: The run session update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated run session.\n\nRaises:\n    HTTPException: 404 if session not found."
+        },
+        {
+          "info": {
+            "name": "Delete a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/run-sessions/:session_id",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a run session.\n\nThis will also delete all associated RunRequests (cascade delete).\n\nArgs:\n    session_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if session not found."
+        },
+        {
+          "info": {
+            "name": "Deactivate a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/run-sessions/:session_id/deactivate",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deactivate a run session.\n\nSets the session's active flag to False. Inactive sessions cannot accept\nnew RunRequests but can still be viewed and referenced.\n\nArgs:\n    session_id: The run session ID.\n    data: Optional deactivation request with reason.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The deactivated run session.\n\nRaises:\n    HTTPException: 404 if session not found.\n    HTTPException: 400 if session is already inactive."
+        },
+        {
+          "info": {
+            "name": "Escalate a run session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/run-sessions/:session_id/escalate",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Mark a run session as escalated.\n\nEscalation flags the session as requiring human attention. This is used\nfor issue triage and prioritization.\n\nArgs:\n    session_id: The run session ID.\n    data: Optional escalation request with escalated status.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The escalated run session.\n\nRaises:\n    HTTPException: 404 if session not found."
+        },
+        {
+          "info": {
+            "name": "List run sessions for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "page-size",
+                "value": "",
+                "type": "query",
+                "description": "Items per page"
+              },
+              {
+                "name": "active",
+                "value": "",
+                "type": "query",
+                "description": "If set, filter to sessions whose ``active`` column matches this value (``true`` for active, ``false`` for inactive). Omit to return both."
+              },
+              {
+                "name": "modified__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter to sessions with modified_at >= this ISO-8601 datetime. Must include a timezone offset (e.g. ``...+00:00`` or ``...Z``); naive datetimes are rejected to avoid ambiguity against the tz-aware column."
+              },
+              {
+                "name": "modified__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter to sessions with modified_at <= this ISO-8601 datetime. Must include a timezone offset."
+              },
+              {
+                "name": "created__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter to sessions with created_at >= this ISO-8601 datetime. Must include a timezone offset."
+              },
+              {
+                "name": "created__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter to sessions with created_at <= this ISO-8601 datetime. Must include a timezone offset."
+              },
+              {
+                "name": "runrequest__runbook__name",
+                "value": "",
+                "type": "query",
+                "description": "Filter by SLX/runbook full name (e.g. workspace--short-name). Returns only sessions with at least one RunRequest for this SLX."
+              },
+              {
+                "name": "runrequest__runbook__name__in",
+                "value": "",
+                "type": "query",
+                "description": "Filter by multiple SLX/runbook full names (comma-separated). Returns sessions with at least one RunRequest matching any name."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List run sessions for a workspace by name.\n\nArgs:\n    workspace_name: The workspace short name.\n    page: Page number (1-indexed).\n    page_size: Number of items per page.\n    active: Optional exact-match filter on ``RunSession.active``.\n    modified__gte: Inclusive lower bound on ``modified_at``.\n    modified__lte: Inclusive upper bound on ``modified_at``.\n    created__gte: Inclusive lower bound on ``created_at``.\n    created__lte: Inclusive upper bound on ``created_at``.\n    runrequest__runboo"
+        },
+        {
+          "info": {
+            "name": "Create a run session with run requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new run session with run requests atomically.\n\nThis endpoint creates a RunSession and associated RunRequests in a single\natomic transaction. It supports deduplication to merge requests into\nexisting sessions based on the source type.\n\n**Deduplication behavior by source:**\n- `direct`: No deduplication - always creates a new session\n- `search`: No deduplication - always creates a new session\n- `slo_alert`: Deduplication enabled (10m window by default)\n- `sli_alert`: Deduplication enabled "
+        },
+        {
+          "info": {
+            "name": "Search Workspace Run Sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/search",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Search RunSessions with time-bounded filtering."
+        },
+        {
+          "info": {
+            "name": "Get Search Sources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/search/sources",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get available source filter values for RunSession search."
+        },
+        {
+          "info": {
+            "name": "Get Runsession Alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id/alerts",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get alerts routed to a specific RunSession."
+        },
+        {
+          "info": {
+            "name": "Get a run session by ID within a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a run session by ID within a workspace.\n\nArgs:\n    workspace_name: The workspace short name.\n    runsession_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The run session details.\n\nRaises:\n    HTTPException: 404 if workspace or session not found."
+        },
+        {
+          "info": {
+            "name": "Update a run session within a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a run session within a workspace (partial update)."
+        },
+        {
+          "info": {
+            "name": "Get run session summary from Sobrain",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id/summary",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Proxy to Sobrain service for LLM-generated run session summary."
+        },
+        {
+          "info": {
+            "name": "Get run session activity timeline",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id/activities",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Proxy to Activities service for run session timeline.\n\nReturns paginated response matching Django's DRF PageNumberPagination\nformat: {count, next, previous, results}."
+        },
+        {
+          "info": {
+            "name": "Process the next step in the RunSession workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/workspaces/:workspace_name/runsessions/:runsession_id/step",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Process the next step in the RunSession workflow.\n\nThis endpoint coordinates several background tasks:\n1. Processes queued RunRequests that are ready to run (if any)\n2. Marks relevant issues as visited\n3. Triggers persona tasks if a persona is attached\n\nArgs:\n    workspace_name: The workspace short name.\n    runsession_id: The RunSession ID.\n    db_session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    StepResponse with processing status.\n\nRaises:\n    HTTPException: 4"
+        },
+        {
+          "info": {
+            "name": "List run sessions for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "page-size",
+                "value": "",
+                "type": "query",
+                "description": "Items per page"
+              },
+              {
+                "name": "active",
+                "value": "",
+                "type": "query",
+                "description": "If set, filter to sessions whose ``active`` column matches this value (``true`` for active, ``false`` for inactive). Omit to return both."
+              },
+              {
+                "name": "modified__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter to sessions with modified_at >= this ISO-8601 datetime. Must include a timezone offset (e.g. ``...+00:00`` or ``...Z``); naive datetimes are rejected to avoid ambiguity against the tz-aware column."
+              },
+              {
+                "name": "modified__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter to sessions with modified_at <= this ISO-8601 datetime. Must include a timezone offset."
+              },
+              {
+                "name": "created__gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter to sessions with created_at >= this ISO-8601 datetime. Must include a timezone offset."
+              },
+              {
+                "name": "created__lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter to sessions with created_at <= this ISO-8601 datetime. Must include a timezone offset."
+              },
+              {
+                "name": "runrequest__runbook__name",
+                "value": "",
+                "type": "query",
+                "description": "Filter by SLX/runbook full name (e.g. workspace--short-name). Returns only sessions with at least one RunRequest for this SLX."
+              },
+              {
+                "name": "runrequest__runbook__name__in",
+                "value": "",
+                "type": "query",
+                "description": "Filter by multiple SLX/runbook full names (comma-separated). Returns sessions with at least one RunRequest matching any name."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List run sessions for a workspace by name.\n\nArgs:\n    workspace_name: The workspace short name.\n    page: Page number (1-indexed).\n    page_size: Number of items per page.\n    active: Optional exact-match filter on ``RunSession.active``.\n    modified__gte: Inclusive lower bound on ``modified_at``.\n    modified__lte: Inclusive upper bound on ``modified_at``.\n    created__gte: Inclusive lower bound on ``created_at``.\n    created__lte: Inclusive upper bound on ``created_at``.\n    runrequest__runboo"
+        },
+        {
+          "info": {
+            "name": "Create a run session with run requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new run session with run requests atomically.\n\nThis endpoint creates a RunSession and associated RunRequests in a single\natomic transaction. It supports deduplication to merge requests into\nexisting sessions based on the source type.\n\n**Deduplication behavior by source:**\n- `direct`: No deduplication - always creates a new session\n- `search`: No deduplication - always creates a new session\n- `slo_alert`: Deduplication enabled (10m window by default)\n- `sli_alert`: Deduplication enabled "
+        },
+        {
+          "info": {
+            "name": "Search Workspace Run Sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/search",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Search RunSessions with time-bounded filtering."
+        },
+        {
+          "info": {
+            "name": "Get Search Sources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/search/sources",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get available source filter values for RunSession search."
+        },
+        {
+          "info": {
+            "name": "Get Runsession Alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id/alerts",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get alerts routed to a specific RunSession."
+        },
+        {
+          "info": {
+            "name": "Get a run session by ID within a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a run session by ID within a workspace.\n\nArgs:\n    workspace_name: The workspace short name.\n    runsession_id: The run session ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The run session details.\n\nRaises:\n    HTTPException: 404 if workspace or session not found."
+        },
+        {
+          "info": {
+            "name": "Update a run session within a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a run session within a workspace (partial update)."
+        },
+        {
+          "info": {
+            "name": "Get run session summary from Sobrain",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id/summary",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Proxy to Sobrain service for LLM-generated run session summary."
+        },
+        {
+          "info": {
+            "name": "Get run session activity timeline",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id/activities",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Proxy to Activities service for run session timeline.\n\nReturns paginated response matching Django's DRF PageNumberPagination\nformat: {count, next, previous, results}."
+        },
+        {
+          "info": {
+            "name": "Process the next step in the RunSession workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v3/workspaces/:workspace_name/runsessions/:runsession_id/step",
+            "params": [
+              {
+                "name": "workspace_name",
+                "value": "",
+                "type": "path",
+                "description": "Workspace short name"
+              },
+              {
+                "name": "runsession_id",
+                "value": "",
+                "type": "path",
+                "description": "RunSession ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Process the next step in the RunSession workflow.\n\nThis endpoint coordinates several background tasks:\n1. Processes queued RunRequests that are ready to run (if any)\n2. Marks relevant issues as visited\n3. Triggers persona tasks if a persona is attached\n\nArgs:\n    workspace_name: The workspace short name.\n    runsession_id: The RunSession ID.\n    db_session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    StepResponse with processing status.\n\nRaises:\n    HTTPException: 4"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
