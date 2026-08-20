@@ -60,6 +60,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -80,6 +82,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Auth0
+  tags_raw:
   - auth0
   properties:
   - type: OpenAPI
@@ -90,6 +94,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Author
+  tags_raw:
   - author
   properties:
   - type: OpenAPI
@@ -130,6 +136,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Comments
+  tags_raw:
   - comments
   properties:
   - type: OpenAPI
@@ -140,6 +148,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Configuration
+  tags_raw:
   - configuration
   properties:
   - type: OpenAPI
@@ -150,6 +160,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Explorer
+  tags_raw:
   - explorer
   properties:
   - type: OpenAPI
@@ -160,6 +172,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - GraphQL
+  tags_raw:
   - Graphql
   properties:
   - type: OpenAPI
@@ -170,6 +184,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Health
+  tags_raw:
   - health
   properties:
   - type: OpenAPI
@@ -180,6 +196,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Internal
+  tags_raw:
   - internal
   properties:
   - type: OpenAPI
@@ -200,6 +218,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Issues
+  tags_raw:
   - issues
   properties:
   - type: OpenAPI
@@ -210,6 +230,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - JWKS
+  tags_raw:
   - jwks
   properties:
   - type: OpenAPI
@@ -280,6 +302,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Personas
+  tags_raw:
   - personas
   properties:
   - type: OpenAPI
@@ -290,6 +314,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Profile
+  tags_raw:
   - profile
   properties:
   - type: OpenAPI
@@ -330,6 +356,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Runbooks
+  tags_raw:
   - runbooks
   properties:
   - type: OpenAPI
@@ -340,6 +368,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Runners
+  tags_raw:
   - runners
   properties:
   - type: OpenAPI
@@ -390,6 +420,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Slack
+  tags_raw:
   - slack
   properties:
   - type: OpenAPI
@@ -430,6 +462,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - SLO
+  tags_raw:
   - slos
   properties:
   - type: OpenAPI
@@ -470,6 +504,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Sync
+  tags_raw:
   - sync
   properties:
   - type: OpenAPI
@@ -480,6 +516,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Tokens
+  tags_raw:
   - tokens
   properties:
   - type: OpenAPI
@@ -490,6 +528,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Tutorials
+  tags_raw:
   - tutorials
   properties:
   - type: OpenAPI
@@ -500,6 +540,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
@@ -520,6 +562,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Workflows
+  tags_raw:
   - workflows
   properties:
   - type: OpenAPI
@@ -550,6 +594,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - Workspaces
+  tags_raw:
   - workspaces
   properties:
   - type: OpenAPI
