@@ -94,7 +94,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - auth0
+  - Auth0
   tags_raw:
   - auth0
   properties:
@@ -106,7 +106,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - author
+  - Author
   tags_raw:
   - author
   properties:
@@ -172,7 +172,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - explorer
+  - Explorer
   tags_raw:
   - explorer
   properties:
@@ -242,7 +242,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - jwks
+  - JWKS
   tags_raw:
   - jwks
   properties:
@@ -314,7 +314,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - personas
+  - Personas
   tags_raw:
   - personas
   properties:
@@ -368,7 +368,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - runbooks
+  - Runbooks
   tags_raw:
   - runbooks
   properties:
@@ -380,7 +380,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - runners
+  - Runners
   tags_raw:
   - runners
   properties:
@@ -474,7 +474,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - slos
+  - SLO
   tags_raw:
   - slos
   properties:
@@ -540,7 +540,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - tutorials
+  - Tutorials
   tags_raw:
   - tutorials
   properties:
