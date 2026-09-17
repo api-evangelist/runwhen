@@ -180,18 +180,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/runwhen-explorer-api-openapi.yml
-- aid: runwhen:runwhen-graphql-api
-  name: RunWhen Graphql API
-  description: The Graphql API from RunWhen — 1 operation(s) for graphql.
-  humanURL: https://docs.runwhen.com/docs/use/api-reference
-  baseURL: https://papi.beta.runwhen.com
-  tags:
-  - GraphQL
-  tags_raw:
-  - Graphql
-  properties:
-  - type: OpenAPI
-    url: openapi/runwhen-graphql-api-openapi.yml
 - aid: runwhen:runwhen-health-api
   name: RunWhen health API
   description: The health API from RunWhen — 4 operation(s) for health.
@@ -470,18 +458,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/runwhen-slo-v4-api-openapi.yml
-- aid: runwhen:runwhen-slos-api
-  name: RunWhen slos API
-  description: The slos API from RunWhen — 4 operation(s) for slos.
-  humanURL: https://docs.runwhen.com/docs/use/api-reference
-  baseURL: https://papi.beta.runwhen.com
-  tags:
-  - SLO
-  tags_raw:
-  - slos
-  properties:
-  - type: OpenAPI
-    url: openapi/runwhen-slos-api-openapi.yml
 - aid: runwhen:runwhen-slx-v4-api
   name: RunWhen slx-v4 API
   description: The slx-v4 API from RunWhen — 3 operation(s) for slx-v4.
@@ -614,6 +590,26 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/runwhen-workspaces-api-openapi.yml
+- aid: runwhen:runwhen-slos-api
+  name: RunWhen Slos API
+  description: The slos API from RunWhen — 4 operation(s) for slos.
+  humanURL: https://docs.runwhen.com/docs/use/api-reference
+  baseURL: https://papi.beta.runwhen.com
+  tags:
+  - slos
+  properties:
+  - type: OpenAPI
+    url: openapi/runwhen-slos-api-openapi.yml
+- aid: runwhen:runwhen-graph-ql-api
+  name: RunWhen Graph QL API
+  description: The Graph QL API from RunWhen — 1 operation(s) for graph ql.
+  humanURL: https://docs.runwhen.com/docs/use/api-reference
+  baseURL: https://papi.beta.runwhen.com
+  tags:
+  - Graph QL
+  properties:
+  - type: OpenAPI
+    url: openapi/runwhen-graph-ql-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
