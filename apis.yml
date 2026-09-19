@@ -316,7 +316,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - Profile
+  - Profiles
   tags_raw:
   - profile
   properties:
@@ -584,7 +584,7 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - Workspaces
+  - Workspace
   tags_raw:
   - workspaces
   properties:
@@ -596,6 +596,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - SLO
+  tags_raw:
   - slos
   properties:
   - type: OpenAPI
@@ -606,6 +608,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - GraphQL
+  tags_raw:
   - Graph QL
   properties:
   - type: OpenAPI
