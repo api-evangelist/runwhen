@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy API
+  title: papi Alert Query Proxy API
   description: RunWhen Platform API
   version: 2.0.0
 tags:

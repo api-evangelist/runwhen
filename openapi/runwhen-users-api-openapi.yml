@@ -1,17 +1,34 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy users API
+  title: papi Users API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: users
+- name: Users
 paths:
   /api/v3/users/register:
     post:
       tags:
-      - users
+      - Users
       summary: Register a new user account
-      description: "Create a new user account and send a verification email.\n\nArgs:\n    data: Registration details (username, email, password).\n    session: Database session.\n\nReturns:\n    The created user's basic info with a confirmation message.\n\nRaises:\n    HTTPException: 409 if username or email already exists."
+      description: 'Create a new user account and send a verification email.
+
+
+        Args:
+
+        data: Registration details (username, email, password).
+
+        session: Database session.
+
+
+        Returns:
+
+        The created user''s basic info with a confirmation message.
+
+
+        Raises:
+
+        HTTPException: 409 if username or email already exists.'
       operationId: register_api_v3_users_register_post
       requestBody:
         content:
@@ -36,9 +53,26 @@ paths:
   /api/v3/users/verify-email:
     post:
       tags:
-      - users
+      - Users
       summary: Verify email address via token
-      description: "Verify a user's email address using a signed token.\n\nArgs:\n    data: The verification token.\n    session: Database session.\n\nReturns:\n    Confirmation message.\n\nRaises:\n    HTTPException: 400 if token is invalid or expired."
+      description: 'Verify a user''s email address using a signed token.
+
+
+        Args:
+
+        data: The verification token.
+
+        session: Database session.
+
+
+        Returns:
+
+        Confirmation message.
+
+
+        Raises:
+
+        HTTPException: 400 if token is invalid or expired.'
       operationId: verify_email_api_v3_users_verify_email_post
       requestBody:
         content:
@@ -63,7 +97,7 @@ paths:
   /api/v3/users/resend-verification:
     post:
       tags:
-      - users
+      - Users
       summary: Resend verification email
       description: 'Resend verification email for an unverified account.
 
@@ -94,9 +128,24 @@ paths:
   /api/v3/users/forgot-password:
     post:
       tags:
-      - users
+      - Users
       summary: Request a password reset email
-      description: "Send a password reset email if the email exists.\n\nAlways returns 200 with a generic message to prevent email enumeration.\n\nArgs:\n    data: The email address to send the reset link to.\n    session: Database session.\n\nReturns:\n    Generic confirmation message (regardless of whether the email exists)."
+      description: 'Send a password reset email if the email exists.
+
+
+        Always returns 200 with a generic message to prevent email enumeration.
+
+
+        Args:
+
+        data: The email address to send the reset link to.
+
+        session: Database session.
+
+
+        Returns:
+
+        Generic confirmation message (regardless of whether the email exists).'
       operationId: forgot_password_api_v3_users_forgot_password_post
       requestBody:
         content:
@@ -121,9 +170,26 @@ paths:
   /api/v3/users/reset-password:
     post:
       tags:
-      - users
+      - Users
       summary: Reset password using a token
-      description: "Reset a user's password using a signed, one-time-use token.\n\nArgs:\n    data: The reset token and new password.\n    session: Database session.\n\nReturns:\n    Confirmation message.\n\nRaises:\n    HTTPException: 400 if token is invalid, expired, or already consumed."
+      description: 'Reset a user''s password using a signed, one-time-use token.
+
+
+        Args:
+
+        data: The reset token and new password.
+
+        session: Database session.
+
+
+        Returns:
+
+        Confirmation message.
+
+
+        Raises:
+
+        HTTPException: 400 if token is invalid, expired, or already consumed.'
       operationId: reset_password_api_v3_users_reset_password_post
       requestBody:
         content:
@@ -148,9 +214,24 @@ paths:
   /api/v3/users/csrf-token:
     get:
       tags:
-      - users
+      - Users
       summary: Get CSRF token
-      description: "Get a CSRF token for cross-domain requests.\n\nThis endpoint is provided for UI compatibility. With JWT-based\nauthentication, CSRF tokens are not strictly necessary since\nthe auth token is sent in the Authorization header (not cookies).\n\nHowever, the frontend may still expect this endpoint to exist.\n\nReturns:\n    A CSRF token."
+      description: 'Get a CSRF token for cross-domain requests.
+
+
+        This endpoint is provided for UI compatibility. With JWT-based
+
+        authentication, CSRF tokens are not strictly necessary since
+
+        the auth token is sent in the Authorization header (not cookies).
+
+
+        However, the frontend may still expect this endpoint to exist.
+
+
+        Returns:
+
+        A CSRF token.'
       operationId: get_csrf_token_api_v3_users_csrf_token_get
       responses:
         '200':
@@ -163,9 +244,26 @@ paths:
   /api/v3/users/login:
     post:
       tags:
-      - users
+      - Users
       summary: Login with username and password
-      description: "Authenticate user with username and password.\n\nArgs:\n    data: Login credentials.\n    session: Database session.\n\nReturns:\n    Access and refresh tokens with user info.\n\nRaises:\n    HTTPException: 401 if credentials invalid."
+      description: 'Authenticate user with username and password.
+
+
+        Args:
+
+        data: Login credentials.
+
+        session: Database session.
+
+
+        Returns:
+
+        Access and refresh tokens with user info.
+
+
+        Raises:
+
+        HTTPException: 401 if credentials invalid.'
       operationId: login_api_v3_users_login_post
       requestBody:
         content:
@@ -190,7 +288,7 @@ paths:
   /api/v3/users/logout:
     post:
       tags:
-      - users
+      - Users
       summary: Logout (invalidate session)
       description: 'Logout the current user.
 
@@ -205,9 +303,19 @@ paths:
   /api/v3/users/whoami:
     get:
       tags:
-      - users
+      - Users
       summary: Get current user info
-      description: "Get information about the currently logged in user.\n\nArgs:\n    current_user: The authenticated user.\n\nReturns:\n    The current user's information."
+      description: 'Get information about the currently logged in user.
+
+
+        Args:
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The current user''s information.'
       operationId: whoami_api_v3_users_whoami_get
       responses:
         '200':
@@ -221,7 +329,7 @@ paths:
   /api/v3/users/search:
     get:
       tags:
-      - users
+      - Users
       summary: Search users by name or email
       description: 'Search users by first name, last name, username, or email.
 
@@ -279,7 +387,7 @@ paths:
   /api/v3/users/search-email:
     get:
       tags:
-      - users
+      - Users
       summary: Search users by exact email
       description: 'Search users by exact email address match.
 
@@ -323,7 +431,7 @@ paths:
   /api/v3/users/get-token:
     get:
       tags:
-      - users
+      - Users
       summary: Get access token for API usage
       description: 'Generate an access token for the current user.
 
@@ -360,9 +468,30 @@ paths:
   /api/v3/users/my-network:
     get:
       tags:
-      - users
+      - Users
       summary: Get users in current user's network
-      description: "Get users who share workspaces with the current user.\n\nWorkspace name to scope results to (required).\nReturns users who have permissions on the specified workspace.\nUseful for autocomplete/mentions.\n\nArgs:\n    workspace: Workspace name to scope results to (required).\n    current_user: The authenticated user.\n    session: Database session.\n\nReturns:\n    List of users in the current user's network."
+      description: 'Get users who share workspaces with the current user.
+
+
+        Workspace name to scope results to (required).
+
+        Returns users who have permissions on the specified workspace.
+
+        Useful for autocomplete/mentions.
+
+
+        Args:
+
+        workspace: Workspace name to scope results to (required).
+
+        current_user: The authenticated user.
+
+        session: Database session.
+
+
+        Returns:
+
+        List of users in the current user''s network.'
       operationId: get_my_network_api_v3_users_my_network_get
       parameters:
       - name: workspace
@@ -394,9 +523,28 @@ paths:
   /api/v3/users/{user_id}:
     get:
       tags:
-      - users
+      - Users
       summary: Get user by ID
-      description: "Get a user by their ID.\n\nArgs:\n    user_id: The ID of the user to retrieve.\n    session: Database session.\n    current_user: The authenticated user (required for auth).\n\nReturns:\n    The user information.\n\nRaises:\n    HTTPException: 404 if user not found."
+      description: 'Get a user by their ID.
+
+
+        Args:
+
+        user_id: The ID of the user to retrieve.
+
+        session: Database session.
+
+        current_user: The authenticated user (required for auth).
+
+
+        Returns:
+
+        The user information.
+
+
+        Raises:
+
+        HTTPException: 404 if user not found.'
       operationId: get_user_api_v3_users__user_id__get
       parameters:
       - name: user_id
@@ -422,9 +570,35 @@ paths:
       - BearerAuth: []
     patch:
       tags:
-      - users
+      - Users
       summary: Update user details
-      description: "Update user details.\n\nUsers can only update their own profile. Admins can update any user.\n\nArgs:\n    user_id: The ID of the user to update.\n    update_data: The fields to update.\n    current_user: The authenticated user.\n    session: Database session.\n\nReturns:\n    The updated user information.\n\nRaises:\n    HTTPException: 403 if trying to update another user's profile.\n    HTTPException: 404 if user not found."
+      description: 'Update user details.
+
+
+        Users can only update their own profile. Admins can update any user.
+
+
+        Args:
+
+        user_id: The ID of the user to update.
+
+        update_data: The fields to update.
+
+        current_user: The authenticated user.
+
+        session: Database session.
+
+
+        Returns:
+
+        The updated user information.
+
+
+        Raises:
+
+        HTTPException: 403 if trying to update another user''s profile.
+
+        HTTPException: 404 if user not found.'
       operationId: update_user_api_v3_users__user_id__patch
       parameters:
       - name: user_id
@@ -457,9 +631,23 @@ paths:
   /api/v3/users/{user_id}/activeworkspaces:
     get:
       tags:
-      - users
+      - Users
       summary: Get user's active workspaces
-      description: "Get workspaces sorted by user's activity count.\n\nArgs:\n    user_id: The user ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of workspaces with activity counts."
+      description: 'Get workspaces sorted by user''s activity count.
+
+
+        Args:
+
+        user_id: The user ID.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        List of workspaces with activity counts.'
       operationId: get_user_active_workspaces_api_v3_users__user_id__activeworkspaces_get
       parameters:
       - name: user_id
@@ -489,9 +677,26 @@ paths:
   /api/v3/users/{user_id}/activities/count:
     get:
       tags:
-      - users
+      - Users
       summary: Get count of user's activities
-      description: "Get the count of activities for a user (heatmap data).\n\nReturns a list of date/count pairs for generating activity heatmaps.\n\nArgs:\n    user_id: The user ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of date/count pairs."
+      description: 'Get the count of activities for a user (heatmap data).
+
+
+        Returns a list of date/count pairs for generating activity heatmaps.
+
+
+        Args:
+
+        user_id: The user ID.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        List of date/count pairs.'
       operationId: get_user_activities_count_api_v3_users__user_id__activities_count_get
       parameters:
       - name: user_id
@@ -521,9 +726,27 @@ paths:
   /api/v3/users/{user_id}/activities:
     get:
       tags:
-      - users
+      - Users
       summary: Get user's activity stream
-      description: "Get activity stream for a user.\n\nArgs:\n    user_id: The user ID.\n    page: Page number.\n    page_size: Items per page.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of activities."
+      description: 'Get activity stream for a user.
+
+
+        Args:
+
+        user_id: The user ID.
+
+        page: Page number.
+
+        page_size: Items per page.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        List of activities.'
       operationId: get_user_activities_api_v3_users__user_id__activities_get
       parameters:
       - name: user_id
@@ -570,6 +793,16 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    MessageResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - message
+      title: MessageResponse
+      description: Generic message response.
     UserNetworkResponse:
       properties:
         id:
@@ -599,16 +832,37 @@ components:
       - username
       title: UserNetworkResponse
       description: Response schema for users in the current user's network.
-    VerifyEmailRequest:
+    HTTPValidationError:
       properties:
-        token:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RegisterResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
           type: string
-          title: Token
+          title: Username
+        email:
+          type: string
+          title: Email
+        message:
+          type: string
+          title: Message
       type: object
       required:
-      - token
-      title: VerifyEmailRequest
-      description: Email verification request.
+      - id
+      - username
+      - email
+      - message
+      title: RegisterResponse
+      description: User registration response.
     ValidationError:
       properties:
         loc:
@@ -718,46 +972,6 @@ components:
       - username
       title: UserResponse
       description: User response schema matching Django's UserSerializer.
-    RegisterRequest:
-      properties:
-        username:
-          anyOf:
-          - type: string
-            maxLength: 150
-            minLength: 3
-          - type: 'null'
-          title: Username
-        email:
-          type: string
-          format: email
-          title: Email
-        password:
-          type: string
-          maxLength: 128
-          minLength: 8
-          title: Password
-        confirm_password:
-          anyOf:
-          - type: string
-            maxLength: 128
-          - type: 'null'
-          title: Confirm Password
-        first_name:
-          type: string
-          maxLength: 100
-          title: First Name
-          default: ''
-        last_name:
-          type: string
-          maxLength: 100
-          title: Last Name
-          default: ''
-      type: object
-      required:
-      - email
-      - password
-      title: RegisterRequest
-      description: User registration request.
     UserSearchEmailResponse:
       properties:
         users:
@@ -775,20 +989,20 @@ components:
       - users
       title: UserSearchEmailResponse
       description: Response for email search including not found emails.
-    UserActivitiesCountResponse:
+    GroupResponse:
       properties:
-        date:
-          type: string
-          title: Date
-        count:
+        id:
           type: integer
-          title: Count
+          title: Id
+        name:
+          type: string
+          title: Name
       type: object
       required:
-      - date
-      - count
-      title: UserActivitiesCountResponse
-      description: Response for user activities count (heatmap data).
+      - id
+      - name
+      title: GroupResponse
+      description: Minimal group info returned inside UserResponse.
     UserUpdateRequest:
       properties:
         primaryEmail:
@@ -844,42 +1058,48 @@ components:
       - user
       title: LoginResponse
       description: Login response with tokens.
-    GroupResponse:
+    UserTokenResponse:
       properties:
-        id:
-          type: integer
-          title: Id
-        name:
+        access:
           type: string
-          title: Name
+          title: Access
+        lifetime:
+          type: string
+          title: Lifetime
       type: object
       required:
-      - id
-      - name
-      title: GroupResponse
-      description: Minimal group info returned inside UserResponse.
-    RegisterResponse:
+      - access
+      - lifetime
+      title: UserTokenResponse
+      description: Response for token generation.
+    UserActiveWorkspacesResponse:
       properties:
-        id:
+        workspaceName:
+          type: string
+          title: Workspacename
+        count:
           type: integer
-          title: Id
+          title: Count
+      type: object
+      required:
+      - workspaceName
+      - count
+      title: UserActiveWorkspacesResponse
+      description: Response for user's active workspaces with activity count.
+    LoginRequest:
+      properties:
         username:
           type: string
           title: Username
-        email:
+        password:
           type: string
-          title: Email
-        message:
-          type: string
-          title: Message
+          title: Password
       type: object
       required:
-      - id
       - username
-      - email
-      - message
-      title: RegisterResponse
-      description: User registration response.
+      - password
+      title: LoginRequest
+      description: Username/password login request.
     UserSearchResponse:
       properties:
         id:
@@ -925,34 +1145,81 @@ components:
       - username
       title: UserSearchResponse
       description: Response for user search results.
-    LoginRequest:
+    UserActivitiesCountResponse:
       properties:
-        username:
+        date:
           type: string
-          title: Username
-        password:
-          type: string
-          title: Password
-      type: object
-      required:
-      - username
-      - password
-      title: LoginRequest
-      description: Username/password login request.
-    UserActiveWorkspacesResponse:
-      properties:
-        workspaceName:
-          type: string
-          title: Workspacename
+          title: Date
         count:
           type: integer
           title: Count
       type: object
       required:
-      - workspaceName
+      - date
       - count
-      title: UserActiveWorkspacesResponse
-      description: Response for user's active workspaces with activity count.
+      title: UserActivitiesCountResponse
+      description: Response for user activities count (heatmap data).
+    ForgotPasswordRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+      - email
+      title: ForgotPasswordRequest
+      description: Forgot password request.
+    CsrfTokenResponse:
+      properties:
+        csrfToken:
+          type: string
+          title: Csrftoken
+      type: object
+      required:
+      - csrfToken
+      title: CsrfTokenResponse
+      description: CSRF token response.
+    RegisterRequest:
+      properties:
+        username:
+          anyOf:
+          - type: string
+            maxLength: 150
+            minLength: 3
+          - type: 'null'
+          title: Username
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          maxLength: 128
+          minLength: 8
+          title: Password
+        confirm_password:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Confirm Password
+        first_name:
+          type: string
+          maxLength: 100
+          title: First Name
+          default: ''
+        last_name:
+          type: string
+          maxLength: 100
+          title: Last Name
+          default: ''
+      type: object
+      required:
+      - email
+      - password
+      title: RegisterRequest
+      description: User registration request.
     ResetPasswordRequest:
       properties:
         token:
@@ -988,60 +1255,16 @@ components:
         Accepts both ''password'' (frontend sends this) and ''new_password'' for
 
         backward compatibility.'
-    CsrfTokenResponse:
+    VerifyEmailRequest:
       properties:
-        csrfToken:
+        token:
           type: string
-          title: Csrftoken
+          title: Token
       type: object
       required:
-      - csrfToken
-      title: CsrfTokenResponse
-      description: CSRF token response.
-    UserTokenResponse:
-      properties:
-        access:
-          type: string
-          title: Access
-        lifetime:
-          type: string
-          title: Lifetime
-      type: object
-      required:
-      - access
-      - lifetime
-      title: UserTokenResponse
-      description: Response for token generation.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ForgotPasswordRequest:
-      properties:
-        email:
-          type: string
-          format: email
-          title: Email
-      type: object
-      required:
-      - email
-      title: ForgotPasswordRequest
-      description: Forgot password request.
-    MessageResponse:
-      properties:
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - message
-      title: MessageResponse
-      description: Generic message response.
+      - token
+      title: VerifyEmailRequest
+      description: Email verification request.
   securitySchemes:
     BearerAuth:
       type: http

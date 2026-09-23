@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy sync API
+  title: papi Sync API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: sync
+- name: Sync
 paths:
   /api/v1/workspaces/{workspace_name}/slxs/sync:
     post:
       tags:
-      - sync
+      - Sync
       summary: Upsert an SLX
       description: Upsert an SLX record using SHA-based deduplication.
       operationId: sync_slx_api_v1_workspaces__workspace_name__slxs_sync_post
@@ -44,7 +44,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/slxs/{name}:
     delete:
       tags:
-      - sync
+      - Sync
       summary: Soft-delete an SLX
       description: Soft-delete an SLX by name.
       operationId: delete_slx_api_v1_workspaces__workspace_name__slxs__name__delete
@@ -79,7 +79,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/slxs/reconcile-tasks:
     post:
       tags:
-      - sync
+      - Sync
       summary: '[dev only] Re-reconcile slx_tasks for a workspace'
       description: 'Re-run the slx_tasks reconcile for every runbook in a workspace.
 
@@ -121,9 +121,9 @@ paths:
   /api/v1/workspaces/{workspace_name}/slis/sync:
     post:
       tags:
-      - sync
+      - Sync
       summary: Upsert an SLI
-      description: Upsert an SLI record.  The slx_id must be present in the payload.
+      description: Upsert an SLI record. The slx_id must be present in the payload.
       operationId: sync_sli_api_v1_workspaces__workspace_name__slis_sync_post
       parameters:
       - name: workspace_name
@@ -156,7 +156,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/slis/{slx_name}:
     delete:
       tags:
-      - sync
+      - Sync
       summary: Soft-delete an SLI by its parent SLX name
       description: Soft-delete an SLI identified by its parent SLX name.
       operationId: delete_sli_api_v1_workspaces__workspace_name__slis__slx_name__delete
@@ -191,9 +191,9 @@ paths:
   /api/v1/workspaces/{workspace_name}/slos/sync:
     post:
       tags:
-      - sync
+      - Sync
       summary: Upsert an SLO
-      description: Upsert an SLO record.  The slx_id must be present in the payload.
+      description: Upsert an SLO record. The slx_id must be present in the payload.
       operationId: sync_slo_api_v1_workspaces__workspace_name__slos_sync_post
       parameters:
       - name: workspace_name
@@ -226,7 +226,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/slos/{slx_name}:
     delete:
       tags:
-      - sync
+      - Sync
       summary: Soft-delete an SLO by its parent SLX name
       description: Soft-delete an SLO identified by its parent SLX name.
       operationId: delete_slo_api_v1_workspaces__workspace_name__slos__slx_name__delete
@@ -261,9 +261,9 @@ paths:
   /api/v1/workspaces/{workspace_name}/runbooks/sync:
     post:
       tags:
-      - sync
+      - Sync
       summary: Upsert a Runbook
-      description: Upsert a Runbook record.  The slx_id must be present in the payload.
+      description: Upsert a Runbook record. The slx_id must be present in the payload.
       operationId: sync_runbook_api_v1_workspaces__workspace_name__runbooks_sync_post
       parameters:
       - name: workspace_name
@@ -296,7 +296,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/runbooks/{slx_name}:
     delete:
       tags:
-      - sync
+      - Sync
       summary: Soft-delete a Runbook by its parent SLX name
       description: Soft-delete a Runbook identified by its parent SLX name.
       operationId: delete_runbook_api_v1_workspaces__workspace_name__runbooks__slx_name__delete
@@ -331,7 +331,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/personas/sync:
     post:
       tags:
-      - sync
+      - Sync
       summary: Upsert a Persona
       description: Upsert a Persona record.
       operationId: sync_persona_api_v1_workspaces__workspace_name__personas_sync_post
@@ -366,7 +366,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/personas/{name}:
     delete:
       tags:
-      - sync
+      - Sync
       summary: Soft-delete a Persona
       description: Soft-delete a Persona by name.
       operationId: delete_persona_api_v1_workspaces__workspace_name__personas__name__delete
@@ -401,7 +401,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/workflows/sync:
     post:
       tags:
-      - sync
+      - Sync
       summary: Upsert a Workflow
       description: Upsert a Workflow record.
       operationId: sync_workflow_api_v1_workspaces__workspace_name__workflows_sync_post
@@ -436,7 +436,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/workflows/{name}:
     delete:
       tags:
-      - sync
+      - Sync
       summary: Soft-delete a Workflow
       description: Soft-delete a Workflow by name.
       operationId: delete_workflow_api_v1_workspaces__workspace_name__workflows__name__delete
@@ -471,7 +471,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/sync:
     post:
       tags:
-      - sync
+      - Sync
       summary: Upsert a Workspace
       description: 'Upsert a Workspace record.
 
@@ -510,82 +510,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    DeleteResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        name:
-          type: string
-          title: Name
-        resource_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Resource Id
-      type: object
-      required:
-      - status
-      - name
-      title: DeleteResponse
-      description: Response for a soft-delete operation.
-    ReconcileTasksResponse:
-      properties:
-        workspace:
-          type: string
-          title: Workspace
-        slx_count:
-          type: integer
-          title: Slx Count
-        task_upserted:
-          type: integer
-          title: Task Upserted
-        task_soft_deleted:
-          type: integer
-          title: Task Soft Deleted
-      type: object
-      required:
-      - workspace
-      - slx_count
-      - task_upserted
-      - task_soft_deleted
-      title: ReconcileTasksResponse
-      description: Response for the dev-only slx_tasks reconcile trigger.
     SyncResponse:
       properties:
         status:
@@ -638,6 +562,82 @@ components:
         key) sees HTTP 422 rather than a silent drop. See RW-998 / the
 
         ``modified_by`` field removal for rationale.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ReconcileTasksResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        slx_count:
+          type: integer
+          title: Slx Count
+        task_upserted:
+          type: integer
+          title: Task Upserted
+        task_soft_deleted:
+          type: integer
+          title: Task Soft Deleted
+      type: object
+      required:
+      - workspace
+      - slx_count
+      - task_upserted
+      - task_soft_deleted
+      title: ReconcileTasksResponse
+      description: Response for the dev-only slx_tasks reconcile trigger.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DeleteResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        name:
+          type: string
+          title: Name
+        resource_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resource Id
+      type: object
+      required:
+      - status
+      - name
+      title: DeleteResponse
+      description: Response for a soft-delete operation.
   securitySchemes:
     BearerAuth:
       type: http

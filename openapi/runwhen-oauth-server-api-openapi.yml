@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy oauth-server API
+  title: papi OAUTH Server API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -166,7 +166,23 @@ paths:
       tags:
       - oauth-server
       summary: Oauth Authorize Oidc Login
-      description: "Begin a standalone upstream-OIDC login (dual-mode).\n\nResolves the IdP's authorization endpoint via discovery, stores PKCE +\nstate, and redirects the browser to the upstream IdP, which returns to\n``/oauth/authorize/callback/{idp_name}``. Two callers:\n\n* **OAuth 2.1 client** (MCP/Slack via ``/oauth/authorize``): passes\n  ``oauth_session``; the callback issues an auth code back to the client.\n* **First-party UI** (``login.tsx``): passes ``next``; the callback sets a\n  JWT cookie and redirects to ``next`` (mirrors ``/accounts/auth0/login/``)."
+      description: 'Begin a standalone upstream-OIDC login (dual-mode).
+
+
+        Resolves the IdP''s authorization endpoint via discovery, stores PKCE +
+
+        state, and redirects the browser to the upstream IdP, which returns to
+
+        ``/oauth/authorize/callback/{idp_name}``. Two callers:
+
+
+        * **OAuth 2.1 client** (MCP/Slack via ``/oauth/authorize``): passes
+
+        ``oauth_session``; the callback issues an auth code back to the client.
+
+        * **First-party UI** (``login.tsx``): passes ``next``; the callback sets a
+
+        JWT cookie and redirects to ``next`` (mirrors ``/accounts/auth0/login/``).'
       operationId: oauth_authorize_oidc_login_oauth_authorize_login__idp_name__get
       parameters:
       - name: idp_name
@@ -307,6 +323,15 @@ components:
       - username
       - password
       title: Body_oauth_authorize_email_login_oauth_authorize_login_email_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     Body_oauth_token_oauth_token_post:
       properties:
         grant_type:
@@ -340,15 +365,6 @@ components:
       required:
       - grant_type
       title: Body_oauth_token_oauth_token_post
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:

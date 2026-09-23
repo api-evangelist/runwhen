@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy notes-import-v4 API
+  title: papi Notes Import V4 API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -147,125 +147,30 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    NoteDeleteResponseV4:
+    NoteDeleteRequestV4:
       properties:
-        applied:
-          type: boolean
-          title: Applied
-        results:
-          items:
-            $ref: '#/components/schemas/NoteDeleteResultV4'
-          type: array
-          title: Results
-          default: []
-      type: object
-      required:
-      - applied
-      title: NoteDeleteResponseV4
-    NoteSyncResponseV4:
-      properties:
-        status:
+        sourceKind:
           type: string
-          title: Status
-        applied:
-          type: boolean
-          title: Applied
-        ok:
-          type: boolean
-          title: Ok
-        noteId:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Noteid
-        diagnostics:
-          items:
-            $ref: '#/components/schemas/NoteDiagnosticV4'
-          type: array
-          title: Diagnostics
-          default: []
-      type: object
-      required:
-      - status
-      - applied
-      - ok
-      title: NoteSyncResponseV4
-    WorkspaceTagsResponseV4:
-      properties:
-        tags:
-          items:
-            $ref: '#/components/schemas/TagKeyValuesV4'
-          type: array
-          title: Tags
-      type: object
-      required:
-      - tags
-      title: WorkspaceTagsResponseV4
-    ResourcePathsResponseV4:
-      properties:
-        resourcePaths:
+          title: Sourcekind
+          default: git
+        source:
+          type: string
+          title: Source
+        sourceIds:
           items:
             type: string
           type: array
-          title: Resourcepaths
+          title: Sourceids
+        dryRun:
+          type: boolean
+          title: Dryrun
+          default: false
+      additionalProperties: false
       type: object
       required:
-      - resourcePaths
-      title: ResourcePathsResponseV4
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    TagKeyValuesV4:
-      properties:
-        key:
-          type: string
-          title: Key
-        values:
-          items:
-            type: string
-          type: array
-          title: Values
-        valueCount:
-          type: integer
-          title: Valuecount
-      type: object
-      required:
-      - key
-      - values
-      - valueCount
-      title: TagKeyValuesV4
+      - source
+      - sourceIds
+      title: NoteDeleteRequestV4
     NoteDeleteResultV4:
       properties:
         sourceId:
@@ -323,30 +228,6 @@ components:
       - sourceId
       - content
       title: NoteSyncRequestV4
-    NoteDeleteRequestV4:
-      properties:
-        sourceKind:
-          type: string
-          title: Sourcekind
-          default: git
-        source:
-          type: string
-          title: Source
-        sourceIds:
-          items:
-            type: string
-          type: array
-          title: Sourceids
-        dryRun:
-          type: boolean
-          title: Dryrun
-          default: false
-      additionalProperties: false
-      type: object
-      required:
-      - source
-      - sourceIds
-      title: NoteDeleteRequestV4
     NoteDiagnosticV4:
       properties:
         level:
@@ -369,6 +250,125 @@ components:
       - code
       - message
       title: NoteDiagnosticV4
+    WorkspaceTagsResponseV4:
+      properties:
+        tags:
+          items:
+            $ref: '#/components/schemas/TagKeyValuesV4'
+          type: array
+          title: Tags
+      type: object
+      required:
+      - tags
+      title: WorkspaceTagsResponseV4
+    ResourcePathsResponseV4:
+      properties:
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+      type: object
+      required:
+      - resourcePaths
+      title: ResourcePathsResponseV4
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    NoteSyncResponseV4:
+      properties:
+        status:
+          type: string
+          title: Status
+        applied:
+          type: boolean
+          title: Applied
+        ok:
+          type: boolean
+          title: Ok
+        noteId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Noteid
+        diagnostics:
+          items:
+            $ref: '#/components/schemas/NoteDiagnosticV4'
+          type: array
+          title: Diagnostics
+          default: []
+      type: object
+      required:
+      - status
+      - applied
+      - ok
+      title: NoteSyncResponseV4
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    NoteDeleteResponseV4:
+      properties:
+        applied:
+          type: boolean
+          title: Applied
+        results:
+          items:
+            $ref: '#/components/schemas/NoteDeleteResultV4'
+          type: array
+          title: Results
+          default: []
+      type: object
+      required:
+      - applied
+      title: NoteDeleteResponseV4
+    TagKeyValuesV4:
+      properties:
+        key:
+          type: string
+          title: Key
+        values:
+          items:
+            type: string
+          type: array
+          title: Values
+        valueCount:
+          type: integer
+          title: Valuecount
+      type: object
+      required:
+      - key
+      - values
+      - valueCount
+      title: TagKeyValuesV4
   securitySchemes:
     BearerAuth:
       type: http

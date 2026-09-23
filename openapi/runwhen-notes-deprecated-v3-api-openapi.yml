@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy notes (deprecated v3) API
+  title: papi notes (deprecated v3) API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -238,6 +238,83 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    NoteCreate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+          description: Short note title
+        content:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Content
+          description: Note content
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+          description: Canonical resource paths
+        abstractEntities:
+          items:
+            type: string
+          type: array
+          title: Abstractentities
+          description: Normalized entity tokens
+        status:
+          $ref: '#/components/schemas/NoteStatus'
+          description: Note lifecycle status
+          default: active
+      type: object
+      required:
+      - content
+      title: NoteCreate
+      description: Schema for creating a note.
+    NoteUpdate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+        content:
+          anyOf:
+          - type: string
+            maxLength: 20000
+            minLength: 1
+          - type: 'null'
+          title: Content
+        resourcePaths:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Resourcepaths
+        abstractEntities:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Abstractentities
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/NoteStatus'
+          - type: 'null'
+        verified:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Verified
+      type: object
+      title: NoteUpdate
+      description: Schema for partial update of a note.
     HTTPValidationError:
       properties:
         detail:
@@ -247,6 +324,13 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    NoteStatus:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatus
+      description: Note lifecycle status.
     ValidationError:
       properties:
         loc:
@@ -338,90 +422,6 @@ components:
       - updatedAt
       title: NoteResponse
       description: Note response schema for API responses.
-    NoteUpdate:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Title
-        content:
-          anyOf:
-          - type: string
-            maxLength: 20000
-            minLength: 1
-          - type: 'null'
-          title: Content
-        resourcePaths:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Resourcepaths
-        abstractEntities:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Abstractentities
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/NoteStatus'
-          - type: 'null'
-        verified:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Verified
-      type: object
-      title: NoteUpdate
-      description: Schema for partial update of a note.
-    NoteCreate:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Title
-          description: Short note title
-        content:
-          type: string
-          maxLength: 20000
-          minLength: 1
-          title: Content
-          description: Note content
-        resourcePaths:
-          items:
-            type: string
-          type: array
-          title: Resourcepaths
-          description: Canonical resource paths
-        abstractEntities:
-          items:
-            type: string
-          type: array
-          title: Abstractentities
-          description: Normalized entity tokens
-        status:
-          $ref: '#/components/schemas/NoteStatus'
-          description: Note lifecycle status
-          default: active
-      type: object
-      required:
-      - content
-      title: NoteCreate
-      description: Schema for creating a note.
-    NoteStatus:
-      type: string
-      enum:
-      - active
-      - deprecated
-      title: NoteStatus
-      description: Note lifecycle status.
   securitySchemes:
     BearerAuth:
       type: http

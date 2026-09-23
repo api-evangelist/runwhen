@@ -1,0 +1,31 @@
+# Front Door AI Index — runwhen — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: runwhen
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: runwhen.com
+  final_host: www.runwhen.com
+  ownership: own
+  owner: runwhen
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 13
+  host_score: 13
+  density: 17.98
+  words: 723
+  tiers:
+    agentic: 1
+    core: 10
+    model: 2
+  ambiguous: 17
+  top_terms:
+    agent: 13
+    AI: 9
+    automation: 4
+    Anthropic: 1
+    Claude: 1
+    LLMs: 1
+    agentic: 1

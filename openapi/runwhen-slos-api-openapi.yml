@@ -1,17 +1,45 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy slos API
+  title: papi Slos API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: slos
+- name: SLOs
 paths:
   /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/slo:
     get:
       tags:
-      - slos
+      - SLOs
       summary: Get the SLO for an SLX
-      description: "Get the SLO for an SLX.\n\nSLX and SLO have a 1:1 relationship. This endpoint returns the single\nSLO associated with the specified SLX, or 404 if no SLO exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLO details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLO not found."
+      description: 'Get the SLO for an SLX.
+
+
+        SLX and SLO have a 1:1 relationship. This endpoint returns the single
+
+        SLO associated with the specified SLX, or 404 if no SLO exists.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        slx_short_name: The SLX short name.
+
+        _detail: Django parity query param (ignored).
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The SLO details.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace, SLX, or SLO not found.'
       operationId: get_slx_slo_api_v1_workspaces__workspace_name__slxs__slx_short_name__slo_get
       parameters:
       - name: workspace_name
@@ -54,7 +82,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/slo/objective-recommendation:
     get:
       tags:
-      - slos
+      - SLOs
       summary: Get SLO objective recommendation for an SLX
       description: 'Calculate a recommended SLO objective for an SLX.
 
@@ -109,9 +137,37 @@ paths:
   /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/slo:
     get:
       tags:
-      - slos
+      - SLOs
       summary: Get the SLO for an SLX
-      description: "Get the SLO for an SLX.\n\nSLX and SLO have a 1:1 relationship. This endpoint returns the single\nSLO associated with the specified SLX, or 404 if no SLO exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLO details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLO not found."
+      description: 'Get the SLO for an SLX.
+
+
+        SLX and SLO have a 1:1 relationship. This endpoint returns the single
+
+        SLO associated with the specified SLX, or 404 if no SLO exists.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        slx_short_name: The SLX short name.
+
+        _detail: Django parity query param (ignored).
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The SLO details.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace, SLX, or SLO not found.'
       operationId: get_slx_slo_api_v3_workspaces__workspace_name__slxs__slx_short_name__slo_get
       parameters:
       - name: workspace_name
@@ -154,7 +210,7 @@ paths:
   /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/slo/objective-recommendation:
     get:
       tags:
-      - slos
+      - SLOs
       summary: Get SLO objective recommendation for an SLX
       description: 'Calculate a recommended SLO objective for an SLX.
 
@@ -208,67 +264,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    ObjectiveRecommendationResponse:
-      properties:
-        currentErrorBudget:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Currenterrorbudget
-          description: Most recent error budget reading. None when no SLO exists.
-        monthProgress:
-          type: number
-          title: Monthprogress
-          description: Fraction of the current calendar month elapsed (0.0–1.0).
-        projectedEndOfMonth:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Projectedendofmonth
-          description: Projected error budget at end of month assuming linear burn rate. None when no SLO exists. May be negative when burn rate exceeds 100%.
-        currentObjective:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Currentobjective
-          description: Current SLO objective percentage (e.g. 99.9). None when no SLO exists.
-        recommendedObjective:
-          type: number
-          title: Recommendedobjective
-          description: Recommended SLO objective percentage, clamped to [0.5, 99.99].
-        baselinePeriod:
-          type: string
-          title: Baselineperiod
-          description: PromQL timestring used as the calculation baseline (e.g. '168h', '30d'). '30d' for SLI-based recommendations.
-        hasSlo:
-          type: boolean
-          title: Hasslo
-          description: True when an SLO exists for this SLX.
-        recommendationSource:
-          type: string
-          title: Recommendationsource
-          description: 'How the recommendation was derived: ''error_budget'' (SLO burn rate), ''sli_data'' (historical SLI healthiness), or ''default'' (insufficient data).'
-      type: object
-      required:
-      - monthProgress
-      - recommendedObjective
-      - baselinePeriod
-      - hasSlo
-      - recommendationSource
-      title: ObjectiveRecommendationResponse
-      description: 'SLO objective recommendation response.
-
-
-        Matches Django''s SloViewSet.slo_objective_recommendation() response shape exactly.
-
-        Used by agentfarm''s papi_client.fetch_slo_recommendation().
-
-
-        Django''s DRF uses djangorestframework-camel-case to auto-convert snake_case → camelCase.
-
-        We replicate that with alias_generator so agentfarm''s SLORecommendation(extra="forbid")
-
-        receives the expected camelCase keys.'
     papi__schemas__slo__SloResponse:
       properties:
         slxId:
@@ -394,6 +389,67 @@ components:
       - status
       title: SloResponse
       description: "Legacy V1/V3 shape: V4 fields + computed ``spec`` and ``status`` for Django-era consumers.\n\nSubclassing keeps flat fields in lock-step with V4. Computed fields rebuild the\nCRD-shape sub-objects from flat ones at serialization time. Sunset path: when\nexternal consumers fully migrate to /api/v4, delete this subclass.\n\nLegacy wire keys preserved by overriding aliased timestamp fields:\n  - ``created_at`` → alias ``created``   (was ``createdAt`` in V4)\n  - ``modified_at`` → alias ``modified``  (was ``modifiedAt`` in V4)"
+    ObjectiveRecommendationResponse:
+      properties:
+        currentErrorBudget:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Currenterrorbudget
+          description: Most recent error budget reading. None when no SLO exists.
+        monthProgress:
+          type: number
+          title: Monthprogress
+          description: Fraction of the current calendar month elapsed (0.0–1.0).
+        projectedEndOfMonth:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Projectedendofmonth
+          description: Projected error budget at end of month assuming linear burn rate. None when no SLO exists. May be negative when burn rate exceeds 100%.
+        currentObjective:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Currentobjective
+          description: Current SLO objective percentage (e.g. 99.9). None when no SLO exists.
+        recommendedObjective:
+          type: number
+          title: Recommendedobjective
+          description: Recommended SLO objective percentage, clamped to [0.5, 99.99].
+        baselinePeriod:
+          type: string
+          title: Baselineperiod
+          description: PromQL timestring used as the calculation baseline (e.g. '168h', '30d'). '30d' for SLI-based recommendations.
+        hasSlo:
+          type: boolean
+          title: Hasslo
+          description: True when an SLO exists for this SLX.
+        recommendationSource:
+          type: string
+          title: Recommendationsource
+          description: 'How the recommendation was derived: ''error_budget'' (SLO burn rate), ''sli_data'' (historical SLI healthiness), or ''default'' (insufficient data).'
+      type: object
+      required:
+      - monthProgress
+      - recommendedObjective
+      - baselinePeriod
+      - hasSlo
+      - recommendationSource
+      title: ObjectiveRecommendationResponse
+      description: 'SLO objective recommendation response.
+
+
+        Matches Django''s SloViewSet.slo_objective_recommendation() response shape exactly.
+
+        Used by agentfarm''s papi_client.fetch_slo_recommendation().
+
+
+        Django''s DRF uses djangorestframework-camel-case to auto-convert snake_case → camelCase.
+
+        We replicate that with alias_generator so agentfarm''s SLORecommendation(extra="forbid")
+
+        receives the expected camelCase keys.'
     HTTPValidationError:
       properties:
         detail:

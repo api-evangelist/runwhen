@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy workflow-v4 API
+  title: papi Workflow V4 API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -157,6 +157,21 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    WorkflowPayloadV4:
+      properties:
+        name:
+          type: string
+          title: Name
+        definition:
+          additionalProperties: true
+          type: object
+          title: Definition
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: WorkflowPayloadV4
+      description: Writable subset of Workflow (the body of a sync upsert).
     WorkflowListResponseV4:
       properties:
         results:
@@ -278,21 +293,6 @@ components:
       - modifiedAt
       title: WorkflowResponseV4
       description: Flat-shape Workflow detail response.
-    WorkflowPayloadV4:
-      properties:
-        name:
-          type: string
-          title: Name
-        definition:
-          additionalProperties: true
-          type: object
-          title: Definition
-      additionalProperties: false
-      type: object
-      required:
-      - name
-      title: WorkflowPayloadV4
-      description: Writable subset of Workflow (the body of a sync upsert).
   securitySchemes:
     BearerAuth:
       type: http

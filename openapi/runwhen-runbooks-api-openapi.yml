@@ -1,17 +1,45 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy runbooks API
+  title: papi Runbooks API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: runbooks
+- name: Runbooks
 paths:
   /api/v1/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook:
     get:
       tags:
-      - runbooks
+      - Runbooks
       summary: Get the Runbook for an SLX
-      description: "Get the Runbook for an SLX.\n\nSLX and Runbook have a 1:1 relationship. This endpoint returns the single\nRunbook associated with the specified SLX, or 404 if no Runbook exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The Runbook details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or Runbook not found."
+      description: 'Get the Runbook for an SLX.
+
+
+        SLX and Runbook have a 1:1 relationship. This endpoint returns the single
+
+        Runbook associated with the specified SLX, or 404 if no Runbook exists.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        slx_short_name: The SLX short name.
+
+        _detail: Django parity query param (ignored).
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The Runbook details.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace, SLX, or Runbook not found.'
       operationId: get_slx_runbook_api_v1_workspaces__workspace_name__slxs__slx_short_name__runbook_get
       parameters:
       - name: workspace_name
@@ -54,9 +82,37 @@ paths:
   /api/v3/workspaces/{workspace_name}/slxs/{slx_short_name}/runbook:
     get:
       tags:
-      - runbooks
+      - Runbooks
       summary: Get the Runbook for an SLX
-      description: "Get the Runbook for an SLX.\n\nSLX and Runbook have a 1:1 relationship. This endpoint returns the single\nRunbook associated with the specified SLX, or 404 if no Runbook exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The Runbook details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or Runbook not found."
+      description: 'Get the Runbook for an SLX.
+
+
+        SLX and Runbook have a 1:1 relationship. This endpoint returns the single
+
+        Runbook associated with the specified SLX, or 404 if no Runbook exists.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        slx_short_name: The SLX short name.
+
+        _detail: Django parity query param (ignored).
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The Runbook details.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace, SLX, or Runbook not found.'
       operationId: get_slx_runbook_api_v3_workspaces__workspace_name__slxs__slx_short_name__runbook_get
       parameters:
       - name: workspace_name
@@ -98,6 +154,15 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     RunbookTaskV4:
       properties:
         name:
@@ -120,6 +185,32 @@ components:
       - value
       title: RunbookTaskV4
       description: Individual task in a runbook (V4 wire shape).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     papi__schemas__runbook__RunbookResponse:
       properties:
         id:
@@ -254,41 +345,6 @@ components:
       - status
       title: RunbookResponse
       description: "Legacy V1/V3 shape: V4 fields + computed ``spec`` and ``status`` for Django-era consumers.\n\nSubclassing keeps flat fields in lock-step with V4. Computed fields rebuild the\nCRD-shape sub-objects from flat ones at serialization time. Sunset path: when\nexternal consumers fully migrate to /api/v4, delete this subclass.\n\nLegacy wire keys preserved by overriding aliased timestamp fields:\n  - ``created_at`` → alias ``created``   (was ``createdAt`` in V4)\n  - ``modified_at`` → alias ``modified``  (was ``modifiedAt`` in V4)"
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
   securitySchemes:
     BearerAuth:
       type: http

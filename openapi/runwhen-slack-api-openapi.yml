@@ -1,17 +1,34 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy slack API
+  title: papi Slack API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: slack
+- name: Slack
 paths:
   /api/v3/{workspace_name}/slack:
     get:
       tags:
-      - slack
+      - Slack
       summary: Get Slack integrations for workspace
-      description: "Get Slack integrations for a workspace.\n\nProxies to the slackbot service to fetch workspace integrations.\n\nArgs:\n    workspace_name: The workspace name from path.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Slack workspace integrations from slackbot service."
+      description: 'Get Slack integrations for a workspace.
+
+
+        Proxies to the slackbot service to fetch workspace integrations.
+
+
+        Args:
+
+        workspace_name: The workspace name from path.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        Slack workspace integrations from slackbot service.'
       operationId: get_slack_workspaces_api_v3__workspace_name__slack_get
       parameters:
       - name: workspace_name
@@ -39,9 +56,28 @@ paths:
       - BearerAuth: []
     post:
       tags:
-      - slack
+      - Slack
       summary: Create Slack integration for workspace
-      description: "Create a Slack integration for a workspace.\n\nProxies to the slackbot service to create the integration.\n\nArgs:\n    workspace_name: The workspace name from path.\n    data: Slack integration data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    Created integration from slackbot service."
+      description: 'Create a Slack integration for a workspace.
+
+
+        Proxies to the slackbot service to create the integration.
+
+
+        Args:
+
+        workspace_name: The workspace name from path.
+
+        data: Slack integration data.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        Created integration from slackbot service.'
       operationId: create_slack_workspace_api_v3__workspace_name__slack_post
       parameters:
       - name: workspace_name
@@ -76,9 +112,20 @@ paths:
   /api/v3/{workspace_name}/slack/{integration_id}:
     delete:
       tags:
-      - slack
+      - Slack
       summary: Delete Slack integration
-      description: "Delete a Slack integration for a workspace.\n\nArgs:\n    workspace_name: The workspace name from path.\n    integration_id: The integration ID to delete.\n    session: Database session.\n    current_user: The authenticated user."
+      description: 'Delete a Slack integration for a workspace.
+
+
+        Args:
+
+        workspace_name: The workspace name from path.
+
+        integration_id: The integration ID to delete.
+
+        session: Database session.
+
+        current_user: The authenticated user.'
       operationId: delete_slack_workspace_api_v3__workspace_name__slack__integration_id__delete
       parameters:
       - name: workspace_name

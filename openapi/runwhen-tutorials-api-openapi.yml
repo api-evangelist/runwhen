@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy tutorials API
+  title: papi Tutorials API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: tutorials
+- name: Tutorials
 paths:
   /api/v3/workspaces/{workspace_name}/tutorials:
     get:
       tags:
-      - tutorials
+      - Tutorials
       summary: List tutorials (deprecated)
       description: Tutorials feature is deprecated. Returns empty list for backwards compatibility.
       operationId: list_workspace_tutorials_api_v3_workspaces__workspace_name__tutorials_get
@@ -40,7 +40,7 @@ paths:
   /api/v3/workspaces/{workspace_name}/tutorials/{tutorial_name}:
     get:
       tags:
-      - tutorials
+      - Tutorials
       summary: Get tutorial (deprecated)
       description: Tutorials feature is deprecated. Returns 404.
       operationId: get_workspace_tutorial_api_v3_workspaces__workspace_name__tutorials__tutorial_name__get

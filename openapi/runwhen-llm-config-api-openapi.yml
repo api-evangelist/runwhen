@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy llm-config API
+  title: papi Llm Config API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -55,6 +55,41 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    papi__routers__llm_config__LLMModelResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        modelName:
+          type: string
+          title: Modelname
+        maxTokens:
+          type: integer
+          title: Maxtokens
+          default: 0
+        dimension:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Dimension
+        endpointPath:
+          type: string
+          title: Endpointpath
+          default: /chat/completions
+        endpointUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Endpointurl
+        provider:
+          $ref: '#/components/schemas/papi__routers__llm_config__LLMProviderResponse'
+      type: object
+      required:
+      - id
+      - modelName
+      - provider
+      title: LLMModelResponse
+      description: LLM Model response schema.
     HTTPValidationError:
       properties:
         detail:
@@ -64,32 +99,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     papi__routers__llm_config__LLMProviderResponse:
       properties:
         id:
@@ -126,41 +135,6 @@ components:
       - providerType
       title: LLMProviderResponse
       description: LLM Provider response schema.
-    papi__routers__llm_config__LLMModelResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        modelName:
-          type: string
-          title: Modelname
-        maxTokens:
-          type: integer
-          title: Maxtokens
-          default: 0
-        dimension:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Dimension
-        endpointPath:
-          type: string
-          title: Endpointpath
-          default: /chat/completions
-        endpointUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Endpointurl
-        provider:
-          $ref: '#/components/schemas/papi__routers__llm_config__LLMProviderResponse'
-      type: object
-      required:
-      - id
-      - modelName
-      - provider
-      title: LLMModelResponse
-      description: LLM Model response schema.
     papi__routers__llm_config__LLMConfigResponse:
       properties:
         llmModel:
@@ -170,6 +144,32 @@ components:
       - llmModel
       title: LLMConfigResponse
       description: LLM Config response schema.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     BearerAuth:
       type: http

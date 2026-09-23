@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy sli-v4 API
+  title: papi Sli V4 API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -115,6 +115,95 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    SliPayloadV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        displayUnitsLong:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitslong
+        displayUnitsShort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Displayunitsshort
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        intervalStrategy:
+          type: string
+          title: Intervalstrategy
+          default: intermezzo
+        intervalSeconds:
+          type: integer
+          title: Intervalseconds
+          default: 300
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        alertConfig:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Alertconfig
+      additionalProperties: false
+      type: object
+      required:
+      - slxId
+      title: SliPayloadV4
+      description: Writable subset of SLI (the body of a sync upsert).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     SliResponseV4:
       properties:
         slxId:
@@ -244,15 +333,6 @@ components:
       - modifiedAt
       title: SliResponseV4
       description: Flat-shape SLI detail response.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -302,86 +382,6 @@ components:
         ``get_effective_modifier``. Unknown keys (including ``modified_by``)
 
         raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
-    SliPayloadV4:
-      properties:
-        slxId:
-          type: integer
-          title: Slxid
-        displayUnitsLong:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Displayunitslong
-        displayUnitsShort:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Displayunitsshort
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        runnerUuid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Runneruuid
-        intervalStrategy:
-          type: string
-          title: Intervalstrategy
-          default: intermezzo
-        intervalSeconds:
-          type: integer
-          title: Intervalseconds
-          default: 300
-        codeBundleRepoUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlerepourl
-        codeBundleRef:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundleref
-        codeBundlePath:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlepath
-        repositoryId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Repositoryid
-        configProvided:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - additionalProperties: true
-            type: object
-          title: Configprovided
-        secretsProvided:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Secretsprovided
-        alertConfig:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Alertconfig
-      additionalProperties: false
-      type: object
-      required:
-      - slxId
-      title: SliPayloadV4
-      description: Writable subset of SLI (the body of a sync upsert).
   securitySchemes:
     BearerAuth:
       type: http

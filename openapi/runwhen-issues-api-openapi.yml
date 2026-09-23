@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy issues API
+  title: papi Issues API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: issues
+- name: Issues
 paths:
   /api/v1/workspaces/{workspace_name}/issues:
     get:
       tags:
-      - issues
+      - Issues
       summary: List issues for a workspace
       description: 'List issues for a workspace with optional filters.
 
@@ -253,9 +253,45 @@ paths:
   /api/v1/workspaces/{workspace_name}/issues/{issue_id}:
     get:
       tags:
-      - issues
+      - Issues
       summary: Get an issue by ID
-      description: "Get an issue by ID within a workspace.\n\nSupports optional occurrence timestamp slicing via query parameters.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    include_occurrence_timestamps: Opt-in for occurrence timestamps.\n    occurrence_tail: Return N most recent occurrences.\n    occurrence_from: Slice from position (1=latest).\n    occurrence_to: Slice to position (1=latest).\n    occurrence_window_gte: Filter occurrences observed_at >= this datetime.\n    occurrence_window_lte: Filter occurrences observed_at <= this datetime.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue details.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Get an issue by ID within a workspace.
+
+
+        Supports optional occurrence timestamp slicing via query parameters.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        include_occurrence_timestamps: Opt-in for occurrence timestamps.
+
+        occurrence_tail: Return N most recent occurrences.
+
+        occurrence_from: Slice from position (1=latest).
+
+        occurrence_to: Slice to position (1=latest).
+
+        occurrence_window_gte: Filter occurrences observed_at >= this datetime.
+
+        occurrence_window_lte: Filter occurrences observed_at <= this datetime.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The issue details.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: get_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__get
       parameters:
       - name: workspace_name
@@ -368,9 +404,32 @@ paths:
       - BearerAuth: []
     patch:
       tags:
-      - issues
+      - Issues
       summary: Update an issue
-      description: "Update an issue (partial update).\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    issue_data: The issue update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Update an issue (partial update).
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        issue_data: The issue update data.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The updated issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: update_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__patch
       parameters:
       - name: workspace_name
@@ -408,9 +467,25 @@ paths:
       - BearerAuth: []
     delete:
       tags:
-      - issues
+      - Issues
       summary: Delete an issue
-      description: "Delete an issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Delete an issue.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: delete_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__delete
       parameters:
       - name: workspace_name
@@ -439,9 +514,37 @@ paths:
   /api/v1/workspaces/{workspace_name}/issues/{issue_id}/ignore:
     patch:
       tags:
-      - issues
+      - Issues
       summary: Ignore an issue
-      description: "Ignore an issue.\n\nSets ignored_by_user, ignored_since, and ignored_until.\nAlso resets open_since and open_occurrence_count to close the issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    ignore_data: The ignore request data with required ignored_until.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The ignored issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Ignore an issue.
+
+
+        Sets ignored_by_user, ignored_since, and ignored_until.
+
+        Also resets open_since and open_occurrence_count to close the issue.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        ignore_data: The ignore request data with required ignored_until.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The ignored issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: ignore_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__ignore_patch
       parameters:
       - name: workspace_name
@@ -480,9 +583,37 @@ paths:
   /api/v1/workspaces/{workspace_name}/issues/{issue_id}/close:
     patch:
       tags:
-      - issues
+      - Issues
       summary: Close an issue
-      description: "Close an issue, optionally with a comment.\n\nSets the issue's closed_at timestamp and resets open_since\nand open_occurrence_count to 0.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    body: Optional request body with a comment.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The closed issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Close an issue, optionally with a comment.
+
+
+        Sets the issue''s closed_at timestamp and resets open_since
+
+        and open_occurrence_count to 0.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        body: Optional request body with a comment.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The closed issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: close_workspace_issue_api_v1_workspaces__workspace_name__issues__issue_id__close_patch
       parameters:
       - name: workspace_name
@@ -523,9 +654,41 @@ paths:
   /api/v1/workspaces/{workspace_name}/issues/{issue_id}/generate-next-steps:
     post:
       tags:
-      - issues
+      - Issues
       summary: Generate next steps for an issue using AI
-      description: "Generate intelligent next steps for an issue using sobrain AI service.\n\nThis endpoint calls the sobrain service to generate suggested next steps\nbased on the issue details and optional comment context.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    request_data: Optional request data with comment contents.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated next steps for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+      description: 'Generate intelligent next steps for an issue using sobrain AI service.
+
+
+        This endpoint calls the sobrain service to generate suggested next steps
+
+        based on the issue details and optional comment context.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        request_data: Optional request data with comment contents.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+        sobrain: Sobrain client for AI features.
+
+
+        Returns:
+
+        Generated next steps for the issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.
+
+        HTTPException: 503 if sobrain service is unavailable.'
       operationId: generate_issue_next_steps_api_v1_workspaces__workspace_name__issues__issue_id__generate_next_steps_post
       parameters:
       - name: workspace_name
@@ -566,9 +729,34 @@ paths:
   /api/v1/workspaces/{workspace_name}/issues/{issue_id}/generate-summary:
     post:
       tags:
-      - issues
+      - Issues
       summary: Generate a summary for an issue using AI
-      description: "Generate a summary for an issue using sobrain AI service.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated summary for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+      description: 'Generate a summary for an issue using sobrain AI service.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+        sobrain: Sobrain client for AI features.
+
+
+        Returns:
+
+        Generated summary for the issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.
+
+        HTTPException: 503 if sobrain service is unavailable.'
       operationId: generate_issue_summary_api_v1_workspaces__workspace_name__issues__issue_id__generate_summary_post
       parameters:
       - name: workspace_name
@@ -601,7 +789,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/runsessions/{runsession_id}/issues/{issue_id}/jit-summary:
     post:
       tags:
-      - issues
+      - Issues
       summary: Generate a just-in-time summary for an issue occurrence in a run session
       description: 'Generate a JIT summary for an issue within a specific run session context.
 
@@ -649,7 +837,7 @@ paths:
   /api/v3/workspaces/{workspace_name}/issues:
     get:
       tags:
-      - issues
+      - Issues
       summary: List issues for a workspace
       description: 'List issues for a workspace with optional filters.
 
@@ -893,9 +1081,45 @@ paths:
   /api/v3/workspaces/{workspace_name}/issues/{issue_id}:
     get:
       tags:
-      - issues
+      - Issues
       summary: Get an issue by ID
-      description: "Get an issue by ID within a workspace.\n\nSupports optional occurrence timestamp slicing via query parameters.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    include_occurrence_timestamps: Opt-in for occurrence timestamps.\n    occurrence_tail: Return N most recent occurrences.\n    occurrence_from: Slice from position (1=latest).\n    occurrence_to: Slice to position (1=latest).\n    occurrence_window_gte: Filter occurrences observed_at >= this datetime.\n    occurrence_window_lte: Filter occurrences observed_at <= this datetime.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The issue details.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Get an issue by ID within a workspace.
+
+
+        Supports optional occurrence timestamp slicing via query parameters.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        include_occurrence_timestamps: Opt-in for occurrence timestamps.
+
+        occurrence_tail: Return N most recent occurrences.
+
+        occurrence_from: Slice from position (1=latest).
+
+        occurrence_to: Slice to position (1=latest).
+
+        occurrence_window_gte: Filter occurrences observed_at >= this datetime.
+
+        occurrence_window_lte: Filter occurrences observed_at <= this datetime.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The issue details.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: get_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__get
       parameters:
       - name: workspace_name
@@ -1008,9 +1232,32 @@ paths:
       - BearerAuth: []
     patch:
       tags:
-      - issues
+      - Issues
       summary: Update an issue
-      description: "Update an issue (partial update).\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    issue_data: The issue update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Update an issue (partial update).
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        issue_data: The issue update data.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The updated issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: update_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__patch
       parameters:
       - name: workspace_name
@@ -1048,9 +1295,25 @@ paths:
       - BearerAuth: []
     delete:
       tags:
-      - issues
+      - Issues
       summary: Delete an issue
-      description: "Delete an issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Delete an issue.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: delete_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__delete
       parameters:
       - name: workspace_name
@@ -1079,9 +1342,37 @@ paths:
   /api/v3/workspaces/{workspace_name}/issues/{issue_id}/ignore:
     patch:
       tags:
-      - issues
+      - Issues
       summary: Ignore an issue
-      description: "Ignore an issue.\n\nSets ignored_by_user, ignored_since, and ignored_until.\nAlso resets open_since and open_occurrence_count to close the issue.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    ignore_data: The ignore request data with required ignored_until.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The ignored issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Ignore an issue.
+
+
+        Sets ignored_by_user, ignored_since, and ignored_until.
+
+        Also resets open_since and open_occurrence_count to close the issue.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        ignore_data: The ignore request data with required ignored_until.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The ignored issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: ignore_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__ignore_patch
       parameters:
       - name: workspace_name
@@ -1120,9 +1411,37 @@ paths:
   /api/v3/workspaces/{workspace_name}/issues/{issue_id}/close:
     patch:
       tags:
-      - issues
+      - Issues
       summary: Close an issue
-      description: "Close an issue, optionally with a comment.\n\nSets the issue's closed_at timestamp and resets open_since\nand open_occurrence_count to 0.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    body: Optional request body with a comment.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The closed issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found."
+      description: 'Close an issue, optionally with a comment.
+
+
+        Sets the issue''s closed_at timestamp and resets open_since
+
+        and open_occurrence_count to 0.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        body: Optional request body with a comment.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The closed issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.'
       operationId: close_workspace_issue_api_v3_workspaces__workspace_name__issues__issue_id__close_patch
       parameters:
       - name: workspace_name
@@ -1163,9 +1482,41 @@ paths:
   /api/v3/workspaces/{workspace_name}/issues/{issue_id}/generate-next-steps:
     post:
       tags:
-      - issues
+      - Issues
       summary: Generate next steps for an issue using AI
-      description: "Generate intelligent next steps for an issue using sobrain AI service.\n\nThis endpoint calls the sobrain service to generate suggested next steps\nbased on the issue details and optional comment context.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    request_data: Optional request data with comment contents.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated next steps for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+      description: 'Generate intelligent next steps for an issue using sobrain AI service.
+
+
+        This endpoint calls the sobrain service to generate suggested next steps
+
+        based on the issue details and optional comment context.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        request_data: Optional request data with comment contents.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+        sobrain: Sobrain client for AI features.
+
+
+        Returns:
+
+        Generated next steps for the issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.
+
+        HTTPException: 503 if sobrain service is unavailable.'
       operationId: generate_issue_next_steps_api_v3_workspaces__workspace_name__issues__issue_id__generate_next_steps_post
       parameters:
       - name: workspace_name
@@ -1206,9 +1557,34 @@ paths:
   /api/v3/workspaces/{workspace_name}/issues/{issue_id}/generate-summary:
     post:
       tags:
-      - issues
+      - Issues
       summary: Generate a summary for an issue using AI
-      description: "Generate a summary for an issue using sobrain AI service.\n\nArgs:\n    workspace_name: The workspace name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n    sobrain: Sobrain client for AI features.\n\nReturns:\n    Generated summary for the issue.\n\nRaises:\n    HTTPException: 404 if workspace or issue not found.\n    HTTPException: 503 if sobrain service is unavailable."
+      description: 'Generate a summary for an issue using sobrain AI service.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        issue_id: The issue ID.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+        sobrain: Sobrain client for AI features.
+
+
+        Returns:
+
+        Generated summary for the issue.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace or issue not found.
+
+        HTTPException: 503 if sobrain service is unavailable.'
       operationId: generate_issue_summary_api_v3_workspaces__workspace_name__issues__issue_id__generate_summary_post
       parameters:
       - name: workspace_name
@@ -1241,7 +1617,7 @@ paths:
   /api/v3/workspaces/{workspace_name}/runsessions/{runsession_id}/issues/{issue_id}/jit-summary:
     post:
       tags:
-      - issues
+      - Issues
       summary: Generate a just-in-time summary for an issue occurrence in a run session
       description: 'Generate a JIT summary for an issue within a specific run session context.
 
@@ -1288,17 +1664,127 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    GenerateNextStepsRequest:
+    IssueUpdate:
       properties:
-        comment_contents:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        severity:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Severity
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        observations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Observations
+        next_steps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Steps
+        additional_context:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Additional Context
+      type: object
+      title: IssueUpdate
+      description: Schema for updating an issue (partial update).
+    GenerateNextStepsResponse:
+      properties:
+        next_steps:
           items:
             type: string
           type: array
-          title: Comment Contents
-          description: Optional list of comment contents to provide additional context
+          title: Next Steps
+          description: Generated next steps for the issue
+        raw_next_steps:
+          items:
+            type: string
+          type: array
+          title: Raw Next Steps
+          description: Raw next steps from LLM before validation
+        issue_id:
+          type: integer
+          title: Issue Id
+          description: The issue ID
       type: object
-      title: GenerateNextStepsRequest
-      description: Request schema for generating next steps via sobrain.
+      required:
+      - next_steps
+      - issue_id
+      title: GenerateNextStepsResponse
+      description: Response schema for generated next steps.
+    JitSummaryResponse:
+      properties:
+        summary:
+          type: string
+          title: Summary
+          description: Generated summary for the issue
+      type: object
+      required:
+      - summary
+      title: JitSummaryResponse
+      description: Response schema for JIT summary.
+    IssueListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/IssueResponse'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: IssueListResponse
+      description: Schema for paginated issue list response.
+    IssueIgnoreRequest:
+      properties:
+        ignored_until:
+          type: string
+          format: date-time
+          title: Ignored Until
+          description: Ignore until this datetime (required, ISO 8601 format)
+      type: object
+      required:
+      - ignored_until
+      title: IssueIgnoreRequest
+      description: Schema for ignore issue request.
     HTTPValidationError:
       properties:
         detail:
@@ -1308,32 +1794,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     IssueResponse:
       properties:
         taskTitle:
@@ -1554,17 +2014,6 @@ components:
         Uses alias_generator=to_camel so the JSON output uses camelCase keys
 
         matching the Django DRF convention the frontend expects.'
-    JitSummaryResponse:
-      properties:
-        summary:
-          type: string
-          title: Summary
-          description: Generated summary for the issue
-      type: object
-      required:
-      - summary
-      title: JitSummaryResponse
-      description: Response schema for JIT summary.
     GenerateSummaryResponse:
       properties:
         summary:
@@ -1581,116 +2030,32 @@ components:
       - issue_id
       title: GenerateSummaryResponse
       description: Response schema for generated issue summary.
-    IssueUpdate:
+    ValidationError:
       properties:
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        severity:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Severity
-        summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Summary
-        observations:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Observations
-        next_steps:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next Steps
-        additional_context:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Additional Context
-      type: object
-      title: IssueUpdate
-      description: Schema for updating an issue (partial update).
-    GenerateNextStepsResponse:
-      properties:
-        next_steps:
+        loc:
           items:
-            type: string
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Next Steps
-          description: Generated next steps for the issue
-        raw_next_steps:
-          items:
-            type: string
-          type: array
-          title: Raw Next Steps
-          description: Raw next steps from LLM before validation
-        issue_id:
-          type: integer
-          title: Issue Id
-          description: The issue ID
-      type: object
-      required:
-      - next_steps
-      - issue_id
-      title: GenerateNextStepsResponse
-      description: Response schema for generated next steps.
-    IssueIgnoreRequest:
-      properties:
-        ignored_until:
+          title: Location
+        msg:
           type: string
-          format: date-time
-          title: Ignored Until
-          description: Ignore until this datetime (required, ISO 8601 format)
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - ignored_until
-      title: IssueIgnoreRequest
-      description: Schema for ignore issue request.
-    IssueListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/IssueResponse'
-          type: array
-          title: Results
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: Next page URL
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: Previous page URL
-      type: object
-      required:
-      - results
-      - count
-      - limit
-      - offset
-      title: IssueListResponse
-      description: Schema for paginated issue list response.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     IssueCloseRequest:
       properties:
         comment:
@@ -1703,6 +2068,17 @@ components:
       type: object
       title: IssueCloseRequest
       description: Optional request body for closing an issue with a comment.
+    GenerateNextStepsRequest:
+      properties:
+        comment_contents:
+          items:
+            type: string
+          type: array
+          title: Comment Contents
+          description: Optional list of comment contents to provide additional context
+      type: object
+      title: GenerateNextStepsRequest
+      description: Request schema for generating next steps via sobrain.
   securitySchemes:
     BearerAuth:
       type: http

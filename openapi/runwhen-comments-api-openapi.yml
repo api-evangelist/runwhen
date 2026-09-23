@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy comments API
+  title: papi Comments API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: comments
+- name: Comments
 paths:
   /api/v3/workspaces/{workspace_short_name}/runsessions/{runsession_id}/comments:
     get:
       tags:
-      - comments
+      - Comments
       summary: List comments for a run session
       description: List all top-level comments for a run session with their replies.
       operationId: list_runsession_comments_api_v3_workspaces__workspace_short_name__runsessions__runsession_id__comments_get
@@ -47,9 +47,25 @@ paths:
   /api/v3/workspaces/{workspace_short_name}/issues/{issue_id}/comments:
     get:
       tags:
-      - comments
+      - Comments
       summary: List comments for an issue
-      description: "List all top-level comments for an issue with their replies.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    List of top-level comments with nested replies."
+      description: 'List all top-level comments for an issue with their replies.
+
+
+        Args:
+
+        workspace_short_name: The workspace short name.
+
+        issue_id: The issue ID.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        List of top-level comments with nested replies.'
       operationId: list_issue_comments_api_v3_workspaces__workspace_short_name__issues__issue_id__comments_get
       parameters:
       - name: workspace_short_name
@@ -84,9 +100,27 @@ paths:
       - BearerAuth: []
     post:
       tags:
-      - comments
+      - Comments
       summary: Create a comment on an issue
-      description: "Create a new top-level comment on an issue.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_data: The comment creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created comment."
+      description: 'Create a new top-level comment on an issue.
+
+
+        Args:
+
+        workspace_short_name: The workspace short name.
+
+        issue_id: The issue ID.
+
+        comment_data: The comment creation data.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The created comment.'
       operationId: create_issue_comment_api_v3_workspaces__workspace_short_name__issues__issue_id__comments_post
       parameters:
       - name: workspace_short_name
@@ -125,7 +159,7 @@ paths:
   /api/v3/workspaces/{workspace_short_name}/runsessions/{runsession_id}/issueoccurrences/{issue_id}/comments:
     get:
       tags:
-      - comments
+      - Comments
       summary: List comments for an issue occurrence (alias)
       description: 'List comments for an issue via the occurrence URL pattern.
 
@@ -174,9 +208,34 @@ paths:
   /api/v3/workspaces/{workspace_short_name}/issues/{issue_id}/comments/{comment_id}/replies:
     post:
       tags:
-      - comments
+      - Comments
       summary: Reply to a comment
-      description: "Create a reply to an existing comment.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_id: The parent comment ID to reply to.\n    reply_data: The reply creation data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The created reply comment.\n\nRaises:\n    HTTPException: 404 if parent comment not found."
+      description: 'Create a reply to an existing comment.
+
+
+        Args:
+
+        workspace_short_name: The workspace short name.
+
+        issue_id: The issue ID.
+
+        comment_id: The parent comment ID to reply to.
+
+        reply_data: The reply creation data.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The created reply comment.
+
+
+        Raises:
+
+        HTTPException: 404 if parent comment not found.'
       operationId: create_issue_comment_reply_api_v3_workspaces__workspace_short_name__issues__issue_id__comments__comment_id__replies_post
       parameters:
       - name: workspace_short_name
@@ -221,9 +280,34 @@ paths:
   /api/v3/workspaces/{workspace_short_name}/issues/{issue_id}/comments/{comment_id}:
     patch:
       tags:
-      - comments
+      - Comments
       summary: Update a comment
-      description: "Update an existing comment's content.\n\nArgs:\n    workspace_short_name: The workspace short name.\n    issue_id: The issue ID.\n    comment_id: The comment ID to update.\n    comment_data: The comment update data.\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The updated comment.\n\nRaises:\n    HTTPException: 404 if comment not found."
+      description: 'Update an existing comment''s content.
+
+
+        Args:
+
+        workspace_short_name: The workspace short name.
+
+        issue_id: The issue ID.
+
+        comment_id: The comment ID to update.
+
+        comment_data: The comment update data.
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The updated comment.
+
+
+        Raises:
+
+        HTTPException: 404 if comment not found.'
       operationId: update_issue_comment_api_v3_workspaces__workspace_short_name__issues__issue_id__comments__comment_id__patch
       parameters:
       - name: workspace_short_name
@@ -267,41 +351,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     CommentUpdate:
       properties:
         content:
@@ -313,27 +362,6 @@ components:
       - content
       title: CommentUpdate
       description: Schema for updating an existing comment.
-    CommentReplyCreate:
-      properties:
-        content:
-          type: string
-          title: Content
-          description: Reply text content (markdown supported)
-        action:
-          anyOf:
-          - $ref: '#/components/schemas/CommentAction'
-          - type: 'null'
-          description: Optional action to take (resolve/reopen thread)
-        escalated:
-          type: boolean
-          title: Escalated
-          description: Whether to escalate the associated entity
-          default: false
-      type: object
-      required:
-      - content
-      title: CommentReplyCreate
-      description: Schema for creating a reply to an existing comment.
     CommentResponse:
       properties:
         id:
@@ -398,12 +426,17 @@ components:
         Uses camelCase aliases for frontend compatibility.
 
         Supports nested replies for threaded comments.'
-    CommentCreate:
+    CommentReplyCreate:
       properties:
         content:
           type: string
           title: Content
-          description: Comment text content (markdown supported)
+          description: Reply text content (markdown supported)
+        action:
+          anyOf:
+          - $ref: '#/components/schemas/CommentAction'
+          - type: 'null'
+          description: Optional action to take (resolve/reopen thread)
         escalated:
           type: boolean
           title: Escalated
@@ -412,8 +445,24 @@ components:
       type: object
       required:
       - content
-      title: CommentCreate
-      description: Schema for creating a top-level comment.
+      title: CommentReplyCreate
+      description: Schema for creating a reply to an existing comment.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CommentAction:
+      type: string
+      enum:
+      - resolve
+      - reopen
+      title: CommentAction
+      description: Actions that can be taken on a comment thread.
     CommentAuthorResponse:
       properties:
         id:
@@ -459,13 +508,48 @@ components:
 
 
         Uses camelCase aliases for frontend compatibility.'
-    CommentAction:
-      type: string
-      enum:
-      - resolve
-      - reopen
-      title: CommentAction
-      description: Actions that can be taken on a comment thread.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CommentCreate:
+      properties:
+        content:
+          type: string
+          title: Content
+          description: Comment text content (markdown supported)
+        escalated:
+          type: boolean
+          title: Escalated
+          description: Whether to escalate the associated entity
+          default: false
+      type: object
+      required:
+      - content
+      title: CommentCreate
+      description: Schema for creating a top-level comment.
   securitySchemes:
     BearerAuth:
       type: http

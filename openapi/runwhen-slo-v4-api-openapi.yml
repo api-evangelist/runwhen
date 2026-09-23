@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy slo-v4 API
+  title: papi Slo V4 API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -113,111 +113,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    SloPayloadV4:
-      properties:
-        slxId:
-          type: integer
-          title: Slxid
-        sloSpecType:
-          type: string
-          title: Slospectype
-          default: simple-mwmb
-        objective:
-          type: number
-          title: Objective
-          default: 99.9
-        threshold:
-          type: integer
-          title: Threshold
-          default: 9
-        operand:
-          type: string
-          title: Operand
-          default: eq
-        codeBundleRepoUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlerepourl
-        codeBundleRef:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundleref
-        codeBundlePathToYaml:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlepathtoyaml
-        repositoryId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Repositoryid
-      additionalProperties: false
-      type: object
-      required:
-      - slxId
-      title: SloPayloadV4
-      description: Writable subset of SLO (the body of a sync upsert).
-    SloSyncRequestV4:
-      properties:
-        payload:
-          $ref: '#/components/schemas/SloPayloadV4'
-        lastSyncedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Lastsyncedat
-      additionalProperties: false
-      type: object
-      required:
-      - payload
-      title: SloSyncRequestV4
-      description: 'Body of POST /api/v4/workspaces/{ws}/slos/sync-typed.
-
-
-        ``modified_by`` is not accepted: the server derives it from the JWT via
-
-        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
-
-        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     SloResponseV4:
       properties:
         slxId:
@@ -327,6 +222,111 @@ components:
       - modifiedAt
       title: SloResponseV4
       description: Flat-shape SLO detail response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SloPayloadV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        sloSpecType:
+          type: string
+          title: Slospectype
+          default: simple-mwmb
+        objective:
+          type: number
+          title: Objective
+          default: 99.9
+        threshold:
+          type: integer
+          title: Threshold
+          default: 9
+        operand:
+          type: string
+          title: Operand
+          default: eq
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePathToYaml:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepathtoyaml
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+      additionalProperties: false
+      type: object
+      required:
+      - slxId
+      title: SloPayloadV4
+      description: Writable subset of SLO (the body of a sync upsert).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SloSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/SloPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: SloSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/slos/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
   securitySchemes:
     BearerAuth:
       type: http

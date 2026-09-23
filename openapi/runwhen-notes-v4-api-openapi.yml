@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy notes-v4 API
+  title: papi Notes V4 API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -383,6 +383,13 @@ components:
       - updatedAt
       title: NoteResponseV4
       description: Note response schema for API responses.
+    NoteStatusV4:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatusV4
+      description: Note lifecycle status.
     NoteCreateV4:
       properties:
         title:
@@ -441,56 +448,28 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    NoteResourceLinkV4:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        resourcePath:
           type: string
-          title: Message
-        type:
+          title: Resourcepath
+          description: Concrete resource path the note attaches to
+        matchReason:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Matchreason
+          description: '"explicit_path" | "selector"'
+        matchedSelector:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Matchedselector
+          description: Index into resourceSelectors (null for explicit paths)
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    NoteStatusV4:
-      type: string
-      enum:
-      - active
-      - deprecated
-      title: NoteStatusV4
-      description: Note lifecycle status.
-    ResourceSelectorV4:
-      properties:
-        matchTags:
-          additionalProperties:
-            type: string
-          type: object
-          title: Matchtags
-          description: Tag key/value equalities, ANDed together
-      additionalProperties: false
-      type: object
-      title: ResourceSelectorV4
-      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
-
-
-        (``matchExpressions`` — set-based operators — is a planned follow-on; only
-
-        ``matchTags`` is supported today.)'
+      - resourcePath
+      - matchReason
+      title: NoteResourceLinkV4
+      description: A materialized note→resource attachment (Tier-3), resolver-owned.
     NoteUpdateV4:
       properties:
         title:
@@ -547,28 +526,49 @@ components:
       type: object
       title: NoteUpdateV4
       description: Schema for partial update of a note.
-    NoteResourceLinkV4:
+    ValidationError:
       properties:
-        resourcePath:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Resourcepath
-          description: Concrete resource path the note attaches to
-        matchReason:
+          title: Message
+        type:
           type: string
-          title: Matchreason
-          description: '"explicit_path" | "selector"'
-        matchedSelector:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Matchedselector
-          description: Index into resourceSelectors (null for explicit paths)
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - resourcePath
-      - matchReason
-      title: NoteResourceLinkV4
-      description: A materialized note→resource attachment (Tier-3), resolver-owned.
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ResourceSelectorV4:
+      properties:
+        matchTags:
+          additionalProperties:
+            type: string
+          type: object
+          title: Matchtags
+          description: Tag key/value equalities, ANDed together
+      additionalProperties: false
+      type: object
+      title: ResourceSelectorV4
+      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
+
+
+        (``matchExpressions`` — set-based operators — is a planned follow-on; only
+
+        ``matchTags`` is supported today.)'
   securitySchemes:
     BearerAuth:
       type: http

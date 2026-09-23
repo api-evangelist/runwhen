@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy runbook-v4 API
+  title: papi Runbook V4 API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -113,138 +113,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    RunbookTaskV4:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Resolved task display name
-        value:
-          type: string
-          title: Value
-          description: Original task identifier
-        tags:
-          items:
-            type: string
-          type: array
-          title: Tags
-          description: Task tags
-      type: object
-      required:
-      - name
-      - value
-      title: RunbookTaskV4
-      description: Individual task in a runbook (V4 wire shape).
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    RunbookPayloadV4:
-      properties:
-        slxId:
-          type: integer
-          title: Slxid
-        name:
-          type: string
-          title: Name
-          default: ''
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        runnerUuid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Runneruuid
-        codeBundleRepoUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlerepourl
-        codeBundleRef:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundleref
-        codeBundlePath:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlepath
-        repositoryId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Repositoryid
-        configProvided:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - additionalProperties: true
-            type: object
-          title: Configprovided
-        secretsProvided:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Secretsprovided
-        runtimeVarsProvided:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Runtimevarsprovided
-        requirements:
-          additionalProperties: true
-          type: object
-          title: Requirements
-        lookbackWindow:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lookbackwindow
-      additionalProperties: false
-      type: object
-      required:
-      - slxId
-      title: RunbookPayloadV4
-      description: Writable subset of Runbook (the body of a sync upsert).
     RunbookResponseV4:
       properties:
         id:
@@ -363,6 +231,15 @@ components:
       - modifiedAt
       title: RunbookResponseV4
       description: Flat-shape Runbook detail response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     RunbookSyncRequestV4:
       properties:
         payload:
@@ -386,6 +263,129 @@ components:
         ``get_effective_modifier``. Unknown keys (including ``modified_by``)
 
         raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RunbookTaskV4:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Task tags
+      type: object
+      required:
+      - name
+      - value
+      title: RunbookTaskV4
+      description: Individual task in a runbook (V4 wire shape).
+    RunbookPayloadV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        name:
+          type: string
+          title: Name
+          default: ''
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        runnerUuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+        runtimeVarsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Runtimevarsprovided
+        requirements:
+          additionalProperties: true
+          type: object
+          title: Requirements
+        lookbackWindow:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lookbackwindow
+      additionalProperties: false
+      type: object
+      required:
+      - slxId
+      title: RunbookPayloadV4
+      description: Writable subset of Runbook (the body of a sync upsert).
   securitySchemes:
     BearerAuth:
       type: http

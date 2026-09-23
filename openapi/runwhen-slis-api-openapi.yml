@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy slis API
+  title: papi Slis API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -11,7 +11,35 @@ paths:
       tags:
       - slis
       summary: Get the SLI for an SLX
-      description: "Get the SLI for an SLX.\n\nSLX and SLI have a 1:1 relationship. This endpoint returns the single\nSLI associated with the specified SLX, or 404 if no SLI exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLI details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLI not found."
+      description: 'Get the SLI for an SLX.
+
+
+        SLX and SLI have a 1:1 relationship. This endpoint returns the single
+
+        SLI associated with the specified SLX, or 404 if no SLI exists.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        slx_short_name: The SLX short name.
+
+        _detail: Django parity query param (ignored).
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The SLI details.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace, SLX, or SLI not found.'
       operationId: get_slx_sli_api_v1_workspaces__workspace_name__slxs__slx_short_name__sli_get
       parameters:
       - name: workspace_name
@@ -154,7 +182,35 @@ paths:
       tags:
       - slis
       summary: Get the SLI for an SLX
-      description: "Get the SLI for an SLX.\n\nSLX and SLI have a 1:1 relationship. This endpoint returns the single\nSLI associated with the specified SLX, or 404 if no SLI exists.\n\nArgs:\n    workspace_name: The workspace name.\n    slx_short_name: The SLX short name.\n    _detail: Django parity query param (ignored).\n    session: Database session.\n    current_user: The authenticated user.\n\nReturns:\n    The SLI details.\n\nRaises:\n    HTTPException: 404 if workspace, SLX, or SLI not found."
+      description: 'Get the SLI for an SLX.
+
+
+        SLX and SLI have a 1:1 relationship. This endpoint returns the single
+
+        SLI associated with the specified SLX, or 404 if no SLI exists.
+
+
+        Args:
+
+        workspace_name: The workspace name.
+
+        slx_short_name: The SLX short name.
+
+        _detail: Django parity query param (ignored).
+
+        session: Database session.
+
+        current_user: The authenticated user.
+
+
+        Returns:
+
+        The SLI details.
+
+
+        Raises:
+
+        HTTPException: 404 if workspace, SLX, or SLI not found.'
       operationId: get_slx_sli_api_v3_workspaces__workspace_name__slxs__slx_short_name__sli_get
       parameters:
       - name: workspace_name
@@ -294,6 +350,15 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -320,15 +385,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     papi__schemas__sli__SliResponse:
       properties:
         slxId:

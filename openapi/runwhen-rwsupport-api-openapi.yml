@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy rwsupport API
+  title: papi Rwsupport API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
@@ -948,102 +948,35 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    OrgCreate:
+    LLMProviderUpdate:
       properties:
-        name:
-          type: string
-          maxLength: 150
-          title: Name
-        tenantType:
-          type: string
-          title: Tenanttype
-          default: SHARED
-      type: object
-      required:
-      - name
-      title: OrgCreate
-    papi__schemas__rwsupport__LLMModelResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        provider:
-          type: integer
-          title: Provider
         providerType:
           anyOf:
           - type: string
           - type: 'null'
           title: Providertype
-        providerName:
+        baseUrl:
           anyOf:
           - type: string
           - type: 'null'
-          title: Providername
-        modelName:
-          type: string
-          title: Modelname
-        maxTokens:
-          type: integer
-          title: Maxtokens
-          default: 0
-        dimension:
+          title: Baseurl
+        apiKey:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Apikey
+        llmTenantType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Llmtenanttype
+        ownerOrg:
           anyOf:
           - type: integer
           - type: 'null'
-          title: Dimension
-        endpointPath:
-          type: string
-          title: Endpointpath
-          default: /chat/completions
-        created:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created
-        modified:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Modified
+          title: Ownerorg
       type: object
-      required:
-      - id
-      - provider
-      - modelName
-      title: LLMModelResponse
-    LLMModelUpdate:
-      properties:
-        provider:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Provider
-        modelName:
-          anyOf:
-          - type: string
-            maxLength: 100
-          - type: 'null'
-          title: Modelname
-        maxTokens:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Maxtokens
-        dimension:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Dimension
-        endpointPath:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Endpointpath
-      type: object
-      title: LLMModelUpdate
+      title: LLMProviderUpdate
     LLMConfigCreate:
       properties:
         name:
@@ -1076,104 +1009,6 @@ components:
       - category
       - llmModel
       title: LLMConfigCreate
-    LLMConfigUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Name
-        category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Category
-        llmModel:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Llmmodel
-        workspace:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Workspace
-        org:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Org
-        isPlatformDefault:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Isplatformdefault
-      type: object
-      title: LLMConfigUpdate
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    LLMModelCreate:
-      properties:
-        provider:
-          type: integer
-          title: Provider
-        modelName:
-          type: string
-          maxLength: 100
-          title: Modelname
-        maxTokens:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Maxtokens
-        dimension:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Dimension
-        endpointPath:
-          type: string
-          title: Endpointpath
-          default: /chat/completions
-      type: object
-      required:
-      - provider
-      - modelName
-      title: LLMModelCreate
     papi__schemas__rwsupport__LLMProviderResponse:
       properties:
         id:
@@ -1231,77 +1066,6 @@ components:
       - name
       - providerType
       title: LLMProviderResponse
-    OrgUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 150
-          - type: 'null'
-          title: Name
-        tenantType:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tenanttype
-      type: object
-      title: OrgUpdate
-    LLMProviderUpdate:
-      properties:
-        providerType:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Providertype
-        baseUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Baseurl
-        apiKey:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Apikey
-        llmTenantType:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Llmtenanttype
-        ownerOrg:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Ownerorg
-      type: object
-      title: LLMProviderUpdate
-    OrgResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        tenantType:
-          type: string
-          title: Tenanttype
-        created:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created
-        workspaceCount:
-          type: integer
-          title: Workspacecount
-          default: 0
-      type: object
-      required:
-      - id
-      - name
-      - tenantType
-      title: OrgResponse
     LLMProviderCreate:
       properties:
         name:
@@ -1406,6 +1170,34 @@ components:
       - category
       - llmModel
       title: LLMConfigResponse
+    LLMModelCreate:
+      properties:
+        provider:
+          type: integer
+          title: Provider
+        modelName:
+          type: string
+          maxLength: 100
+          title: Modelname
+        maxTokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Maxtokens
+        dimension:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Dimension
+        endpointPath:
+          type: string
+          title: Endpointpath
+          default: /chat/completions
+      type: object
+      required:
+      - provider
+      - modelName
+      title: LLMModelCreate
     AssignWorkspacesRequest:
       properties:
         workspaceIds:
@@ -1421,6 +1213,214 @@ components:
       required:
       - workspaceIds
       title: AssignWorkspacesRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    OrgResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        tenantType:
+          type: string
+          title: Tenanttype
+        created:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created
+        workspaceCount:
+          type: integer
+          title: Workspacecount
+          default: 0
+      type: object
+      required:
+      - id
+      - name
+      - tenantType
+      title: OrgResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    LLMModelUpdate:
+      properties:
+        provider:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Provider
+        modelName:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Modelname
+        maxTokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Maxtokens
+        dimension:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Dimension
+        endpointPath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Endpointpath
+      type: object
+      title: LLMModelUpdate
+    OrgCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 150
+          title: Name
+        tenantType:
+          type: string
+          title: Tenanttype
+          default: SHARED
+      type: object
+      required:
+      - name
+      title: OrgCreate
+    papi__schemas__rwsupport__LLMModelResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        provider:
+          type: integer
+          title: Provider
+        providerType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Providertype
+        providerName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Providername
+        modelName:
+          type: string
+          title: Modelname
+        maxTokens:
+          type: integer
+          title: Maxtokens
+          default: 0
+        dimension:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Dimension
+        endpointPath:
+          type: string
+          title: Endpointpath
+          default: /chat/completions
+        created:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created
+        modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Modified
+      type: object
+      required:
+      - id
+      - provider
+      - modelName
+      title: LLMModelResponse
+    OrgUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 150
+          - type: 'null'
+          title: Name
+        tenantType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tenanttype
+      type: object
+      title: OrgUpdate
+    LLMConfigUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        llmModel:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Llmmodel
+        workspace:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Workspace
+        org:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Org
+        isPlatformDefault:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isplatformdefault
+      type: object
+      title: LLMConfigUpdate
   securitySchemes:
     BearerAuth:
       type: http

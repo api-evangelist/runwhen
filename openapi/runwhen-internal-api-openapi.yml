@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy internal API
+  title: papi Internal API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: internal
+- name: Internal
 paths:
   /api/v1/workspaces/{workspace_name}/internal/upload-config:
     get:
       tags:
-      - internal
+      - Internal
       summary: Generate upload config (internal)
       description: 'Generate upload credentials for runner-control.
 
@@ -82,7 +82,7 @@ paths:
   /api/v3/workspaces/{workspace_name}/internal/upload-config:
     get:
       tags:
-      - internal
+      - Internal
       summary: Generate upload config (internal)
       description: 'Generate upload credentials for runner-control.
 

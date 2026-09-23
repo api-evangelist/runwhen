@@ -1,17 +1,42 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy auth0 API
+  title: papi Auth0 API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: auth0
+- name: Auth0
 paths:
   /accounts/auth0/login/:
     get:
       tags:
-      - auth0
+      - Auth0
       summary: Auth0 Login
-      description: "Initiate Auth0 OAuth2 login flow with PKCE.\n\nBuilds the Auth0 authorize URL, stores state in Redis, and redirects\nthe browser to Auth0 for authentication.\n\nArgs:\n    request: The incoming request.\n    next: URL to redirect to after login (e.g. /rd/<b64_url>).\n    auth_params: Auth0 connection parameters (e.g. [connection]=runwhen).\n    oauth_session: OAuth 2.1 AS session ID — when present, the callback\n        issues an authorization code and redirects to the OAuth client\n        instead of setting a UI cookie.\n\nReturns:\n    Redirect to Auth0 authorize URL."
+      description: 'Initiate Auth0 OAuth2 login flow with PKCE.
+
+
+        Builds the Auth0 authorize URL, stores state in Redis, and redirects
+
+        the browser to Auth0 for authentication.
+
+
+        Args:
+
+        request: The incoming request.
+
+        next: URL to redirect to after login (e.g. /rd/).
+
+        auth_params: Auth0 connection parameters (e.g. [connection]=runwhen).
+
+        oauth_session: OAuth 2.1 AS session ID — when present, the callback
+
+        issues an authorization code and redirects to the OAuth client
+
+        instead of setting a UI cookie.
+
+
+        Returns:
+
+        Redirect to Auth0 authorize URL.'
       operationId: auth0_login_accounts_auth0_login__get
       parameters:
       - name: next
@@ -54,9 +79,32 @@ paths:
   /accounts/auth0/login/callback/:
     get:
       tags:
-      - auth0
+      - Auth0
       summary: Auth0 Callback
-      description: "Handle Auth0 OAuth2 callback.\n\nExchanges authorization code for tokens, fetches userinfo, creates or\nlinks the user, issues a JWT cookie, and redirects to the next URL.\n\nArgs:\n    request: The incoming request.\n    code: Authorization code from Auth0.\n    state: State parameter for CSRF validation.\n    error: Error code from Auth0 (if any).\n    error_description: Error description from Auth0 (if any).\n\nReturns:\n    Redirect to next URL with JWT cookie set."
+      description: 'Handle Auth0 OAuth2 callback.
+
+
+        Exchanges authorization code for tokens, fetches userinfo, creates or
+
+        links the user, issues a JWT cookie, and redirects to the next URL.
+
+
+        Args:
+
+        request: The incoming request.
+
+        code: Authorization code from Auth0.
+
+        state: State parameter for CSRF validation.
+
+        error: Error code from Auth0 (if any).
+
+        error_description: Error description from Auth0 (if any).
+
+
+        Returns:
+
+        Redirect to next URL with JWT cookie set.'
       operationId: auth0_callback_accounts_auth0_login_callback__get
       parameters:
       - name: code
@@ -107,7 +155,7 @@ paths:
   /accounts/logout/:
     get:
       tags:
-      - auth0
+      - Auth0
       summary: Generic Logout
       description: 'Log out — clears JWT cookie and delegates to Auth0 federated logout.
 
@@ -126,9 +174,21 @@ paths:
   /accounts/auth0/logout/:
     get:
       tags:
-      - auth0
+      - Auth0
       summary: Auth0 Logout
-      description: "Log out via Auth0 federated logout.\n\nRedirects to Auth0's /v2/logout endpoint which clears the Auth0 session\nand the upstream SAML/OIDC provider session, then redirects back to\nthe user pages login page.\n\nReturns:\n    Redirect to Auth0 logout URL or direct to login page."
+      description: 'Log out via Auth0 federated logout.
+
+
+        Redirects to Auth0''s /v2/logout endpoint which clears the Auth0 session
+
+        and the upstream SAML/OIDC provider session, then redirects back to
+
+        the user pages login page.
+
+
+        Returns:
+
+        Redirect to Auth0 logout URL or direct to login page.'
       operationId: auth0_logout_accounts_auth0_logout__get
       responses:
         '200':
@@ -140,9 +200,24 @@ paths:
   /rd/{nxt_raw}:
     get:
       tags:
-      - auth0
+      - Auth0
       summary: Login Redirect
-      description: "Redirect to a base64-encoded URL after login, with host whitelist validation.\n\nThis matches Django's core/login.py:rd() view exactly. The URL is base64-encoded\nto avoid issues with OAuth providers stripping query parameters.\n\nArgs:\n    nxt_raw: Base64-encoded absolute URL to redirect to.\n\nReturns:\n    Redirect to the decoded URL if host is allowed, or to an error page."
+      description: 'Redirect to a base64-encoded URL after login, with host whitelist validation.
+
+
+        This matches Django''s core/login.py:rd() view exactly. The URL is base64-encoded
+
+        to avoid issues with OAuth providers stripping query parameters.
+
+
+        Args:
+
+        nxt_raw: Base64-encoded absolute URL to redirect to.
+
+
+        Returns:
+
+        Redirect to the decoded URL if host is allowed, or to an error page.'
       operationId: login_redirect_rd__nxt_raw__get
       parameters:
       - name: nxt_raw

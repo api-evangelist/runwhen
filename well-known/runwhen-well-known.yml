@@ -1,20 +1,27 @@
 generated: '2026-07-21'
 method: searched
 host: https://papi.beta.runwhen.com
-documents:
-- path: /.well-known/openid-configuration
-  status: 200
-  file: runwhen-openid-configuration.json
-- path: /.well-known/oauth-authorization-server
-  status: 200
-  file: runwhen-oauth-authorization-server.json
-- path: /.well-known/jwks.json
-  status: 200
-  file: runwhen-jwks.json
-- path: /.well-known/security.txt
-  status: 404
 other_hosts:
 - host: https://runwhen.com
   probed:
   - /.well-known/security.txt (404)
   - /.well-known/openid-configuration (404)
+hosts:
+- host: https://papi.beta.runwhen.com
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: runwhen-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: runwhen-oauth-authorization-server.json
+  - path: /.well-known/jwks.json
+    status: 200
+    file: runwhen-jwks.json
+  - path: /.well-known/security.txt
+    status: 404
+x-shape-fix:
+  converted: '2026-08-20'
+  from: documents
+  note: Rewritten into hosts[] -> documents[], the only shape well_known_docs() in score.rb reads. A served
+    .well-known surface recorded in any other shape scores as absent.

@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy jwks API
+  title: papi Jwks API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: jwks
+- name: JWKS
 paths:
   /.well-known/jwks.json:
     get:
       tags:
-      - jwks
+      - JWKS
       summary: Jwks Endpoint
       description: Return the JSON Web Key Set containing the RS256 public key.
       operationId: jwks_endpoint__well_known_jwks_json_get

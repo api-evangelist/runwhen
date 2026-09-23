@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy explorer API
+  title: papi Explorer API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: explorer
+- name: Explorer
 paths:
   /internal/api/v1/health:
     get:
       tags:
-      - explorer
+      - Explorer
       summary: Explorer Health
       description: Health check for the explorer API.
       operationId: explorer_health_internal_api_v1_health_get
@@ -28,7 +28,7 @@ paths:
   /internal/api/v1/getSLIEnv:
     post:
       tags:
-      - explorer
+      - Explorer
       summary: Get Sli Env
       description: 'Return execution environment for an SLI.
 
@@ -73,7 +73,7 @@ paths:
       - BearerAuth: []
     get:
       tags:
-      - explorer
+      - Explorer
       summary: Get Sli Env
       description: 'Return execution environment for an SLI.
 
@@ -119,7 +119,7 @@ paths:
   /internal/api/v1/runners/register:
     post:
       tags:
-      - explorer
+      - Explorer
       summary: Register Runner
       description: 'Register or update a runner in the runners table.
 
@@ -158,7 +158,7 @@ paths:
   /internal/api/v1/runners/status:
     post:
       tags:
-      - explorer
+      - Explorer
       summary: Runner Status Update
       description: 'Update runner heartbeat and status for an existing runner.
 
@@ -198,9 +198,24 @@ paths:
   /internal/api/v1/runners/run-status:
     post:
       tags:
-      - explorer
+      - Explorer
       summary: Runner Run Status
-      description: "Receive run-status updates from runners after SLI/Runbook execution.\n\nPorted from Go pkg/explorer/explorer.go LocationUpdate.\n\nBody is a RunnerLocation:\n  { \"runnerUUID\": \"...\", \"status\": { \"name\": \"<slx-full-name>\", \"code\": \"...\", \"message\": \"...\" } }\n\nSteps (independent queries — partial failure is acceptable):\n1. Look up runner by runnerUUID; update last_heartbeat. If not found, log and return early.\n2. Look up SLI or Runbook by slx full name; update last_run_* columns."
+      description: 'Receive run-status updates from runners after SLI/Runbook execution.
+
+
+        Ported from Go pkg/explorer/explorer.go LocationUpdate.
+
+
+        Body is a RunnerLocation:
+
+        { "runnerUUID": "...", "status": { "name": "", "code": "...", "message": "..." } }
+
+
+        Steps (independent queries — partial failure is acceptable):
+
+        1. Look up runner by runnerUUID; update last_heartbeat. If not found, log and return early.
+
+        2. Look up SLI or Runbook by slx full name; update last_run_* columns.'
       operationId: runner_run_status_internal_api_v1_runners_run_status_post
       parameters:
       - name: type
@@ -242,7 +257,7 @@ paths:
   /internal/api/v1/sli:
     get:
       tags:
-      - explorer
+      - Explorer
       summary: List Slis
       description: 'List SLIs for a workspace, optionally filtered by runner.
 
@@ -293,7 +308,7 @@ paths:
   /internal/api/v1/codeCollection:
     get:
       tags:
-      - explorer
+      - Explorer
       summary: List Code Collections
       description: 'List code collections used by SLIs and Runbooks assigned to a runner.
 
@@ -302,7 +317,7 @@ paths:
 
         from SLIs (cronCodeRunCount) and Runbooks (codeRunCount) that are
 
-        assigned to the given runner in the given workspace.  The
+        assigned to the given runner in the given workspace. The
 
         ``CodeCollection`` table is NOT queried directly because it may not
 
@@ -315,13 +330,13 @@ paths:
 
         SLI/Runbook''s stored ``code_bundle_repo_url`` (the Go handler emits the
 
-        stored URL).  In airgap (``CC_SOURCE=catalog``) the stored URL may be an
+        stored URL). In airgap (``CC_SOURCE=catalog``) the stored URL may be an
 
         unreachable public Git host while the synced collection carries the
 
         in-cluster catalog host — see ``_make_collection_entry`` and
 
-        ``_resolve_ccv``''s slug fallback.  This also matches the sibling
+        ``_resolve_ccv``''s slug fallback. This also matches the sibling
 
         ``/codeCollection/{id}`` endpoint, which already emits ``cc.repo_url``.
 
@@ -373,7 +388,7 @@ paths:
   /internal/api/v1/codeCollection/{collection_id}:
     get:
       tags:
-      - explorer
+      - Explorer
       summary: Get Code Collection
       description: Get a single code collection by ID with its built CCV image tags.
       operationId: get_code_collection_internal_api_v1_codeCollection__collection_id__get
@@ -403,45 +418,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    SLIEnvResponse:
-      properties:
-        runner:
-          type: string
-          title: Runner
-          default: ''
-        runnerUUID:
-          type: string
-          title: Runneruuid
-          default: ''
-        version:
-          type: string
-          title: Version
-          default: ''
-        platform:
-          additionalProperties:
-            type: string
-          type: object
-          title: Platform
-        configProvided:
-          additionalProperties:
-            type: string
-          type: object
-          title: Configprovided
-        secretsProvided:
-          additionalProperties:
-            type: string
-          type: object
-          title: Secretsprovided
-        locationServicesProvided:
-          additionalProperties:
-            type: string
-          type: object
-          title: Locationservicesprovided
-        codeBundleReference:
-          $ref: '#/components/schemas/CodeBundleReference'
-      type: object
-      title: SLIEnvResponse
-      description: SLI environment response matching Go SLIEnv struct.
     HTTPValidationError:
       properties:
         detail:
@@ -451,71 +427,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    RunnerStatusUpdateRequest:
-      properties:
-        organization:
-          type: string
-          title: Organization
-          default: ''
-        workspace:
-          type: string
-          title: Workspace
-          default: ''
-        runner:
-          type: string
-          title: Runner
-          default: ''
-        runnerUUID:
-          type: string
-          title: Runneruuid
-          default: ''
-        runnerStatus:
-          additionalProperties: true
-          type: object
-          title: Runnerstatus
-          default: {}
-      type: object
-      title: RunnerStatusUpdateRequest
-      description: Request body for runner status update endpoint.
-    RunnerRegisterResponse:
-      properties:
-        runner:
-          type: string
-          title: Runner
-          default: ''
-        runnerUUID:
-          type: string
-          title: Runneruuid
-          default: ''
-      type: object
-      title: RunnerRegisterResponse
-      description: Response for runner registration endpoint.
     RunnerRegisterRequest:
       properties:
         organization:
@@ -566,6 +477,110 @@ components:
       type: object
       title: CodeBundleReference
       description: Code bundle reference matching runner-control JSONCodeBundleReference.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RunnerRegisterResponse:
+      properties:
+        runner:
+          type: string
+          title: Runner
+          default: ''
+        runnerUUID:
+          type: string
+          title: Runneruuid
+          default: ''
+      type: object
+      title: RunnerRegisterResponse
+      description: Response for runner registration endpoint.
+    SLIEnvResponse:
+      properties:
+        runner:
+          type: string
+          title: Runner
+          default: ''
+        runnerUUID:
+          type: string
+          title: Runneruuid
+          default: ''
+        version:
+          type: string
+          title: Version
+          default: ''
+        platform:
+          additionalProperties:
+            type: string
+          type: object
+          title: Platform
+        configProvided:
+          additionalProperties:
+            type: string
+          type: object
+          title: Configprovided
+        secretsProvided:
+          additionalProperties:
+            type: string
+          type: object
+          title: Secretsprovided
+        locationServicesProvided:
+          additionalProperties:
+            type: string
+          type: object
+          title: Locationservicesprovided
+        codeBundleReference:
+          $ref: '#/components/schemas/CodeBundleReference'
+      type: object
+      title: SLIEnvResponse
+      description: SLI environment response matching Go SLIEnv struct.
+    RunnerStatusUpdateRequest:
+      properties:
+        organization:
+          type: string
+          title: Organization
+          default: ''
+        workspace:
+          type: string
+          title: Workspace
+          default: ''
+        runner:
+          type: string
+          title: Runner
+          default: ''
+        runnerUUID:
+          type: string
+          title: Runneruuid
+          default: ''
+        runnerStatus:
+          additionalProperties: true
+          type: object
+          title: Runnerstatus
+          default: {}
+      type: object
+      title: RunnerStatusUpdateRequest
+      description: Request body for runner status update endpoint.
   securitySchemes:
     BearerAuth:
       type: http

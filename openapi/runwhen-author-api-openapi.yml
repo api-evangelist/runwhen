@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy author API
+  title: papi Author API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: author
+- name: Author
 paths:
   /api/v1/workspaces/{workspace_name}/author/run:
     post:
       tags:
-      - author
+      - Author
       summary: Create an author run
       description: 'Submit a new author run.
 
@@ -51,7 +51,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/author/run/{run_id}:
     get:
       tags:
-      - author
+      - Author
       summary: Get stored command for a run (public, for runner/explorer)
       description: 'Return the stored user command for a run.
 
@@ -97,7 +97,7 @@ paths:
   /api/v1/workspaces/{workspace_name}/author/run/{run_id}/status:
     get:
       tags:
-      - author
+      - Author
       summary: Get run status (owner only)
       description: 'Return the current status of an author run.
 
@@ -138,7 +138,7 @@ paths:
       - BearerAuth: []
     patch:
       tags:
-      - author
+      - Author
       summary: Update run status (runner callback)
       description: 'Runner callback to update the run status.
 
@@ -188,12 +188,12 @@ paths:
   /api/v1/workspaces/{workspace_name}/author/run/{run_id}/output:
     get:
       tags:
-      - author
+      - Author
       summary: Get signed URLs for run output artifacts (owner only)
       description: 'Return signed URLs for the primary output artifacts of an author run.
 
 
-        Only the user who created the run may retrieve its output.  Three artifacts
+        Only the user who created the run may retrieve its output. Three artifacts
 
         are returned: ``report.jsonl``, ``issues.jsonl``, and ``log.html``.'
       operationId: get_run_output_api_v1_workspaces__workspace_name__author_run__run_id__output_get
@@ -232,7 +232,7 @@ paths:
   /api/v3/workspaces/{workspace_name}/author/run:
     post:
       tags:
-      - author
+      - Author
       summary: Create an author run
       description: 'Submit a new author run.
 
@@ -274,7 +274,7 @@ paths:
   /api/v3/workspaces/{workspace_name}/author/run/{run_id}:
     get:
       tags:
-      - author
+      - Author
       summary: Get stored command for a run (public, for runner/explorer)
       description: 'Return the stored user command for a run.
 
@@ -320,7 +320,7 @@ paths:
   /api/v3/workspaces/{workspace_name}/author/run/{run_id}/status:
     get:
       tags:
-      - author
+      - Author
       summary: Get run status (owner only)
       description: 'Return the current status of an author run.
 
@@ -361,7 +361,7 @@ paths:
       - BearerAuth: []
     patch:
       tags:
-      - author
+      - Author
       summary: Update run status (runner callback)
       description: 'Runner callback to update the run status.
 
@@ -411,12 +411,12 @@ paths:
   /api/v3/workspaces/{workspace_name}/author/run/{run_id}/output:
     get:
       tags:
-      - author
+      - Author
       summary: Get signed URLs for run output artifacts (owner only)
       description: 'Return signed URLs for the primary output artifacts of an author run.
 
 
-        Only the user who created the run may retrieve its output.  Three artifacts
+        Only the user who created the run may retrieve its output. Three artifacts
 
         are returned: ``report.jsonl``, ``issues.jsonl``, and ``log.html``.'
       operationId: get_run_output_api_v3_workspaces__workspace_name__author_run__run_id__output_get
@@ -499,32 +499,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     AuthorRunCreate:
       properties:
         command:
@@ -577,6 +551,32 @@ components:
       - runId
       title: AuthorRunCreateResponse
       description: Response for ``POST /author/run``.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     AuthorRunStatusUpdate:
       properties:
         passedTitles:

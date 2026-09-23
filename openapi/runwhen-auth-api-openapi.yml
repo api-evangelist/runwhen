@@ -1,17 +1,39 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy auth API
+  title: papi Auth API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: auth
+- name: Auth
 paths:
   /api/v3/token/:
     post:
       tags:
-      - auth
+      - Auth
       summary: Obtain Token
-      description: "Obtain JWT access and refresh tokens.\n\nAccepts either username or email with password for authentication.\nCompatible with Django REST Framework SimpleJWT token endpoint.\nSupports both application/json and application/x-www-form-urlencoded.\n\nArgs:\n    request: The incoming HTTP request.\n\nReturns:\n    TokenResponse with access and refresh JWT tokens.\n\nRaises:\n    HTTPException: 401 if credentials are invalid."
+      description: 'Obtain JWT access and refresh tokens.
+
+
+        Accepts either username or email with password for authentication.
+
+        Compatible with Django REST Framework SimpleJWT token endpoint.
+
+        Supports both application/json and application/x-www-form-urlencoded.
+
+
+        Args:
+
+        request: The incoming HTTP request.
+
+
+        Returns:
+
+        TokenResponse with access and refresh JWT tokens.
+
+
+        Raises:
+
+        HTTPException: 401 if credentials are invalid.'
       operationId: obtain_token_api_v3_token__post
       responses:
         '200':
@@ -24,9 +46,27 @@ paths:
   /api/v3/token/refresh/:
     post:
       tags:
-      - auth
+      - Auth
       summary: Refresh Token
-      description: "Refresh an access token using a refresh token.\n\nAccepts {\"refresh\": \"<token>\"} in the request body, matching Django SimpleJWT.\n\nArgs:\n    body: Request body containing the refresh token.\n\nReturns:\n    TokenResponse with new access and refresh tokens.\n\nRaises:\n    HTTPException: 401 if refresh token is invalid."
+      description: 'Refresh an access token using a refresh token.
+
+
+        Accepts {"refresh": ""} in the request body, matching Django SimpleJWT.
+
+
+        Args:
+
+        body: Request body containing the refresh token.
+
+
+        Returns:
+
+        TokenResponse with new access and refresh tokens.
+
+
+        Raises:
+
+        HTTPException: 401 if refresh token is invalid.'
       operationId: refresh_token_api_v3_token_refresh__post
       requestBody:
         content:
@@ -51,9 +91,27 @@ paths:
   /api/v3/token/verify/:
     post:
       tags:
-      - auth
+      - Auth
       summary: Verify Token
-      description: "Verify a JWT token is valid and not expired.\n\nMirrors Django SimpleJWT TokenVerifyView. Returns {} on success.\n\nArgs:\n    body: Request body containing the token to verify.\n\nReturns:\n    Empty dict on success.\n\nRaises:\n    HTTPException: 401 if token is invalid or expired."
+      description: 'Verify a JWT token is valid and not expired.
+
+
+        Mirrors Django SimpleJWT TokenVerifyView. Returns {} on success.
+
+
+        Args:
+
+        body: Request body containing the token to verify.
+
+
+        Returns:
+
+        Empty dict on success.
+
+
+        Raises:
+
+        HTTPException: 401 if token is invalid or expired.'
       operationId: verify_token_api_v3_token_verify__post
       requestBody:
         content:
@@ -80,9 +138,31 @@ paths:
   /api/v3/username-password-login:
     post:
       tags:
-      - auth
+      - Auth
       summary: Username Password Login
-      description: "Authenticate user with username/password and return access token.\n\nThis endpoint is provided for UI login compatibility with Django.\nIt returns an access token with a custom lifetime based on the `days` parameter.\n\nArgs:\n    request: Token request containing username/email and password.\n    days: Token lifetime in days (default 1, max 30).\n\nReturns:\n    UsernamePasswordLoginResponse with access token and lifetime string.\n\nRaises:\n    HTTPException: 400 if credentials are invalid."
+      description: 'Authenticate user with username/password and return access token.
+
+
+        This endpoint is provided for UI login compatibility with Django.
+
+        It returns an access token with a custom lifetime based on the `days` parameter.
+
+
+        Args:
+
+        request: Token request containing username/email and password.
+
+        days: Token lifetime in days (default 1, max 30).
+
+
+        Returns:
+
+        UsernamePasswordLoginResponse with access token and lifetime string.
+
+
+        Raises:
+
+        HTTPException: 400 if credentials are invalid.'
       operationId: username_password_login_api_v3_username_password_login_post
       parameters:
       - name: days
@@ -119,7 +199,7 @@ paths:
   /api/v3/token/exchange/:
     post:
       tags:
-      - auth
+      - Auth
       summary: Exchange an external token for a PAPI JWT
       description: 'Exchange an Auth0 access token for a PAPI JWT.
 
@@ -183,6 +263,12 @@ components:
       - refresh
       title: TokenResponse
       description: Token response matching Django SimpleJWT format.
+    SubjectTokenType:
+      type: string
+      enum:
+      - urn:ietf:params:oauth:token-type:access_token
+      - auth0
+      title: SubjectTokenType
     TokenExchangeRequest:
       properties:
         grant_type:
@@ -208,21 +294,16 @@ components:
       - subject_token
       title: TokenExchangeRequest
       description: RFC 8693 Token Exchange request (simplified).
-    SubjectTokenType:
-      type: string
-      enum:
-      - urn:ietf:params:oauth:token-type:access_token
-      - auth0
-      title: SubjectTokenType
-    HTTPValidationError:
+    TokenRefreshRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        refresh:
+          type: string
+          title: Refresh
       type: object
-      title: HTTPValidationError
+      required:
+      - refresh
+      title: TokenRefreshRequest
+      description: Refresh token request matching Django SimpleJWT format.
     TokenRequest:
       properties:
         username:
@@ -243,52 +324,29 @@ components:
       - password
       title: TokenRequest
       description: Token request body - accepts username or email with password.
-    ValidationError:
+    UsernamePasswordLoginResponse:
       properties:
-        loc:
+        access:
+          type: string
+          title: Access
+        lifetime:
+          type: string
+          title: Lifetime
+      type: object
+      required:
+      - access
+      - lifetime
+      title: UsernamePasswordLoginResponse
+      description: Response for username-password-login endpoint matching Django format.
+    HTTPValidationError:
+      properties:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TokenRefreshRequest:
-      properties:
-        refresh:
-          type: string
-          title: Refresh
-      type: object
-      required:
-      - refresh
-      title: TokenRefreshRequest
-      description: Refresh token request matching Django SimpleJWT format.
-    TokenVerifyRequest:
-      properties:
-        token:
-          type: string
-          title: Token
-      type: object
-      required:
-      - token
-      title: TokenVerifyRequest
-      description: Token verify request matching Django SimpleJWT format.
+      title: HTTPValidationError
     TokenExchangeResponse:
       properties:
         access_token:
@@ -317,20 +375,42 @@ components:
       - expires_in
       title: TokenExchangeResponse
       description: RFC 8693 Token Exchange response.
-    UsernamePasswordLoginResponse:
+    ValidationError:
       properties:
-        access:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Access
-        lifetime:
+          title: Message
+        type:
           type: string
-          title: Lifetime
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - access
-      - lifetime
-      title: UsernamePasswordLoginResponse
-      description: Response for username-password-login endpoint matching Django format.
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TokenVerifyRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: TokenVerifyRequest
+      description: Token verify request matching Django SimpleJWT format.
   securitySchemes:
     BearerAuth:
       type: http

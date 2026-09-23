@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: papi alert-query-proxy configuration API
+  title: papi Configuration API
   description: RunWhen Platform API
   version: 2.0.0
 tags:
-- name: configuration
+- name: Configuration
 paths:
   /api/v3/configuration/what-knowledge:
     get:
       tags:
-      - configuration
+      - Configuration
       summary: Get what-knowledge graph
       description: Return the what-knowledge graph used for task search.
       operationId: list_what_knowledge_api_v3_configuration_what_knowledge_get
