@@ -154,29 +154,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    UploadConfigResponse:
-      properties:
-        token:
-          type: string
-          title: Token
-        papi_url:
-          type: string
-          title: Papi Url
-      type: object
-      required:
-      - token
-      - papi_url
-      title: UploadConfigResponse
-      description: Response containing upload credentials and PAPI URL for workspace-builder.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -203,6 +180,29 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UploadConfigResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+        papi_url:
+          type: string
+          title: Papi Url
+      type: object
+      required:
+      - token
+      - papi_url
+      title: UploadConfigResponse
+      description: Response containing upload credentials and PAPI URL for workspace-builder.
   securitySchemes:
     BearerAuth:
       type: http

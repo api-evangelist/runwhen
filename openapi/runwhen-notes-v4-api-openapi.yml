@@ -253,6 +253,55 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    NoteCreateV4:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+          description: Short note title
+        content:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Content
+          description: Note content
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+          description: Canonical resource paths
+        resourceSelectors:
+          items:
+            $ref: '#/components/schemas/ResourceSelectorV4'
+          type: array
+          title: Resourceselectors
+          description: Tag selectors resolved to resources by the platform
+        abstractEntities:
+          items:
+            type: string
+          type: array
+          title: Abstractentities
+          description: Normalized entity tokens
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Author-facing labels
+        status:
+          $ref: '#/components/schemas/NoteStatusV4'
+          description: Note lifecycle status
+          default: active
+      additionalProperties: false
+      type: object
+      required:
+      - content
+      title: NoteCreateV4
+      description: Schema for creating a note.
     NoteResponseV4:
       properties:
         noteId:
@@ -383,62 +432,6 @@ components:
       - updatedAt
       title: NoteResponseV4
       description: Note response schema for API responses.
-    NoteStatusV4:
-      type: string
-      enum:
-      - active
-      - deprecated
-      title: NoteStatusV4
-      description: Note lifecycle status.
-    NoteCreateV4:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Title
-          description: Short note title
-        content:
-          type: string
-          maxLength: 20000
-          minLength: 1
-          title: Content
-          description: Note content
-        resourcePaths:
-          items:
-            type: string
-          type: array
-          title: Resourcepaths
-          description: Canonical resource paths
-        resourceSelectors:
-          items:
-            $ref: '#/components/schemas/ResourceSelectorV4'
-          type: array
-          title: Resourceselectors
-          description: Tag selectors resolved to resources by the platform
-        abstractEntities:
-          items:
-            type: string
-          type: array
-          title: Abstractentities
-          description: Normalized entity tokens
-        tags:
-          items:
-            type: string
-          type: array
-          title: Tags
-          description: Author-facing labels
-        status:
-          $ref: '#/components/schemas/NoteStatusV4'
-          description: Note lifecycle status
-          default: active
-      additionalProperties: false
-      type: object
-      required:
-      - content
-      title: NoteCreateV4
-      description: Schema for creating a note.
     HTTPValidationError:
       properties:
         detail:
@@ -470,6 +463,56 @@ components:
       - matchReason
       title: NoteResourceLinkV4
       description: A materialized note→resource attachment (Tier-3), resolver-owned.
+    NoteStatusV4:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatusV4
+      description: Note lifecycle status.
+    ResourceSelectorV4:
+      properties:
+        matchTags:
+          additionalProperties:
+            type: string
+          type: object
+          title: Matchtags
+          description: Tag key/value equalities, ANDed together
+      additionalProperties: false
+      type: object
+      title: ResourceSelectorV4
+      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
+
+
+        (``matchExpressions`` — set-based operators — is a planned follow-on; only
+
+        ``matchTags`` is supported today.)'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     NoteUpdateV4:
       properties:
         title:
@@ -526,49 +569,6 @@ components:
       type: object
       title: NoteUpdateV4
       description: Schema for partial update of a note.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ResourceSelectorV4:
-      properties:
-        matchTags:
-          additionalProperties:
-            type: string
-          type: object
-          title: Matchtags
-          description: Tag key/value equalities, ANDed together
-      additionalProperties: false
-      type: object
-      title: ResourceSelectorV4
-      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
-
-
-        (``matchExpressions`` — set-based operators — is a planned follow-on; only
-
-        ``matchTags`` is supported today.)'
   securitySchemes:
     BearerAuth:
       type: http

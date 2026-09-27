@@ -59,7 +59,7 @@ tags:
 - MCP
 apis:
 - aid: runwhen:runwhen-alert-query-proxy-api
-  name: RunWhen alert-query-proxy API
+  name: RunWhen Alert Query Proxy API
   description: The alert-query-proxy API from RunWhen — 1 operation(s) for alert-query-proxy.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -69,7 +69,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-alert-query-proxy-api-openapi.yml
 - aid: runwhen:runwhen-auth-api
-  name: RunWhen auth API
+  name: RunWhen Auth API
   description: The auth API from RunWhen — 5 operation(s) for auth.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -81,7 +81,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-auth-api-openapi.yml
 - aid: runwhen:runwhen-auth-providers-api
-  name: RunWhen auth-providers API
+  name: RunWhen Auth Providers API
   description: The auth-providers API from RunWhen — 1 operation(s) for auth-providers.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -91,7 +91,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-auth-providers-api-openapi.yml
 - aid: runwhen:runwhen-auth0-api
-  name: RunWhen auth0 API
+  name: RunWhen Auth0 API
   description: The auth0 API from RunWhen — 5 operation(s) for auth0.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -103,7 +103,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-auth0-api-openapi.yml
 - aid: runwhen:runwhen-author-api
-  name: RunWhen author API
+  name: RunWhen Author API
   description: The author API from RunWhen — 8 operation(s) for author.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -115,7 +115,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-author-api-openapi.yml
 - aid: runwhen:runwhen-chat-config-api
-  name: RunWhen chat-config API
+  name: RunWhen Chat Config API
   description: The chat-config API from RunWhen — 11 operation(s) for chat-config.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -125,7 +125,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-chat-config-api-openapi.yml
 - aid: runwhen:runwhen-codebundles-api
-  name: RunWhen codebundles API
+  name: RunWhen Codebundles API
   description: The codebundles API from RunWhen — 1 operation(s) for codebundles.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -135,7 +135,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-codebundles-api-openapi.yml
 - aid: runwhen:runwhen-codecollections-api
-  name: RunWhen codecollections API
+  name: RunWhen Codecollections API
   description: The codecollections API from RunWhen — 3 operation(s) for codecollections.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -145,7 +145,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-codecollections-api-openapi.yml
 - aid: runwhen:runwhen-comments-api
-  name: RunWhen comments API
+  name: RunWhen Comments API
   description: The comments API from RunWhen — 5 operation(s) for comments.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -157,7 +157,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-comments-api-openapi.yml
 - aid: runwhen:runwhen-configuration-api
-  name: RunWhen configuration API
+  name: RunWhen Configuration API
   description: The configuration API from RunWhen — 1 operation(s) for configuration.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -169,7 +169,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-configuration-api-openapi.yml
 - aid: runwhen:runwhen-explorer-api
-  name: RunWhen explorer API
+  name: RunWhen Explorer API
   description: The explorer API from RunWhen — 8 operation(s) for explorer.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -181,7 +181,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-explorer-api-openapi.yml
 - aid: runwhen:runwhen-health-api
-  name: RunWhen health API
+  name: RunWhen Health API
   description: The health API from RunWhen — 4 operation(s) for health.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -193,7 +193,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-health-api-openapi.yml
 - aid: runwhen:runwhen-internal-api
-  name: RunWhen internal API
+  name: RunWhen Internal API
   description: The internal API from RunWhen — 2 operation(s) for internal.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -205,7 +205,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-internal-api-openapi.yml
 - aid: runwhen:runwhen-issue-occurrences-api
-  name: RunWhen issue-occurrences API
+  name: RunWhen Issue Occurrences API
   description: The issue-occurrences API from RunWhen — 6 operation(s) for issue-occurrences.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -215,7 +215,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-issue-occurrences-api-openapi.yml
 - aid: runwhen:runwhen-issues-api
-  name: RunWhen issues API
+  name: RunWhen Issues API
   description: The issues API from RunWhen — 14 operation(s) for issues.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -227,7 +227,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-issues-api-openapi.yml
 - aid: runwhen:runwhen-jwks-api
-  name: RunWhen jwks API
+  name: RunWhen Jwks API
   description: The jwks API from RunWhen — 1 operation(s) for jwks.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -239,7 +239,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-jwks-api-openapi.yml
 - aid: runwhen:runwhen-llm-config-api
-  name: RunWhen llm-config API
+  name: RunWhen Llm Config API
   description: The llm-config API from RunWhen — 1 operation(s) for llm-config.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -259,7 +259,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-notes-deprecated-v3-api-openapi.yml
 - aid: runwhen:runwhen-notes-import-v4-api
-  name: RunWhen notes-import-v4 API
+  name: RunWhen Notes Import V4 API
   description: The notes-import-v4 API from RunWhen — 4 operation(s) for notes-import-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -269,7 +269,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-notes-import-v4-api-openapi.yml
 - aid: runwhen:runwhen-notes-v4-api
-  name: RunWhen notes-v4 API
+  name: RunWhen Notes V4 API
   description: The notes-v4 API from RunWhen — 2 operation(s) for notes-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -279,7 +279,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-notes-v4-api-openapi.yml
 - aid: runwhen:runwhen-oauth-server-api
-  name: RunWhen oauth-server API
+  name: RunWhen OAUTH Server API
   description: The oauth-server API from RunWhen — 8 operation(s) for oauth-server.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -289,7 +289,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-oauth-server-api-openapi.yml
 - aid: runwhen:runwhen-persona-v4-api
-  name: RunWhen persona-v4 API
+  name: RunWhen Persona V4 API
   description: The persona-v4 API from RunWhen — 3 operation(s) for persona-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -299,7 +299,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-persona-v4-api-openapi.yml
 - aid: runwhen:runwhen-personas-api
-  name: RunWhen personas API
+  name: RunWhen Personas API
   description: The personas API from RunWhen — 2 operation(s) for personas.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -311,7 +311,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-personas-api-openapi.yml
 - aid: runwhen:runwhen-profile-api
-  name: RunWhen profile API
+  name: RunWhen Profile API
   description: The profile API from RunWhen — 2 operation(s) for profile.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -323,7 +323,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-profile-api-openapi.yml
 - aid: runwhen:runwhen-run-requests-api
-  name: RunWhen run-requests API
+  name: RunWhen Run Requests API
   description: The run-requests API from RunWhen — 18 operation(s) for run-requests.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -333,7 +333,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-run-requests-api-openapi.yml
 - aid: runwhen:runwhen-run-sessions-api
-  name: RunWhen run-sessions API
+  name: RunWhen Run Sessions API
   description: The run-sessions API from RunWhen — 20 operation(s) for run-sessions.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -343,7 +343,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-run-sessions-api-openapi.yml
 - aid: runwhen:runwhen-runbook-v4-api
-  name: RunWhen runbook-v4 API
+  name: RunWhen Runbook V4 API
   description: The runbook-v4 API from RunWhen — 2 operation(s) for runbook-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -353,7 +353,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-runbook-v4-api-openapi.yml
 - aid: runwhen:runwhen-runbooks-api
-  name: RunWhen runbooks API
+  name: RunWhen Runbooks API
   description: The runbooks API from RunWhen — 2 operation(s) for runbooks.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -365,7 +365,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-runbooks-api-openapi.yml
 - aid: runwhen:runwhen-runners-api
-  name: RunWhen runners API
+  name: RunWhen Runners API
   description: The runners API from RunWhen — 2 operation(s) for runners.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -377,7 +377,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-runners-api-openapi.yml
 - aid: runwhen:runwhen-rwfs-api
-  name: RunWhen rwfs API
+  name: RunWhen Rwfs API
   description: The rwfs API from RunWhen — 1 operation(s) for rwfs.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -387,7 +387,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-rwfs-api-openapi.yml
 - aid: runwhen:runwhen-rwsupport-api
-  name: RunWhen rwsupport API
+  name: RunWhen Rwsupport API
   description: The rwsupport API from RunWhen — 14 operation(s) for rwsupport.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -397,7 +397,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-rwsupport-api-openapi.yml
 - aid: runwhen:runwhen-rwsupport-prompt-hub-api
-  name: RunWhen rwsupport-prompt-hub API
+  name: RunWhen Rwsupport Prompt Hub API
   description: The rwsupport-prompt-hub API from RunWhen — 5 operation(s) for rwsupport-prompt-hub.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -407,7 +407,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-rwsupport-prompt-hub-api-openapi.yml
 - aid: runwhen:runwhen-rwsupport-scrubhub-api
-  name: RunWhen rwsupport-scrubhub API
+  name: RunWhen Rwsupport Scrubhub API
   description: The rwsupport-scrubhub API from RunWhen — 11 operation(s) for rwsupport-scrubhub.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -417,7 +417,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-rwsupport-scrubhub-api-openapi.yml
 - aid: runwhen:runwhen-slack-api
-  name: RunWhen slack API
+  name: RunWhen Slack API
   description: The slack API from RunWhen — 2 operation(s) for slack.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -429,7 +429,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-slack-api-openapi.yml
 - aid: runwhen:runwhen-sli-v4-api
-  name: RunWhen sli-v4 API
+  name: RunWhen Sli V4 API
   description: The sli-v4 API from RunWhen — 2 operation(s) for sli-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -439,7 +439,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-sli-v4-api-openapi.yml
 - aid: runwhen:runwhen-slis-api
-  name: RunWhen slis API
+  name: RunWhen Slis API
   description: The slis API from RunWhen — 6 operation(s) for slis.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -449,7 +449,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-slis-api-openapi.yml
 - aid: runwhen:runwhen-slo-v4-api
-  name: RunWhen slo-v4 API
+  name: RunWhen Slo V4 API
   description: The slo-v4 API from RunWhen — 2 operation(s) for slo-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -459,7 +459,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-slo-v4-api-openapi.yml
 - aid: runwhen:runwhen-slx-v4-api
-  name: RunWhen slx-v4 API
+  name: RunWhen Slx V4 API
   description: The slx-v4 API from RunWhen — 3 operation(s) for slx-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -469,7 +469,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-slx-v4-api-openapi.yml
 - aid: runwhen:runwhen-slxs-api
-  name: RunWhen slxs API
+  name: RunWhen Slxs API
   description: The slxs API from RunWhen — 16 operation(s) for slxs.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -479,7 +479,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-slxs-api-openapi.yml
 - aid: runwhen:runwhen-social-auth-api
-  name: RunWhen social-auth API
+  name: RunWhen Social Auth API
   description: The social-auth API from RunWhen — 6 operation(s) for social-auth.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -489,7 +489,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-social-auth-api-openapi.yml
 - aid: runwhen:runwhen-sync-api
-  name: RunWhen sync API
+  name: RunWhen Sync API
   description: The sync API from RunWhen — 14 operation(s) for sync.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -501,7 +501,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-sync-api-openapi.yml
 - aid: runwhen:runwhen-tokens-api
-  name: RunWhen tokens API
+  name: RunWhen Tokens API
   description: The tokens API from RunWhen — 8 operation(s) for tokens.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -513,7 +513,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-tokens-api-openapi.yml
 - aid: runwhen:runwhen-tutorials-api
-  name: RunWhen tutorials API
+  name: RunWhen Tutorials API
   description: The tutorials API from RunWhen — 2 operation(s) for tutorials.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -525,7 +525,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-tutorials-api-openapi.yml
 - aid: runwhen:runwhen-users-api
-  name: RunWhen users API
+  name: RunWhen Users API
   description: The users API from RunWhen — 17 operation(s) for users.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -537,7 +537,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-users-api-openapi.yml
 - aid: runwhen:runwhen-workflow-v4-api
-  name: RunWhen workflow-v4 API
+  name: RunWhen Workflow V4 API
   description: The workflow-v4 API from RunWhen — 3 operation(s) for workflow-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -547,7 +547,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-workflow-v4-api-openapi.yml
 - aid: runwhen:runwhen-workflows-api
-  name: RunWhen workflows API
+  name: RunWhen Workflows API
   description: The workflows API from RunWhen — 6 operation(s) for workflows.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -559,7 +559,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-workflows-api-openapi.yml
 - aid: runwhen:runwhen-workspace-alerts-api
-  name: RunWhen workspace-alerts API
+  name: RunWhen Workspace Alerts API
   description: The workspace-alerts API from RunWhen — 1 operation(s) for workspace-alerts.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -569,7 +569,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-workspace-alerts-api-openapi.yml
 - aid: runwhen:runwhen-workspace-v4-api
-  name: RunWhen workspace-v4 API
+  name: RunWhen Workspace V4 API
   description: The workspace-v4 API from RunWhen — 1 operation(s) for workspace-v4.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -579,7 +579,7 @@ apis:
   - type: OpenAPI
     url: openapi/runwhen-workspace-v4-api-openapi.yml
 - aid: runwhen:runwhen-workspaces-api
-  name: RunWhen workspaces API
+  name: RunWhen Workspaces API
   description: The workspaces API from RunWhen — 72 operation(s) for workspaces.
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
@@ -608,8 +608,6 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
-  - GraphQL
-  tags_raw:
   - Graph QL
   properties:
   - type: OpenAPI

@@ -528,6 +528,87 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    IssueOccurrenceListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/IssueOccurrenceResponse'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: IssueOccurrenceListResponse
+      description: Schema for paginated issue occurrence list response.
+    WorkspaceIssueOccurrenceListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/WorkspaceIssueOccurrenceResponse'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: WorkspaceIssueOccurrenceListResponse
+      description: Schema for paginated workspace issue occurrence list response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     WorkspaceIssueOccurrenceResponse:
       properties:
         observedAt:
@@ -630,87 +711,6 @@ components:
 
 
         Extends IssueOccurrenceResponse with additional workspace-level fields.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    IssueOccurrenceListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/IssueOccurrenceResponse'
-          type: array
-          title: Results
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: Next page URL
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: Previous page URL
-      type: object
-      required:
-      - results
-      - count
-      - limit
-      - offset
-      title: IssueOccurrenceListResponse
-      description: Schema for paginated issue occurrence list response.
-    WorkspaceIssueOccurrenceListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/WorkspaceIssueOccurrenceResponse'
-          type: array
-          title: Results
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: Next page URL
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: Previous page URL
-      type: object
-      required:
-      - results
-      - count
-      - limit
-      - offset
-      title: WorkspaceIssueOccurrenceListResponse
-      description: Schema for paginated workspace issue occurrence list response.
     ValidationError:
       properties:
         loc:

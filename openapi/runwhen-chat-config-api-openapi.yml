@@ -934,75 +934,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    RuleUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        rule_content:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rule Content
-        scope_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope Type
-        scope_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope Id
-        is_active:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Active
-      type: object
-      title: RuleUpdate
-      description: Update a chat rule.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PreviewArtifactDeliveriesRequest:
-      properties:
-        artifact_markdown:
-          type: string
-          title: Artifact Markdown
-          default: ''
-        export_url_path:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Export Url Path
-          description: Relative chat-export URL the executions list returned for this row (e.g. '/workspace/foo/chat-export/<signed-token>?view=pro'). PAPI joins it with WEB_BASE_URL for the absolute 'View full session' link in the preview. Pass null to suppress the link entirely.
-        sink_configs:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Sink Configs
-          description: Optional snapshot of the sinks targeted by THIS run, taken at fire time. When provided, the preview renders through these instead of the command's current sinks — so admins see what was actually delivered (or attempted) for the historical run, not what would be delivered now. When omitted, falls back to the command's current sink_configs.
-      type: object
-      title: PreviewArtifactDeliveriesRequest
-      description: 'Render a saved execution''s artifact through its command''s sinks
-
-        in dispatcher dry-run mode — no email is sent, no slack message
-
-        posted. Returns per-sink rendered payloads so admins can inspect
-
-        exactly what was (or would-be) delivered for a past run.'
     CommandCreate:
       properties:
         name:
@@ -1084,85 +1015,73 @@ components:
         against no instructions, so reject at the schema layer instead of
 
         bouncing the user off agentfarm''s 422.'
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    DryRunRequest:
+      title: HTTPValidationError
+    RuleCreate:
       properties:
-        command_content:
+        name:
           type: string
-          minLength: 1
-          title: Command Content
-        sink_configs:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Sink Configs
-        assistant_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Assistant Name
-        run_as_user:
+          maxLength: 200
+          title: Name
+        rule_content:
           type: string
-          minLength: 1
-          title: Run As User
+          title: Rule Content
         scope_type:
           type: string
           title: Scope Type
-          default: workspace
         scope_id:
           anyOf:
           - type: string
           - type: 'null'
           title: Scope Id
-        name:
-          type: string
-          title: Name
-          default: <dry-run>
+        is_active:
+          type: boolean
+          title: Is Active
+          default: true
       type: object
       required:
-      - command_content
-      - run_as_user
-      title: DryRunRequest
-      description: 'Form-state dry-run for the schedule-config dialog.
-
-
-        ``run_as_user`` is required (RW-931 follow-up) — the dry-run session
-
-        runs AS this user so chat-export and audit show the actual identity.
-
-        Empty / missing ``run_as_user`` yields a 422 here (no silent fallback
-
-        to the requesting admin). ``StringConstraints(strip_whitespace=True)``
-
-        is what makes ``"   "`` count as empty: ``Field(min_length=1)`` checks
-
-        the raw string and would otherwise let three-space input through.'
+      - name
+      - rule_content
+      - scope_type
+      title: RuleCreate
+      description: Create a chat rule.
+    RuleUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        rule_content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rule Content
+        scope_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Type
+        scope_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+      type: object
+      title: RuleUpdate
+      description: Update a chat rule.
     CommandUpdate:
       properties:
         name:
@@ -1251,34 +1170,115 @@ components:
         then-blank mistake — reject so the prompt can''t accidentally be
 
         overwritten with nothing on save.'
-    RuleCreate:
+    DryRunRequest:
       properties:
-        name:
+        command_content:
           type: string
-          maxLength: 200
-          title: Name
-        rule_content:
+          minLength: 1
+          title: Command Content
+        sink_configs:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Sink Configs
+        assistant_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assistant Name
+        run_as_user:
           type: string
-          title: Rule Content
+          minLength: 1
+          title: Run As User
         scope_type:
           type: string
           title: Scope Type
+          default: workspace
         scope_id:
           anyOf:
           - type: string
           - type: 'null'
           title: Scope Id
-        is_active:
-          type: boolean
-          title: Is Active
-          default: true
+        name:
+          type: string
+          title: Name
+          default: <dry-run>
       type: object
       required:
-      - name
-      - rule_content
-      - scope_type
-      title: RuleCreate
-      description: Create a chat rule.
+      - command_content
+      - run_as_user
+      title: DryRunRequest
+      description: 'Form-state dry-run for the schedule-config dialog.
+
+
+        ``run_as_user`` is required (RW-931 follow-up) — the dry-run session
+
+        runs AS this user so chat-export and audit show the actual identity.
+
+        Empty / missing ``run_as_user`` yields a 422 here (no silent fallback
+
+        to the requesting admin). ``StringConstraints(strip_whitespace=True)``
+
+        is what makes ``"   "`` count as empty: ``Field(min_length=1)`` checks
+
+        the raw string and would otherwise let three-space input through.'
+    PreviewArtifactDeliveriesRequest:
+      properties:
+        artifact_markdown:
+          type: string
+          title: Artifact Markdown
+          default: ''
+        export_url_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Export Url Path
+          description: Relative chat-export URL the executions list returned for this row (e.g. '/workspace/foo/chat-export/<signed-token>?view=pro'). PAPI joins it with WEB_BASE_URL for the absolute 'View full session' link in the preview. Pass null to suppress the link entirely.
+        sink_configs:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Sink Configs
+          description: Optional snapshot of the sinks targeted by THIS run, taken at fire time. When provided, the preview renders through these instead of the command's current sinks — so admins see what was actually delivered (or attempted) for the historical run, not what would be delivered now. When omitted, falls back to the command's current sink_configs.
+      type: object
+      title: PreviewArtifactDeliveriesRequest
+      description: 'Render a saved execution''s artifact through its command''s sinks
+
+        in dispatcher dry-run mode — no email is sent, no slack message
+
+        posted. Returns per-sink rendered payloads so admins can inspect
+
+        exactly what was (or would-be) delivered for a past run.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     BearerAuth:
       type: http

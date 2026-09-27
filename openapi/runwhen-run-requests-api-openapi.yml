@@ -1706,164 +1706,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    OutputProcessingStatusEnum:
-      type: string
-      enum:
-      - new
-      - processing
-      - successful
-      - failed
-      - retry
-      title: OutputProcessingStatusEnum
-      description: Processing status for RunRequest output.
-    RunRequestIssuesResponse:
-      properties:
-        issues:
-          items:
-            $ref: '#/components/schemas/IssueReference'
-          type: array
-          title: Issues
-          description: Issues from this RunRequest
-        total:
-          type: integer
-          title: Total
-          description: Total issue count
-      type: object
-      required:
-      - issues
-      - total
-      title: RunRequestIssuesResponse
-      description: Response for issues endpoint.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    StartRunRequestResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-          description: RunRequest ID
-        taskset_uuid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Taskset Uuid
-          description: UUID from runner-control
-        request_time:
-          type: string
-          format: date-time
-          title: Request Time
-          description: When the run started
-        message:
-          type: string
-          title: Message
-          description: Status message
-      type: object
-      required:
-      - id
-      - request_time
-      - message
-      title: StartRunRequestResponse
-      description: Response for starting a staged RunRequest.
-    RunRequestRecordResponse:
-      properties:
-        passed_titles:
-          type: string
-          title: Passed Titles
-          description: Pipe-separated list of passed task titles
-          default: ''
-        failed_titles:
-          type: string
-          title: Failed Titles
-          description: Pipe-separated list of failed task titles
-          default: ''
-        skipped_titles:
-          type: string
-          title: Skipped Titles
-          description: Pipe-separated list of skipped task titles
-          default: ''
-        errors:
-          anyOf:
-          - type: string
-          - additionalProperties: true
-            type: object
-          title: Errors
-          description: Task errors (dict or pipe-separated string)
-        robot_log_file:
-          type: string
-          title: Robot Log File
-          description: URL to robot log file
-          default: ''
-        robot_stdout_file:
-          type: string
-          title: Robot Stdout File
-          description: URL to robot stdout file
-          default: ''
-        report_file:
-          type: string
-          title: Report File
-          description: URL to report file
-          default: ''
-        issues_file:
-          type: string
-          title: Issues File
-          description: URL to issues file
-          default: ''
-        robot_output:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Robot Output
-          description: Raw robot output XML (legacy format)
-      type: object
-      title: RunRequestRecordResponse
-      description: Schema for recording a run response (runner callback).
-    RunRequestListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/RunRequestResponse'
-          type: array
-          title: Results
-          description: List of RunRequests
-        count:
-          type: integer
-          title: Count
-          description: Total count matching filters
-        limit:
-          type: integer
-          title: Limit
-          description: Maximum items per page
-        offset:
-          type: integer
-          title: Offset
-          description: Number of items skipped
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: Next page URL
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: Previous page URL
-      type: object
-      required:
-      - results
-      - count
-      - limit
-      - offset
-      title: RunRequestListResponse
-      description: Paginated list response for RunRequest endpoints.
     RunRequestResponse:
       properties:
         id:
@@ -2071,32 +1913,6 @@ components:
       - title
       title: IssueReference
       description: Reference to an issue from a RunRequest.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     OutputResponse:
       properties:
         output:
@@ -2114,34 +1930,6 @@ components:
       - size_bytes
       title: OutputResponse
       description: Response for output endpoint.
-    ProcessingStatusResponse:
-      properties:
-        status:
-          $ref: '#/components/schemas/OutputProcessingStatusEnum'
-          description: Processing status
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-          description: When processing completed
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-          description: Error message if failed
-        retry_count:
-          type: integer
-          title: Retry Count
-          description: Number of retry attempts
-          default: 0
-      type: object
-      required:
-      - status
-      title: ProcessingStatusResponse
-      description: Schema for RunRequest output processing status.
     RunRequestCreate:
       properties:
         runsession_id:
@@ -2213,6 +2001,25 @@ components:
       type: object
       title: RunRequestCreate
       description: Schema for creating a new RunRequest.
+    OutputProcessingStatusEnum:
+      type: string
+      enum:
+      - new
+      - processing
+      - successful
+      - failed
+      - retry
+      title: OutputProcessingStatusEnum
+      description: Processing status for RunRequest output.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     RunnerStatusResponse:
       properties:
         taskset_uuid:
@@ -2234,6 +2041,199 @@ components:
       - status
       title: RunnerStatusResponse
       description: Response for runner status query.
+    ProcessingStatusResponse:
+      properties:
+        status:
+          $ref: '#/components/schemas/OutputProcessingStatusEnum'
+          description: Processing status
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+          description: When processing completed
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+          description: Error message if failed
+        retry_count:
+          type: integer
+          title: Retry Count
+          description: Number of retry attempts
+          default: 0
+      type: object
+      required:
+      - status
+      title: ProcessingStatusResponse
+      description: Schema for RunRequest output processing status.
+    StartRunRequestResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: RunRequest ID
+        taskset_uuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Taskset Uuid
+          description: UUID from runner-control
+        request_time:
+          type: string
+          format: date-time
+          title: Request Time
+          description: When the run started
+        message:
+          type: string
+          title: Message
+          description: Status message
+      type: object
+      required:
+      - id
+      - request_time
+      - message
+      title: StartRunRequestResponse
+      description: Response for starting a staged RunRequest.
+    RunRequestIssuesResponse:
+      properties:
+        issues:
+          items:
+            $ref: '#/components/schemas/IssueReference'
+          type: array
+          title: Issues
+          description: Issues from this RunRequest
+        total:
+          type: integer
+          title: Total
+          description: Total issue count
+      type: object
+      required:
+      - issues
+      - total
+      title: RunRequestIssuesResponse
+      description: Response for issues endpoint.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RunRequestRecordResponse:
+      properties:
+        passed_titles:
+          type: string
+          title: Passed Titles
+          description: Pipe-separated list of passed task titles
+          default: ''
+        failed_titles:
+          type: string
+          title: Failed Titles
+          description: Pipe-separated list of failed task titles
+          default: ''
+        skipped_titles:
+          type: string
+          title: Skipped Titles
+          description: Pipe-separated list of skipped task titles
+          default: ''
+        errors:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          title: Errors
+          description: Task errors (dict or pipe-separated string)
+        robot_log_file:
+          type: string
+          title: Robot Log File
+          description: URL to robot log file
+          default: ''
+        robot_stdout_file:
+          type: string
+          title: Robot Stdout File
+          description: URL to robot stdout file
+          default: ''
+        report_file:
+          type: string
+          title: Report File
+          description: URL to report file
+          default: ''
+        issues_file:
+          type: string
+          title: Issues File
+          description: URL to issues file
+          default: ''
+        robot_output:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Robot Output
+          description: Raw robot output XML (legacy format)
+      type: object
+      title: RunRequestRecordResponse
+      description: Schema for recording a run response (runner callback).
+    RunRequestListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/RunRequestResponse'
+          type: array
+          title: Results
+          description: List of RunRequests
+        count:
+          type: integer
+          title: Count
+          description: Total count matching filters
+        limit:
+          type: integer
+          title: Limit
+          description: Maximum items per page
+        offset:
+          type: integer
+          title: Offset
+          description: Number of items skipped
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: RunRequestListResponse
+      description: Paginated list response for RunRequest endpoints.
   securitySchemes:
     BearerAuth:
       type: http

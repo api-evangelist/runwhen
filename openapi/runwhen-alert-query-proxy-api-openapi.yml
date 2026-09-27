@@ -39,7 +39,7 @@ paths:
       - alert-query-proxy
       summary: Proxy To Alert Query
       description: Proxy request to the internal alert-query service.
-      operationId: proxy_to_alert_query_api_v1_alert_query__path__delete
+      operationId: patchApiV1AlertQueryByPath
       parameters:
       - name: path
         in: path
@@ -61,12 +61,14 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - BearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: proxy_to_alert_query_api_v1_alert_query__path__delete
     post:
       tags:
       - alert-query-proxy
       summary: Proxy To Alert Query
       description: Proxy request to the internal alert-query service.
-      operationId: proxy_to_alert_query_api_v1_alert_query__path__delete
+      operationId: postApiV1AlertQueryByPath
       parameters:
       - name: path
         in: path
@@ -88,12 +90,14 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - BearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: proxy_to_alert_query_api_v1_alert_query__path__delete
     put:
       tags:
       - alert-query-proxy
       summary: Proxy To Alert Query
       description: Proxy request to the internal alert-query service.
-      operationId: proxy_to_alert_query_api_v1_alert_query__path__delete
+      operationId: putApiV1AlertQueryByPath
       parameters:
       - name: path
         in: path
@@ -115,12 +119,14 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - BearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: proxy_to_alert_query_api_v1_alert_query__path__delete
     get:
       tags:
       - alert-query-proxy
       summary: Proxy To Alert Query
       description: Proxy request to the internal alert-query service.
-      operationId: proxy_to_alert_query_api_v1_alert_query__path__delete
+      operationId: getApiV1AlertQueryByPath
       parameters:
       - name: path
         in: path
@@ -142,17 +148,10 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - BearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: proxy_to_alert_query_api_v1_alert_query__path__delete
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -179,6 +178,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

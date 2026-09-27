@@ -51,26 +51,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    TaskVitalsResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TaskVitalsItem'
-          type: array
-          title: Items
-          description: One entry per (slx, task) with any run history.
-      type: object
-      title: TaskVitalsResponse
-      description: Workspace-scoped task-vitals payload.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -137,6 +117,26 @@ components:
       - lastRunAt
       title: TaskVitalsItem
       description: Per-(slx, task) run-history rollup.
+    TaskVitalsResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TaskVitalsItem'
+          type: array
+          title: Items
+          description: One entry per (slx, task) with any run history.
+      type: object
+      title: TaskVitalsResponse
+      description: Workspace-scoped task-vitals payload.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

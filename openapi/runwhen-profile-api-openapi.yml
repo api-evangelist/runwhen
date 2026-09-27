@@ -145,6 +145,58 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProfileResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        user:
+          type: integer
+          title: User
+        publicEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicemail
+        publicFullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicfullname
+        publicLinkedinUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publiclinkedinurl
+        publicAvatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicavatarurl
+        publicBio:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publicbio
+        optOutPublicGroup:
+          type: boolean
+          title: Optoutpublicgroup
+          default: false
+      type: object
+      required:
+      - id
+      - user
+      title: ProfileResponse
+      description: Profile response matching Django's ProfileSerializer (all fields, camelCase).
     SyncUserAccountRequest:
       properties:
         username:
@@ -190,15 +242,6 @@ components:
       type: object
       title: ProfileUpdateRequest
       description: Profile update request — all fields optional for partial updates.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -225,49 +268,6 @@ components:
       - msg
       - type
       title: ValidationError
-    ProfileResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        user:
-          type: integer
-          title: User
-        publicEmail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Publicemail
-        publicFullName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Publicfullname
-        publicLinkedinUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Publiclinkedinurl
-        publicAvatarUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Publicavatarurl
-        publicBio:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Publicbio
-        optOutPublicGroup:
-          type: boolean
-          title: Optoutpublicgroup
-          default: false
-      type: object
-      required:
-      - id
-      - user
-      title: ProfileResponse
-      description: Profile response matching Django's ProfileSerializer (all fields, camelCase).
   securitySchemes:
     BearerAuth:
       type: http

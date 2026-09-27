@@ -57,7 +57,7 @@
     "runwhen-workspaces-api-openapi.yml"
   ],
   "archived": [
-    "deleted 2 superseded output(s) from the previous generation"
+    "deleted 1 superseded output(s) from the previous generation"
   ],
   "errors": [],
   "warnings": [],
@@ -117,8 +117,8 @@
     "runwhen-papi-openapi-original.json: declared missing tag: workspace-alerts",
     "runwhen-papi-openapi-original.json: declared missing tag: workspace-v4",
     "runwhen-papi-openapi-original.json: declared missing tag: workspaces",
-    "superseded outputs removed: runwhen-graph-ql-api-openapi.yml, runwhen-sl-os-api-openapi.yml",
-    "apis.yml register: written (+2 apis, 51 total)"
+    "superseded outputs removed: runwhen-graph-ql-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 51 total)"
   ],
   "skipped": [
     "runwhen-alert-query-proxy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -155,11 +155,11 @@
     "runwhen-rwsupport-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-rwsupport-prompt-hub-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-rwsupport-scrubhub-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "runwhen-sl-os-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-slack-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-sli-v4-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-slis-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-slo-v4-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "runwhen-slos-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-slx-v4-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-slxs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "runwhen-social-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",

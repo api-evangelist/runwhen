@@ -341,16 +341,29 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    WebhookUrlResponse:
+    WebhookTokenResponse:
       properties:
         webhook_url:
           type: string
           title: Webhook Url
+        webhook_token:
+          type: string
+          title: Webhook Token
       type: object
       required:
       - webhook_url
-      title: WebhookUrlResponse
-      description: Response for webhook URL.
+      - webhook_token
+      title: WebhookTokenResponse
+      description: Response for webhook token.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     WorkflowListResponse:
       properties:
         results:
@@ -381,29 +394,6 @@ components:
 
 
         Subclasses WorkflowListResponseV4 but overrides results to use legacy WorkflowResponse items.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    WebhookTokenResponse:
-      properties:
-        webhook_url:
-          type: string
-          title: Webhook Url
-        webhook_token:
-          type: string
-          title: Webhook Token
-      type: object
-      required:
-      - webhook_url
-      - webhook_token
-      title: WebhookTokenResponse
-      description: Response for webhook token.
     ValidationError:
       properties:
         loc:
@@ -481,6 +471,16 @@ components:
       - status
       title: WorkflowResponse
       description: "Workflow response schema for API responses (legacy V1/V3 wire shape).\n\nSubclasses WorkflowResponseV4 (flat V4 fields) and layers on:\n  - Legacy wire keys: ``workspace`` (was ``workspaceId``),\n    ``created`` (was ``createdAt``), ``modified`` (was ``modifiedAt``)\n  - Computed ``spec`` and ``status`` for Django-era consumers\n\nspec is the workflow definition (UI reads workflow.spec.fromActivities).\nSunset path: when external consumers fully migrate to /api/v4, delete this subclass."
+    WebhookUrlResponse:
+      properties:
+        webhook_url:
+          type: string
+          title: Webhook Url
+      type: object
+      required:
+      - webhook_url
+      title: WebhookUrlResponse
+      description: Response for webhook URL.
   securitySchemes:
     BearerAuth:
       type: http

@@ -418,32 +418,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    RunnerRegisterRequest:
-      properties:
-        organization:
-          type: string
-          title: Organization
-          default: ''
-        workspace:
-          type: string
-          title: Workspace
-          default: ''
-        runner:
-          type: string
-          title: Runner
-          default: ''
-      type: object
-      title: RunnerRegisterRequest
-      description: Request body for runner registration endpoint.
     CodeBundleReference:
       properties:
         id:
@@ -477,34 +451,25 @@ components:
       type: object
       title: CodeBundleReference
       description: Code bundle reference matching runner-control JSONCodeBundleReference.
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    RunnerRegisterResponse:
+      title: HTTPValidationError
+    RunnerStatusUpdateRequest:
       properties:
+        organization:
+          type: string
+          title: Organization
+          default: ''
+        workspace:
+          type: string
+          title: Workspace
+          default: ''
         runner:
           type: string
           title: Runner
@@ -513,9 +478,31 @@ components:
           type: string
           title: Runneruuid
           default: ''
+        runnerStatus:
+          additionalProperties: true
+          type: object
+          title: Runnerstatus
+          default: {}
       type: object
-      title: RunnerRegisterResponse
-      description: Response for runner registration endpoint.
+      title: RunnerStatusUpdateRequest
+      description: Request body for runner status update endpoint.
+    RunnerRegisterRequest:
+      properties:
+        organization:
+          type: string
+          title: Organization
+          default: ''
+        workspace:
+          type: string
+          title: Workspace
+          default: ''
+        runner:
+          type: string
+          title: Runner
+          default: ''
+      type: object
+      title: RunnerRegisterRequest
+      description: Request body for runner registration endpoint.
     SLIEnvResponse:
       properties:
         runner:
@@ -555,16 +542,8 @@ components:
       type: object
       title: SLIEnvResponse
       description: SLI environment response matching Go SLIEnv struct.
-    RunnerStatusUpdateRequest:
+    RunnerRegisterResponse:
       properties:
-        organization:
-          type: string
-          title: Organization
-          default: ''
-        workspace:
-          type: string
-          title: Workspace
-          default: ''
         runner:
           type: string
           title: Runner
@@ -573,14 +552,35 @@ components:
           type: string
           title: Runneruuid
           default: ''
-        runnerStatus:
-          additionalProperties: true
-          type: object
-          title: Runnerstatus
-          default: {}
       type: object
-      title: RunnerStatusUpdateRequest
-      description: Request body for runner status update endpoint.
+      title: RunnerRegisterResponse
+      description: Response for runner registration endpoint.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     BearerAuth:
       type: http

@@ -249,61 +249,12 @@ paths:
       security: []
 components:
   schemas:
-    TokenResponse:
-      properties:
-        access:
-          type: string
-          title: Access
-        refresh:
-          type: string
-          title: Refresh
-      type: object
-      required:
-      - access
-      - refresh
-      title: TokenResponse
-      description: Token response matching Django SimpleJWT format.
     SubjectTokenType:
       type: string
       enum:
       - urn:ietf:params:oauth:token-type:access_token
       - auth0
       title: SubjectTokenType
-    TokenExchangeRequest:
-      properties:
-        grant_type:
-          type: string
-          title: Grant Type
-          description: Must be the token-exchange grant type.
-          default: urn:ietf:params:oauth:grant-type:token-exchange
-        subject_token:
-          type: string
-          title: Subject Token
-          description: The external token to exchange (e.g. Auth0 access token).
-        subject_token_type:
-          $ref: '#/components/schemas/SubjectTokenType'
-          description: 'Token type: "auth0" or the full RFC 8693 URN.'
-          default: auth0
-        scope:
-          type: string
-          title: Scope
-          description: Requested scopes (informational only).
-          default: openid profile email
-      type: object
-      required:
-      - subject_token
-      title: TokenExchangeRequest
-      description: RFC 8693 Token Exchange request (simplified).
-    TokenRefreshRequest:
-      properties:
-        refresh:
-          type: string
-          title: Refresh
-      type: object
-      required:
-      - refresh
-      title: TokenRefreshRequest
-      description: Refresh token request matching Django SimpleJWT format.
     TokenRequest:
       properties:
         username:
@@ -324,20 +275,6 @@ components:
       - password
       title: TokenRequest
       description: Token request body - accepts username or email with password.
-    UsernamePasswordLoginResponse:
-      properties:
-        access:
-          type: string
-          title: Access
-        lifetime:
-          type: string
-          title: Lifetime
-      type: object
-      required:
-      - access
-      - lifetime
-      title: UsernamePasswordLoginResponse
-      description: Response for username-password-login endpoint matching Django format.
     HTTPValidationError:
       properties:
         detail:
@@ -375,6 +312,69 @@ components:
       - expires_in
       title: TokenExchangeResponse
       description: RFC 8693 Token Exchange response.
+    UsernamePasswordLoginResponse:
+      properties:
+        access:
+          type: string
+          title: Access
+        lifetime:
+          type: string
+          title: Lifetime
+      type: object
+      required:
+      - access
+      - lifetime
+      title: UsernamePasswordLoginResponse
+      description: Response for username-password-login endpoint matching Django format.
+    TokenExchangeRequest:
+      properties:
+        grant_type:
+          type: string
+          title: Grant Type
+          description: Must be the token-exchange grant type.
+          default: urn:ietf:params:oauth:grant-type:token-exchange
+        subject_token:
+          type: string
+          title: Subject Token
+          description: The external token to exchange (e.g. Auth0 access token).
+        subject_token_type:
+          $ref: '#/components/schemas/SubjectTokenType'
+          description: 'Token type: "auth0" or the full RFC 8693 URN.'
+          default: auth0
+        scope:
+          type: string
+          title: Scope
+          description: Requested scopes (informational only).
+          default: openid profile email
+      type: object
+      required:
+      - subject_token
+      title: TokenExchangeRequest
+      description: RFC 8693 Token Exchange request (simplified).
+    TokenResponse:
+      properties:
+        access:
+          type: string
+          title: Access
+        refresh:
+          type: string
+          title: Refresh
+      type: object
+      required:
+      - access
+      - refresh
+      title: TokenResponse
+      description: Token response matching Django SimpleJWT format.
+    TokenRefreshRequest:
+      properties:
+        refresh:
+          type: string
+          title: Refresh
+      type: object
+      required:
+      - refresh
+      title: TokenRefreshRequest
+      description: Refresh token request matching Django SimpleJWT format.
     ValidationError:
       properties:
         loc:

@@ -55,6 +55,15 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    papi__routers__llm_config__LLMConfigResponse:
+      properties:
+        llmModel:
+          $ref: '#/components/schemas/papi__routers__llm_config__LLMModelResponse'
+      type: object
+      required:
+      - llmModel
+      title: LLMConfigResponse
+      description: LLM Config response schema.
     papi__routers__llm_config__LLMModelResponse:
       properties:
         id:
@@ -135,15 +144,6 @@ components:
       - providerType
       title: LLMProviderResponse
       description: LLM Provider response schema.
-    papi__routers__llm_config__LLMConfigResponse:
-      properties:
-        llmModel:
-          $ref: '#/components/schemas/papi__routers__llm_config__LLMModelResponse'
-      type: object
-      required:
-      - llmModel
-      title: LLMConfigResponse
-      description: LLM Config response schema.
     ValidationError:
       properties:
         loc:

@@ -1664,44 +1664,45 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    IssueUpdate:
+    GenerateSummaryResponse:
       properties:
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        severity:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Severity
         summary:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Summary
-        observations:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Observations
-        next_steps:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next Steps
-        additional_context:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Additional Context
+          description: Generated summary for the issue
+        issue_id:
+          type: integer
+          title: Issue Id
+          description: The issue ID
       type: object
-      title: IssueUpdate
-      description: Schema for updating an issue (partial update).
+      required:
+      - summary
+      - issue_id
+      title: GenerateSummaryResponse
+      description: Response schema for generated issue summary.
+    IssueIgnoreRequest:
+      properties:
+        ignored_until:
+          type: string
+          format: date-time
+          title: Ignored Until
+          description: Ignore until this datetime (required, ISO 8601 format)
+      type: object
+      required:
+      - ignored_until
+      title: IssueIgnoreRequest
+      description: Schema for ignore issue request.
+    GenerateNextStepsRequest:
+      properties:
+        comment_contents:
+          items:
+            type: string
+          type: array
+          title: Comment Contents
+          description: Optional list of comment contents to provide additional context
+      type: object
+      title: GenerateNextStepsRequest
+      description: Request schema for generating next steps via sobrain.
     GenerateNextStepsResponse:
       properties:
         next_steps:
@@ -1726,17 +1727,6 @@ components:
       - issue_id
       title: GenerateNextStepsResponse
       description: Response schema for generated next steps.
-    JitSummaryResponse:
-      properties:
-        summary:
-          type: string
-          title: Summary
-          description: Generated summary for the issue
-      type: object
-      required:
-      - summary
-      title: JitSummaryResponse
-      description: Response schema for JIT summary.
     IssueListResponse:
       properties:
         results:
@@ -1773,18 +1763,6 @@ components:
       - offset
       title: IssueListResponse
       description: Schema for paginated issue list response.
-    IssueIgnoreRequest:
-      properties:
-        ignored_until:
-          type: string
-          format: date-time
-          title: Ignored Until
-          description: Ignore until this datetime (required, ISO 8601 format)
-      type: object
-      required:
-      - ignored_until
-      title: IssueIgnoreRequest
-      description: Schema for ignore issue request.
     HTTPValidationError:
       properties:
         detail:
@@ -1794,6 +1772,55 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    JitSummaryResponse:
+      properties:
+        summary:
+          type: string
+          title: Summary
+          description: Generated summary for the issue
+      type: object
+      required:
+      - summary
+      title: JitSummaryResponse
+      description: Response schema for JIT summary.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    IssueCloseRequest:
+      properties:
+        comment:
+          anyOf:
+          - type: string
+            maxLength: 10000
+          - type: 'null'
+          title: Comment
+          description: Optional comment when closing
+      type: object
+      title: IssueCloseRequest
+      description: Optional request body for closing an issue with a comment.
     IssueResponse:
       properties:
         taskTitle:
@@ -2014,71 +2041,44 @@ components:
         Uses alias_generator=to_camel so the JSON output uses camelCase keys
 
         matching the Django DRF convention the frontend expects.'
-    GenerateSummaryResponse:
+    IssueUpdate:
       properties:
-        summary:
-          type: string
-          title: Summary
-          description: Generated summary for the issue
-        issue_id:
-          type: integer
-          title: Issue Id
-          description: The issue ID
-      type: object
-      required:
-      - summary
-      - issue_id
-      title: GenerateSummaryResponse
-      description: Response schema for generated issue summary.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    IssueCloseRequest:
-      properties:
-        comment:
+        title:
           anyOf:
           - type: string
-            maxLength: 10000
           - type: 'null'
-          title: Comment
-          description: Optional comment when closing
+          title: Title
+        severity:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Severity
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        observations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Observations
+        next_steps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Steps
+        additional_context:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Additional Context
       type: object
-      title: IssueCloseRequest
-      description: Optional request body for closing an issue with a comment.
-    GenerateNextStepsRequest:
-      properties:
-        comment_contents:
-          items:
-            type: string
-          type: array
-          title: Comment Contents
-          description: Optional list of comment contents to provide additional context
-      type: object
-      title: GenerateNextStepsRequest
-      description: Request schema for generating next steps via sobrain.
+      title: IssueUpdate
+      description: Schema for updating an issue (partial update).
   securitySchemes:
     BearerAuth:
       type: http

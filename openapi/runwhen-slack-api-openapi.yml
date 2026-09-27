@@ -153,34 +153,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    SlackWorkspaceCreate:
-      properties:
-        slack_payload:
-          anyOf:
-          - type: string
-          - additionalProperties: true
-            type: object
-          title: Slack Payload
-          description: Slack OAuth payload (encrypted string or dict)
-        workspace:
-          type: string
-          title: Workspace
-          description: Workspace name
-      type: object
-      required:
-      - slack_payload
-      - workspace
-      title: SlackWorkspaceCreate
-      description: Request to create a Slack workspace integration.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -207,6 +179,34 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SlackWorkspaceCreate:
+      properties:
+        slack_payload:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          title: Slack Payload
+          description: Slack OAuth payload (encrypted string or dict)
+        workspace:
+          type: string
+          title: Workspace
+          description: Workspace name
+      type: object
+      required:
+      - slack_payload
+      - workspace
+      title: SlackWorkspaceCreate
+      description: Request to create a Slack workspace integration.
   securitySchemes:
     BearerAuth:
       type: http

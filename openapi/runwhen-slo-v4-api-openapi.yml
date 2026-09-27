@@ -231,6 +231,29 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    SloSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/SloPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: SloSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/slos/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
     SloPayloadV4:
       properties:
         slxId:
@@ -304,29 +327,6 @@ components:
       - msg
       - type
       title: ValidationError
-    SloSyncRequestV4:
-      properties:
-        payload:
-          $ref: '#/components/schemas/SloPayloadV4'
-        lastSyncedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Lastsyncedat
-      additionalProperties: false
-      type: object
-      required:
-      - payload
-      title: SloSyncRequestV4
-      description: 'Body of POST /api/v4/workspaces/{ws}/slos/sync-typed.
-
-
-        ``modified_by`` is not accepted: the server derives it from the JWT via
-
-        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
-
-        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
   securitySchemes:
     BearerAuth:
       type: http

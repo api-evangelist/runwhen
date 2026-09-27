@@ -510,25 +510,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    SyncResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        name:
-          type: string
-          title: Name
-        resource_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Resource Id
-      type: object
-      required:
-      - status
-      - name
-      title: SyncResponse
-      description: Response for a sync (upsert) operation.
     SyncRequest:
       properties:
         last_synced_at:
@@ -571,28 +552,25 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ReconcileTasksResponse:
+    SyncResponse:
       properties:
-        workspace:
+        status:
           type: string
-          title: Workspace
-        slx_count:
-          type: integer
-          title: Slx Count
-        task_upserted:
-          type: integer
-          title: Task Upserted
-        task_soft_deleted:
-          type: integer
-          title: Task Soft Deleted
+          title: Status
+        name:
+          type: string
+          title: Name
+        resource_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resource Id
       type: object
       required:
-      - workspace
-      - slx_count
-      - task_upserted
-      - task_soft_deleted
-      title: ReconcileTasksResponse
-      description: Response for the dev-only slx_tasks reconcile trigger.
+      - status
+      - name
+      title: SyncResponse
+      description: Response for a sync (upsert) operation.
     ValidationError:
       properties:
         loc:
@@ -619,6 +597,28 @@ components:
       - msg
       - type
       title: ValidationError
+    ReconcileTasksResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        slx_count:
+          type: integer
+          title: Slx Count
+        task_upserted:
+          type: integer
+          title: Task Upserted
+        task_soft_deleted:
+          type: integer
+          title: Task Soft Deleted
+      type: object
+      required:
+      - workspace
+      - slx_count
+      - task_upserted
+      - task_soft_deleted
+      title: ReconcileTasksResponse
+      description: Response for the dev-only slx_tasks reconcile trigger.
     DeleteResponse:
       properties:
         status:
