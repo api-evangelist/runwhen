@@ -44,6 +44,25 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    WorkspaceRoleEnum:
+      type: string
+      enum:
+      - admin
+      - readwrite
+      - readandrun
+      - readonly
+      - readandrunwithassistant
+      title: WorkspaceRoleEnum
+      description: Workspace permission roles.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     WorkspacePermissionV4:
       properties:
         role:
@@ -72,35 +91,6 @@ components:
       - role
       title: WorkspacePermissionV4
       description: A single workspace permission entry. Either ``user`` or ``group`` is set.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    WorkspaceOwnerV4:
-      properties:
-        id:
-          type: integer
-          title: Id
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        fullName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fullname
-      type: object
-      required:
-      - id
-      title: WorkspaceOwnerV4
-      description: Workspace owner summary.
     WorkspaceConfigurationResponseV4:
       properties:
         name:
@@ -166,24 +156,6 @@ components:
         SLX list, no alerts, no layout, no gallery fields. See the migration
 
         plan for the field-by-field rationale.'
-    WorkspaceRoleEnum:
-      type: string
-      enum:
-      - admin
-      - readwrite
-      - readandrun
-      - readonly
-      - readandrunwithassistant
-      title: WorkspaceRoleEnum
-      description: Workspace permission roles.
-    ResourceScrubberConfigEnum:
-      type: string
-      enum:
-      - SCRUB_ALL_RESOURCE_LABELS
-      - SCRUB_ALL_EXCEPT_RESOURCE_NAME
-      - SCRUB_NONE
-      title: ResourceScrubberConfigEnum
-      description: Configuration for resource scrubbing before LLM calls.
     ValidationError:
       properties:
         loc:
@@ -210,6 +182,34 @@ components:
       - msg
       - type
       title: ValidationError
+    ResourceScrubberConfigEnum:
+      type: string
+      enum:
+      - SCRUB_ALL_RESOURCE_LABELS
+      - SCRUB_ALL_EXCEPT_RESOURCE_NAME
+      - SCRUB_NONE
+      title: ResourceScrubberConfigEnum
+      description: Configuration for resource scrubbing before LLM calls.
+    WorkspaceOwnerV4:
+      properties:
+        id:
+          type: integer
+          title: Id
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+      type: object
+      required:
+      - id
+      title: WorkspaceOwnerV4
+      description: Workspace owner summary.
   securitySchemes:
     BearerAuth:
       type: http

@@ -1664,22 +1664,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    GenerateSummaryResponse:
-      properties:
-        summary:
-          type: string
-          title: Summary
-          description: Generated summary for the issue
-        issue_id:
-          type: integer
-          title: Issue Id
-          description: The issue ID
-      type: object
-      required:
-      - summary
-      - issue_id
-      title: GenerateSummaryResponse
-      description: Response schema for generated issue summary.
     IssueIgnoreRequest:
       properties:
         ignored_until:
@@ -1692,6 +1676,27 @@ components:
       - ignored_until
       title: IssueIgnoreRequest
       description: Schema for ignore issue request.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    IssueCloseRequest:
+      properties:
+        comment:
+          anyOf:
+          - type: string
+            maxLength: 10000
+          - type: 'null'
+          title: Comment
+          description: Optional comment when closing
+      type: object
+      title: IssueCloseRequest
+      description: Optional request body for closing an issue with a comment.
     GenerateNextStepsRequest:
       properties:
         comment_contents:
@@ -1703,75 +1708,6 @@ components:
       type: object
       title: GenerateNextStepsRequest
       description: Request schema for generating next steps via sobrain.
-    GenerateNextStepsResponse:
-      properties:
-        next_steps:
-          items:
-            type: string
-          type: array
-          title: Next Steps
-          description: Generated next steps for the issue
-        raw_next_steps:
-          items:
-            type: string
-          type: array
-          title: Raw Next Steps
-          description: Raw next steps from LLM before validation
-        issue_id:
-          type: integer
-          title: Issue Id
-          description: The issue ID
-      type: object
-      required:
-      - next_steps
-      - issue_id
-      title: GenerateNextStepsResponse
-      description: Response schema for generated next steps.
-    IssueListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/IssueResponse'
-          type: array
-          title: Results
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: Next page URL
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: Previous page URL
-      type: object
-      required:
-      - results
-      - count
-      - limit
-      - offset
-      title: IssueListResponse
-      description: Schema for paginated issue list response.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     JitSummaryResponse:
       properties:
         summary:
@@ -1809,18 +1745,68 @@ components:
       - msg
       - type
       title: ValidationError
-    IssueCloseRequest:
+    GenerateNextStepsResponse:
       properties:
-        comment:
+        next_steps:
+          items:
+            type: string
+          type: array
+          title: Next Steps
+          description: Generated next steps for the issue
+        raw_next_steps:
+          items:
+            type: string
+          type: array
+          title: Raw Next Steps
+          description: Raw next steps from LLM before validation
+        issue_id:
+          type: integer
+          title: Issue Id
+          description: The issue ID
+      type: object
+      required:
+      - next_steps
+      - issue_id
+      title: GenerateNextStepsResponse
+      description: Response schema for generated next steps.
+    IssueUpdate:
+      properties:
+        title:
           anyOf:
           - type: string
-            maxLength: 10000
           - type: 'null'
-          title: Comment
-          description: Optional comment when closing
+          title: Title
+        severity:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Severity
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        observations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Observations
+        next_steps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Steps
+        additional_context:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Additional Context
       type: object
-      title: IssueCloseRequest
-      description: Optional request body for closing an issue with a comment.
+      title: IssueUpdate
+      description: Schema for updating an issue (partial update).
     IssueResponse:
       properties:
         taskTitle:
@@ -2041,44 +2027,58 @@ components:
         Uses alias_generator=to_camel so the JSON output uses camelCase keys
 
         matching the Django DRF convention the frontend expects.'
-    IssueUpdate:
+    IssueListResponse:
       properties:
-        title:
+        results:
+          items:
+            $ref: '#/components/schemas/IssueResponse'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        next:
           anyOf:
           - type: string
           - type: 'null'
-          title: Title
-        severity:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Severity
-        summary:
+          title: Next
+          description: Next page URL
+        previous:
           anyOf:
           - type: string
           - type: 'null'
-          title: Summary
-        observations:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Observations
-        next_steps:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next Steps
-        additional_context:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Additional Context
+          title: Previous
+          description: Previous page URL
       type: object
-      title: IssueUpdate
-      description: Schema for updating an issue (partial update).
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: IssueListResponse
+      description: Schema for paginated issue list response.
+    GenerateSummaryResponse:
+      properties:
+        summary:
+          type: string
+          title: Summary
+          description: Generated summary for the issue
+        issue_id:
+          type: integer
+          title: Issue Id
+          description: The issue ID
+      type: object
+      required:
+      - summary
+      - issue_id
+      title: GenerateSummaryResponse
+      description: Response schema for generated issue summary.
   securitySchemes:
     BearerAuth:
       type: http

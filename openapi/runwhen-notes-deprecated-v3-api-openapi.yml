@@ -247,42 +247,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    NoteCreate:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Title
-          description: Short note title
-        content:
-          type: string
-          maxLength: 20000
-          minLength: 1
-          title: Content
-          description: Note content
-        resourcePaths:
-          items:
-            type: string
-          type: array
-          title: Resourcepaths
-          description: Canonical resource paths
-        abstractEntities:
-          items:
-            type: string
-          type: array
-          title: Abstractentities
-          description: Normalized entity tokens
-        status:
-          $ref: '#/components/schemas/NoteStatus'
-          description: Note lifecycle status
-          default: active
-      type: object
-      required:
-      - content
-      title: NoteCreate
-      description: Schema for creating a note.
     NoteUpdate:
       properties:
         title:
@@ -324,13 +288,6 @@ components:
       type: object
       title: NoteUpdate
       description: Schema for partial update of a note.
-    NoteStatus:
-      type: string
-      enum:
-      - active
-      - deprecated
-      title: NoteStatus
-      description: Note lifecycle status.
     NoteResponse:
       properties:
         noteId:
@@ -422,6 +379,49 @@ components:
       - msg
       - type
       title: ValidationError
+    NoteStatus:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatus
+      description: Note lifecycle status.
+    NoteCreate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+          description: Short note title
+        content:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Content
+          description: Note content
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+          description: Canonical resource paths
+        abstractEntities:
+          items:
+            type: string
+          type: array
+          title: Abstractentities
+          description: Normalized entity tokens
+        status:
+          $ref: '#/components/schemas/NoteStatus'
+          description: Note lifecycle status
+          default: active
+      type: object
+      required:
+      - content
+      title: NoteCreate
+      description: Schema for creating a note.
   securitySchemes:
     BearerAuth:
       type: http

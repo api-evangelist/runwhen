@@ -332,15 +332,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     Body_oauth_authorize_email_login_oauth_authorize_login_email_post:
       properties:
         oauth_session:
@@ -358,6 +349,15 @@ components:
       - username
       - password
       title: Body_oauth_authorize_email_login_oauth_authorize_login_email_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     Body_oauth_token_oauth_token_post:
       properties:
         grant_type:

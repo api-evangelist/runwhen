@@ -351,34 +351,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    CommentReplyCreate:
-      properties:
-        content:
-          type: string
-          title: Content
-          description: Reply text content (markdown supported)
-        action:
-          anyOf:
-          - $ref: '#/components/schemas/CommentAction'
-          - type: 'null'
-          description: Optional action to take (resolve/reopen thread)
-        escalated:
-          type: boolean
-          title: Escalated
-          description: Whether to escalate the associated entity
-          default: false
-      type: object
-      required:
-      - content
-      title: CommentReplyCreate
-      description: Schema for creating a reply to an existing comment.
-    CommentAction:
-      type: string
-      enum:
-      - resolve
-      - reopen
-      title: CommentAction
-      description: Actions that can be taken on a comment thread.
     HTTPValidationError:
       properties:
         detail:
@@ -388,6 +360,22 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    CommentCreate:
+      properties:
+        content:
+          type: string
+          title: Content
+          description: Comment text content (markdown supported)
+        escalated:
+          type: boolean
+          title: Escalated
+          description: Whether to escalate the associated entity
+          default: false
+      type: object
+      required:
+      - content
+      title: CommentCreate
+      description: Schema for creating a top-level comment.
     CommentResponse:
       properties:
         id:
@@ -452,6 +440,34 @@ components:
         Uses camelCase aliases for frontend compatibility.
 
         Supports nested replies for threaded comments.'
+    CommentAction:
+      type: string
+      enum:
+      - resolve
+      - reopen
+      title: CommentAction
+      description: Actions that can be taken on a comment thread.
+    CommentReplyCreate:
+      properties:
+        content:
+          type: string
+          title: Content
+          description: Reply text content (markdown supported)
+        action:
+          anyOf:
+          - $ref: '#/components/schemas/CommentAction'
+          - type: 'null'
+          description: Optional action to take (resolve/reopen thread)
+        escalated:
+          type: boolean
+          title: Escalated
+          description: Whether to escalate the associated entity
+          default: false
+      type: object
+      required:
+      - content
+      title: CommentReplyCreate
+      description: Schema for creating a reply to an existing comment.
     ValidationError:
       properties:
         loc:
@@ -478,22 +494,6 @@ components:
       - msg
       - type
       title: ValidationError
-    CommentCreate:
-      properties:
-        content:
-          type: string
-          title: Content
-          description: Comment text content (markdown supported)
-        escalated:
-          type: boolean
-          title: Escalated
-          description: Whether to escalate the associated entity
-          default: false
-      type: object
-      required:
-      - content
-      title: CommentCreate
-      description: Schema for creating a top-level comment.
     CommentUpdate:
       properties:
         content:

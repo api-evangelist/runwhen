@@ -197,16 +197,32 @@ components:
       - user
       title: ProfileResponse
       description: Profile response matching Django's ProfileSerializer (all fields, camelCase).
-    SyncUserAccountRequest:
+    ValidationError:
       properties:
-        username:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Username
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - username
-      title: SyncUserAccountRequest
-      description: Request body matching Django's sync-user-account endpoint.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ProfileUpdateRequest:
       properties:
         publicEmail:
@@ -242,32 +258,16 @@ components:
       type: object
       title: ProfileUpdateRequest
       description: Profile update request — all fields optional for partial updates.
-    ValidationError:
+    SyncUserAccountRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        username:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Username
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - username
+      title: SyncUserAccountRequest
+      description: Request body matching Django's sync-user-account endpoint.
   securitySchemes:
     BearerAuth:
       type: http

@@ -3710,56 +3710,298 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    _ProvisioningStages:
+    WorkspaceUploadResponse:
       properties:
-        git_repo:
-          type: boolean
-          title: Git Repo
-          default: false
-        repository_crd:
-          type: boolean
-          title: Repository Crd
-          default: false
-        worksync:
-          type: boolean
-          title: Worksync
-          default: false
-        workspace_crd:
-          type: boolean
-          title: Workspace Crd
-          default: false
-        workspace_db:
-          type: boolean
-          title: Workspace Db
-          default: false
-        reconciliation:
-          type: boolean
-          title: Reconciliation
-          default: false
+        task_id:
+          type: string
+          title: Task Id
+          description: Task ID for tracking upload progress (empty when deduplicated)
+          default: ''
+        status:
+          type: string
+          enum:
+          - queued
+          - duplicate_skipped
+          title: Status
+          description: Upload status
+          default: queued
+        message:
+          type: string
+          title: Message
+          description: Status message
       type: object
-      title: _ProvisioningStages
-    WorkspaceGitCreate:
+      required:
+      - message
+      title: WorkspaceUploadResponse
+      description: Schema for workspace upload response.
+    WorkspaceRoleEnum:
+      type: string
+      enum:
+      - admin
+      - readwrite
+      - readandrun
+      - readonly
+      - readandrunwithassistant
+      title: WorkspaceRoleEnum
+      description: Workspace permission roles.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RunbookTaskInWorkspace:
       properties:
         name:
           type: string
-          maxLength: 63
-          minLength: 2
-          pattern: ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$
           title: Name
-          description: 'Workspace short name. Must be DNS-label compatible: lowercase alphanumerics and hyphens only, must start and end with an alphanumeric character.'
-        spec:
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Task tags
+        id:
           anyOf:
-          - additionalProperties: true
-            type: object
+          - type: integer
           - type: 'null'
-          title: Spec
-          description: Optional workspace spec overrides
+          title: Id
+          description: Stable platform-owned task id (slx_tasks.id); null until reconciled
       type: object
       required:
       - name
-      title: WorkspaceGitCreate
-      description: Schema for Git-first workspace creation.
-    AnonymousModeStatusResponse:
+      - value
+      title: RunbookTaskInWorkspace
+      description: Individual task in a runbook for workspace response.
+    ResetServiceAccountRequest:
+      properties:
+        password:
+          type: string
+          minLength: 8
+          title: Password
+          description: New password for the service account
+      type: object
+      required:
+      - password
+      title: ResetServiceAccountRequest
+      description: Request to reset a workspace service account password.
+    FinalizeActionEnum:
+      type: string
+      enum:
+      - mergeToMain
+      title: FinalizeActionEnum
+      description: Finalize action after workspace upload.
+    SloBasicInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: SLO ID (same as slx_id)
+        name:
+          type: string
+          title: Name
+          description: SLO name (same as SLX full name)
+        slx:
+          type: integer
+          title: Slx
+          description: Parent SLX ID
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: SLO spec (reconstructed)
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: SLO status (generation info)
+        created:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created
+          description: Creation timestamp (ISO format)
+        modified:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Modified
+          description: Last modified timestamp (ISO format)
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository FK ID
+      type: object
+      required:
+      - id
+      - name
+      - slx
+      title: SloBasicInWorkspace
+      description: Basic SLO info for workspace SLX response (matches Django SloSerializer).
+    UploadConfigResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+        papi_url:
+          type: string
+          title: Papi Url
+      type: object
+      required:
+      - token
+      - papi_url
+      title: UploadConfigResponse
+      description: Response containing upload credentials and PAPI URL for workspace-builder.
+    WorkspaceUploadRequest:
+      properties:
+        output:
+          type: string
+          maxLength: 104857600
+          title: Output
+          description: Base64-encoded gzip-compressed tar archive
+        mergeMode:
+          $ref: '#/components/schemas/MergeModeEnum'
+          description: Deprecated — ignored under the new ownership/overridden_fields model. Accepted for backward compatibility with existing callers.
+          default: keepexisting
+        pruneStaleSlxs:
+          type: boolean
+          title: Prunestaleslxs
+          description: Remove SLXs no longer present in uploaded data
+          default: false
+        pruneStaleResources:
+          type: boolean
+          title: Prunestaleresources
+          description: Remove resources no longer present in uploaded data
+          default: false
+        message:
+          type: string
+          title: Message
+          description: Human-readable message describing the upload
+          default: Updated workspace from map builder.
+        finalizeAction:
+          $ref: '#/components/schemas/FinalizeActionEnum'
+          description: Action after upload completes
+          default: mergeToMain
+        build_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Build Date
+          description: Builder run timestamp (informational); not processed, stored for audit logs
+      type: object
+      required:
+      - output
+      title: WorkspaceUploadRequest
+      description: Schema for workspace upload request (matches runner format).
+    WorkspaceDeletionResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        status:
+          type: string
+          title: Status
+        steps:
+          items:
+            $ref: '#/components/schemas/DeletionStep'
+          type: array
+          title: Steps
+        async_task_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Async Task Id
+      type: object
+      required:
+      - workspace
+      - status
+      - steps
+      title: WorkspaceDeletionResponse
+      description: Response from workspace deletion endpoint.
+    RunbookInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Runbook ID
+        name:
+          type: string
+          title: Name
+          description: Runbook name (same as SLX full name)
+        slx:
+          type: integer
+          title: Slx
+          description: Parent SLX ID
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Runbook spec (codeBundle, location, etc.)
+        tasks:
+          items:
+            $ref: '#/components/schemas/RunbookTaskInWorkspace'
+          type: array
+          title: Tasks
+          description: Runbook tasks
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository FK ID
+      type: object
+      required:
+      - id
+      - name
+      - slx
+      title: RunbookInWorkspace
+      description: Runbook schema for workspace response with tasks.
+    SliBasicInWorkspace:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: SLI ID (same as slx_id)
+        name:
+          type: string
+          title: Name
+          description: SLI name (same as SLX full name)
+        slx:
+          type: integer
+          title: Slx
+          description: Parent SLX ID
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: SLI spec (reconstructed)
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository FK ID
+      type: object
+      required:
+      - id
+      - name
+      - slx
+      title: SliBasicInWorkspace
+      description: Basic SLI info for workspace SLX response (matches Django SliSerializer).
+    WorkspaceSpecPermission:
+      additionalProperties: true
+      type: object
+    AnonymousModeResponse:
       properties:
         workspace:
           type: string
@@ -3767,79 +4009,27 @@ components:
         anonymousMode:
           type: boolean
           title: Anonymousmode
+        message:
+          type: string
+          title: Message
       type: object
       required:
       - workspace
       - anonymousMode
-      title: AnonymousModeStatusResponse
-      description: Response for anonymous mode status check.
-    ResetServiceAccountResponse:
+      - message
+      title: AnonymousModeResponse
+      description: Response for anonymous mode toggle.
+    AutocompleteRequest:
       properties:
-        username:
+        query:
           type: string
-          title: Username
-        message:
-          type: string
-          title: Message
-          default: Service account password reset successfully
+          title: Query
+          description: Partial query for autocomplete
       type: object
       required:
-      - username
-      title: ResetServiceAccountResponse
-      description: Response from resetting a service account.
-    WorkspaceCreateResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Workspace short name
-        repo_url:
-          type: string
-          title: Repo Url
-          description: URL of the created Git repository
-        status:
-          type: string
-          enum:
-          - provisioning
-          - ready
-          title: Status
-          description: Workspace creation status
-        renamed_from:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Renamed From
-          description: Original requested name if it was auto-suffixed due to collision
-      type: object
-      required:
-      - name
-      - repo_url
-      - status
-      title: WorkspaceCreateResponse
-      description: 'Response for workspace creation.
-
-
-        Synchronous creation returns status="ready". Async GitOps-based creation
-
-        (if re-enabled) returns status="provisioning" and requires polling
-
-        GET /{workspace_name}/status for completion.'
-    SlxTag:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Tag name/key
-        value:
-          type: string
-          title: Value
-          description: Tag value
-      type: object
-      required:
-      - name
-      - value
-      title: SlxTag
-      description: Tag with name-value structure for SLX.
+      - query
+      title: AutocompleteRequest
+      description: Request for search autocomplete.
     TaskSearchRequest:
       properties:
         query:
@@ -3873,155 +4063,341 @@ components:
       - query
       title: TaskSearchRequest
       description: Request for workspace task search.
-    ReprovisionWorkspaceInfraResponse:
+    SlxTag:
       properties:
-        workspace:
+        name:
           type: string
-          title: Workspace
-        vault_approle:
+          title: Name
+          description: Tag name/key
+        value:
           type: string
-          title: Vault Approle
-        runner_certs:
-          type: string
-          title: Runner Certs
+          title: Value
+          description: Tag value
       type: object
       required:
-      - workspace
-      - vault_approle
-      - runner_certs
-      title: ReprovisionWorkspaceInfraResponse
-      description: Response from reprovisioning workspace runner infrastructure.
-    WorkspaceStatusResponse:
+      - name
+      - value
+      title: SlxTag
+      description: Tag with name-value structure for SLX.
+    GalleryPersona:
       properties:
-        workspace:
-          type: boolean
-          title: Workspace
-          description: Whether workspace exists in database
-        sync:
-          type: boolean
-          title: Sync
-          description: Whether workspace sync has succeeded
+        name:
+          type: string
+          title: Name
+          description: Persona short name
+        fullName:
+          type: string
+          title: Fullname
+          description: Persona full display name
+        avatarUrl:
+          type: string
+          title: Avatarurl
+          description: Avatar image URL
+          default: ''
       type: object
       required:
-      - workspace
-      - sync
-      title: WorkspaceStatusResponse
-      description: Response for workspace creation status check.
-    SlxInWorkspace:
+      - name
+      - fullName
+      title: GalleryPersona
+      description: Schema for persona info in workspace gallery.
+    SearchScopeResponse:
+      properties:
+        slxGroups:
+          items:
+            $ref: '#/components/schemas/SearchScopeGroup'
+          type: array
+          title: Slxgroups
+        slxSubGroups:
+          items:
+            $ref: '#/components/schemas/SearchScopeGroup'
+          type: array
+          title: Slxsubgroups
+        slxs:
+          items:
+            $ref: '#/components/schemas/SearchScopeSlx'
+          type: array
+          title: Slxs
+      type: object
+      title: SearchScopeResponse
+      description: Search scope response.
+    MergeModeEnum:
+      type: string
+      enum:
+      - keepexisting
+      - keepuploaded
+      title: MergeModeEnum
+      description: Merge mode for workspace upload.
+    OwnerResponse:
       properties:
         id:
           type: integer
           title: Id
-          description: Unique identifier
-        name:
-          type: string
-          title: Name
-          description: Full SLX name
-        shortName:
-          type: string
-          title: Shortname
-          description: Short SLX name
-        alias:
-          type: string
-          title: Alias
-          description: Human-readable alias
-          default: ''
-        tags:
-          items:
-            $ref: '#/components/schemas/SlxTag'
-          type: array
-          title: Tags
-          description: Tags with name-value pairs
-        hasSli:
-          type: boolean
-          title: Hassli
-          description: Whether SLX has an SLI
-          default: false
-        hasSlo:
-          type: boolean
-          title: Hasslo
-          description: Whether SLX has an SLO
-          default: false
-        hasRunbook:
-          type: boolean
-          title: Hasrunbook
-          description: Whether SLX has a Runbook
-          default: false
-        hasHook:
-          type: boolean
-          title: Hashook
-          description: Whether SLX has a Hook
-          default: false
-        created:
+          description: Owner user ID
+        email:
           anyOf:
           - type: string
           - type: 'null'
-          title: Created
-          description: Creation timestamp (ISO format)
-        repo:
+          title: Email
+          description: Owner's email
+        fullName:
           anyOf:
-          - type: integer
+          - type: string
           - type: 'null'
-          title: Repo
-          description: Repository FK ID
-        sli:
-          anyOf:
-          - $ref: '#/components/schemas/SliBasicInWorkspace'
-          - type: 'null'
-          description: SLI details if SLX has one
-        slo:
-          anyOf:
-          - $ref: '#/components/schemas/SloBasicInWorkspace'
-          - type: 'null'
-          description: SLO details if SLX has one
-        spec:
-          $ref: '#/components/schemas/SlxSpecInWorkspace'
-          description: SLX specification for UI
-        runbook:
-          anyOf:
-          - $ref: '#/components/schemas/RunbookInWorkspace'
-          - type: 'null'
-          description: Runbook with tasks if SLX has one
+          title: Fullname
+          description: Owner's full name
       type: object
       required:
       - id
-      - name
-      - shortName
-      title: SlxInWorkspace
-      description: SLX summary for workspace response (camelCase for UI compatibility).
-    AnonymousModeRequest:
+      title: OwnerResponse
+      description: Schema for owner info in workspace response.
+    ResourceScrubberConfigEnum:
+      type: string
+      enum:
+      - SCRUB_ALL_RESOURCE_LABELS
+      - SCRUB_ALL_EXCEPT_RESOURCE_NAME
+      - SCRUB_NONE
+      title: ResourceScrubberConfigEnum
+      description: Configuration for resource scrubbing before LLM calls.
+    AnonymousModeStatusResponse:
       properties:
-        action:
+        workspace:
           type: string
-          pattern: ^(on|off)$
-          title: Action
-          description: 'Action: ''on'' to enable, ''off'' to disable'
+          title: Workspace
+        anonymousMode:
+          type: boolean
+          title: Anonymousmode
       type: object
       required:
-      - action
-      title: AnonymousModeRequest
-      description: Request body for toggling anonymous mode.
-    SecretUsageItem:
+      - workspace
+      - anonymousMode
+      title: AnonymousModeStatusResponse
+      description: Response for anonymous mode status check.
+    WorkspaceListResponse:
       properties:
-        slx:
+        results:
+          items:
+            $ref: '#/components/schemas/WorkspaceResponse'
+          type: array
+          title: Results
+          description: List of workspaces
+        count:
+          type: integer
+          title: Count
+          description: Total count matching filters
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      title: WorkspaceListResponse
+      description: Schema for paginated workspace list response.
+    SATokenResponse:
+      properties:
+        token:
           type: string
-          title: Slx
-          description: SLX short name
-        kind:
+          title: Token
+      type: object
+      required:
+      - token
+      title: SATokenResponse
+      description: Response containing a service account token.
+    WorkspaceUpdate:
+      properties:
+        alias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alias
+          description: Updated human-readable display name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Updated workspace description
+        scrubber_config:
+          anyOf:
+          - $ref: '#/components/schemas/ResourceScrubberConfigEnum'
+          - type: 'null'
+          description: Updated resource scrubbing configuration
+        enabled_locations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Enabled Locations
+          description: Updated list of enabled locations
+        config_provided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Config Provided
+          description: Updated configuration as list of {name, value} objects
+        permissions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/WorkspacePermissionUpdate'
+            type: array
+          - type: 'null'
+          title: Permissions
+          description: Full replacement of workspace permissions. Each entry must have 'role' and either 'user' (email) or 'group' (name). Owner admin permission is preserved automatically.
+        slx_groups:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Slx Groups
+          description: Updated SLX group definitions (replaces existing groups)
+        slx_relationships:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Slx Relationships
+          description: Updated SLX relationship definitions (replaces existing relationships)
+      type: object
+      title: WorkspaceUpdate
+      description: 'Schema for updating a workspace (partial update).
+
+
+        All fields are optional; only non-None values are applied.'
+    UploadStatusResponse:
+      properties:
+        task_id:
           type: string
-          title: Kind
-          description: '''Sli'' or ''Runbook'''
+          title: Task Id
+          description: Task ID
+        status:
+          type: string
+          enum:
+          - PENDING
+          - STARTED
+          - SUCCESS
+          - FAILURE
+          - UNKNOWN
+          title: Status
+          description: Task status
+        result:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Result
+          description: Task result if completed
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+          description: Error message if failed
+      type: object
+      required:
+      - task_id
+      - status
+      title: UploadStatusResponse
+      description: Schema for upload status check response.
+    AuthorizedRunner:
+      properties:
         name:
           type: string
           title: Name
-          description: The secretsProvided entry name
+          description: Runner display name
+        value:
+          type: string
+          title: Value
+          description: Runner resource name (UUID)
+        health:
+          type: string
+          title: Health
+          description: 'Runner health: online, stale, or unknown'
+          default: unknown
+        lastHeartbeat:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastheartbeat
+          description: ISO timestamp of last heartbeat
+        secondsSinceHeartbeat:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Secondssinceheartbeat
+          description: Seconds since last heartbeat
       type: object
       required:
-      - slx
-      - kind
       - name
-      title: SecretUsageItem
-      description: A single SLI/Runbook that references a workspace secret.
+      - value
+      title: AuthorizedRunner
+      description: Authorized runner for a workspace.
+    _ProvisioningStages:
+      properties:
+        git_repo:
+          type: boolean
+          title: Git Repo
+          default: false
+        repository_crd:
+          type: boolean
+          title: Repository Crd
+          default: false
+        worksync:
+          type: boolean
+          title: Worksync
+          default: false
+        workspace_crd:
+          type: boolean
+          title: Workspace Crd
+          default: false
+        workspace_db:
+          type: boolean
+          title: Workspace Db
+          default: false
+        reconciliation:
+          type: boolean
+          title: Reconciliation
+          default: false
+      type: object
+      title: _ProvisioningStages
+    DeletionStep:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+        status:
+          type: string
+          title: Status
+        detail:
+          type: string
+          title: Detail
+          default: ''
+      type: object
+      required:
+      - key
+      - label
+      - status
+      title: DeletionStep
+      description: Status of a single deletion step.
     WorkspaceResponse:
       properties:
         id:
@@ -4219,58 +4595,73 @@ components:
       - name
       title: WorkspaceResponse
       description: Schema for workspace response with all fields (camelCase for UI).
-    SearchScopeResponse:
-      properties:
-        slxGroups:
-          items:
-            $ref: '#/components/schemas/SearchScopeGroup'
-          type: array
-          title: Slxgroups
-        slxSubGroups:
-          items:
-            $ref: '#/components/schemas/SearchScopeGroup'
-          type: array
-          title: Slxsubgroups
-        slxs:
-          items:
-            $ref: '#/components/schemas/SearchScopeSlx'
-          type: array
-          title: Slxs
-      type: object
-      title: SearchScopeResponse
-      description: Search scope response.
-    SliBasicInWorkspace:
+    SliAlertInWorkspace:
       properties:
         id:
           type: integer
           title: Id
-          description: SLI ID (same as slx_id)
-        name:
+          description: Alert ID
+        slx_name:
           type: string
-          title: Name
-          description: SLI name (same as SLX full name)
-        slx:
+          title: Slx Name
+          description: SLX short name
+        sli_id:
           type: integer
-          title: Slx
-          description: Parent SLX ID
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-          description: SLI spec (reconstructed)
-        repo:
+          title: Sli Id
+          description: SLI ID (same as slx_id)
+        start_time:
+          type: string
+          format: date-time
+          title: Start Time
+          description: Alert start time
+        end_time:
           anyOf:
-          - type: integer
+          - type: string
+            format: date-time
           - type: 'null'
-          title: Repo
-          description: Repository FK ID
+          title: End Time
+          description: Alert end time
+        severity:
+          type: string
+          title: Severity
+          description: Alert severity
+          default: ''
+        kind:
+          type: string
+          title: Kind
+          description: Alert kind
+          default: ''
       type: object
       required:
       - id
-      - name
-      - slx
-      title: SliBasicInWorkspace
-      description: Basic SLI info for workspace SLX response (matches Django SliSerializer).
+      - slx_name
+      - sli_id
+      - start_time
+      title: SliAlertInWorkspace
+      description: SLI firing alert for workspace response.
+    SecretsKeysResponse:
+      properties:
+        secrets:
+          items:
+            type: string
+          type: array
+          title: Secrets
+      type: object
+      title: SecretsKeysResponse
+      description: Response containing list of secret key names.
+    SecretsCreateRequest:
+      properties:
+        secrets:
+          additionalProperties:
+            type: string
+          type: object
+          title: Secrets
+          description: Key-value pairs of secrets to create/update
+      type: object
+      required:
+      - secrets
+      title: SecretsCreateRequest
+      description: Request to create/update workspace secrets.
     ValidationError:
       properties:
         loc:
@@ -4297,119 +4688,20 @@ components:
       - msg
       - type
       title: ValidationError
-    WorkspacePermissionUpdate:
+    ResetServiceAccountResponse:
       properties:
-        role:
+        username:
           type: string
-          title: Role
-          description: Permission role (admin, readwrite, readandrun, readonly, …)
-        user:
-          anyOf:
-          - type: string
-            format: email
-          - type: 'null'
-          title: User
-          description: User email address
-        group:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Group
-          description: Group name
+          title: Username
+        message:
+          type: string
+          title: Message
+          default: Service account password reset successfully
       type: object
       required:
-      - role
-      title: WorkspacePermissionUpdate
-      description: 'A single permission entry for workspace update requests.
-
-
-        Mirrors WorkspaceSpecPermission but is used for incoming PATCH payloads.
-
-        Either ``user`` (email) or ``group`` (name) must be set.'
-    GalleryPersona:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Persona short name
-        fullName:
-          type: string
-          title: Fullname
-          description: Persona full display name
-        avatarUrl:
-          type: string
-          title: Avatarurl
-          description: Avatar image URL
-          default: ''
-      type: object
-      required:
-      - name
-      - fullName
-      title: GalleryPersona
-      description: Schema for persona info in workspace gallery.
-    SecretsCreateRequest:
-      properties:
-        secrets:
-          additionalProperties:
-            type: string
-          type: object
-          title: Secrets
-          description: Key-value pairs of secrets to create/update
-      type: object
-      required:
-      - secrets
-      title: SecretsCreateRequest
-      description: Request to create/update workspace secrets.
-    SlxSpecInWorkspace:
-      properties:
-        alias:
-          type: string
-          title: Alias
-          description: Human-readable alias
-          default: ''
-        statement:
-          type: string
-          title: Statement
-          description: SLX purpose statement
-          default: ''
-        asMeasuredBy:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Asmeasuredby
-          description: How the SLX is measured
-        imageURL:
-          type: string
-          title: Imageurl
-          description: Image/icon URL
-          default: ''
-        owners:
-          items:
-            type: string
-          type: array
-          title: Owners
-          description: Owner email addresses
-        configProvided:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Configprovided
-          description: Configuration as list of {name, value} objects
-        tags:
-          items:
-            $ref: '#/components/schemas/SlxTag'
-          type: array
-          title: Tags
-          description: Tags
-        additionalContext:
-          additionalProperties: true
-          type: object
-          title: Additionalcontext
-          description: Additional context data (cluster, hierarchy, etc.)
-      type: object
-      title: SlxSpecInWorkspace
-      description: SLX spec for workspace response (matches frontend SlxSpec interface).
+      - username
+      title: ResetServiceAccountResponse
+      description: Response from resetting a service account.
     SearchScopeSlx:
       properties:
         name:
@@ -4468,17 +4760,204 @@ components:
       - alias
       title: SearchScopeSlx
       description: SLX item in search scope.
-    AutocompleteRequest:
+    SlxInWorkspace:
       properties:
-        query:
+        id:
+          type: integer
+          title: Id
+          description: Unique identifier
+        name:
           type: string
-          title: Query
-          description: Partial query for autocomplete
+          title: Name
+          description: Full SLX name
+        shortName:
+          type: string
+          title: Shortname
+          description: Short SLX name
+        alias:
+          type: string
+          title: Alias
+          description: Human-readable alias
+          default: ''
+        tags:
+          items:
+            $ref: '#/components/schemas/SlxTag'
+          type: array
+          title: Tags
+          description: Tags with name-value pairs
+        hasSli:
+          type: boolean
+          title: Hassli
+          description: Whether SLX has an SLI
+          default: false
+        hasSlo:
+          type: boolean
+          title: Hasslo
+          description: Whether SLX has an SLO
+          default: false
+        hasRunbook:
+          type: boolean
+          title: Hasrunbook
+          description: Whether SLX has a Runbook
+          default: false
+        hasHook:
+          type: boolean
+          title: Hashook
+          description: Whether SLX has a Hook
+          default: false
+        created:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created
+          description: Creation timestamp (ISO format)
+        repo:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repo
+          description: Repository FK ID
+        sli:
+          anyOf:
+          - $ref: '#/components/schemas/SliBasicInWorkspace'
+          - type: 'null'
+          description: SLI details if SLX has one
+        slo:
+          anyOf:
+          - $ref: '#/components/schemas/SloBasicInWorkspace'
+          - type: 'null'
+          description: SLO details if SLX has one
+        spec:
+          $ref: '#/components/schemas/SlxSpecInWorkspace'
+          description: SLX specification for UI
+        runbook:
+          anyOf:
+          - $ref: '#/components/schemas/RunbookInWorkspace'
+          - type: 'null'
+          description: Runbook with tasks if SLX has one
       type: object
       required:
-      - query
-      title: AutocompleteRequest
-      description: Request for search autocomplete.
+      - id
+      - name
+      - shortName
+      title: SlxInWorkspace
+      description: SLX summary for workspace response (camelCase for UI compatibility).
+    SecretUsageResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        usages:
+          items:
+            $ref: '#/components/schemas/SecretUsageItem'
+          type: array
+          title: Usages
+      type: object
+      required:
+      - key
+      title: SecretUsageResponse
+      description: Response listing where a workspace secret is referenced.
+    WorkspaceStatusResponse:
+      properties:
+        workspace:
+          type: boolean
+          title: Workspace
+          description: Whether workspace exists in database
+        sync:
+          type: boolean
+          title: Sync
+          description: Whether workspace sync has succeeded
+      type: object
+      required:
+      - workspace
+      - sync
+      title: WorkspaceStatusResponse
+      description: Response for workspace creation status check.
+    AnonymousModeRequest:
+      properties:
+        action:
+          type: string
+          pattern: ^(on|off)$
+          title: Action
+          description: 'Action: ''on'' to enable, ''off'' to disable'
+      type: object
+      required:
+      - action
+      title: AnonymousModeRequest
+      description: Request body for toggling anonymous mode.
+    SlxSpecInWorkspace:
+      properties:
+        alias:
+          type: string
+          title: Alias
+          description: Human-readable alias
+          default: ''
+        statement:
+          type: string
+          title: Statement
+          description: SLX purpose statement
+          default: ''
+        asMeasuredBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asmeasuredby
+          description: How the SLX is measured
+        imageURL:
+          type: string
+          title: Imageurl
+          description: Image/icon URL
+          default: ''
+        owners:
+          items:
+            type: string
+          type: array
+          title: Owners
+          description: Owner email addresses
+        configProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Configprovided
+          description: Configuration as list of {name, value} objects
+        tags:
+          items:
+            $ref: '#/components/schemas/SlxTag'
+          type: array
+          title: Tags
+          description: Tags
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+          description: Additional context data (cluster, hierarchy, etc.)
+      type: object
+      title: SlxSpecInWorkspace
+      description: SLX spec for workspace response (matches frontend SlxSpec interface).
+    GalleryUser:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: User role in workspace
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: User email
+        group:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Group
+          description: User group
+      type: object
+      required:
+      - role
+      title: GalleryUser
+      description: Schema for user info in workspace gallery.
     SloAlertInWorkspace:
       properties:
         id:
@@ -4536,53 +5015,185 @@ components:
       - start_time
       title: SloAlertInWorkspace
       description: SLO firing alert for workspace response.
-    HTTPValidationError:
+    WorkspaceCreateResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    RunbookInWorkspace:
-      properties:
-        id:
-          type: integer
-          title: Id
-          description: Runbook ID
         name:
           type: string
           title: Name
-          description: Runbook name (same as SLX full name)
-        slx:
-          type: integer
-          title: Slx
-          description: Parent SLX ID
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-          description: Runbook spec (codeBundle, location, etc.)
-        tasks:
-          items:
-            $ref: '#/components/schemas/RunbookTaskInWorkspace'
-          type: array
-          title: Tasks
-          description: Runbook tasks
-        repo:
+          description: Workspace short name
+        repo_url:
+          type: string
+          title: Repo Url
+          description: URL of the created Git repository
+        status:
+          type: string
+          enum:
+          - provisioning
+          - ready
+          title: Status
+          description: Workspace creation status
+        renamed_from:
           anyOf:
-          - type: integer
+          - type: string
           - type: 'null'
-          title: Repo
-          description: Repository FK ID
+          title: Renamed From
+          description: Original requested name if it was auto-suffixed due to collision
       type: object
       required:
-      - id
       - name
+      - repo_url
+      - status
+      title: WorkspaceCreateResponse
+      description: 'Response for workspace creation.
+
+
+        Synchronous creation returns status="ready". Async GitOps-based creation
+
+        (if re-enabled) returns status="provisioning" and requires polling
+
+        GET /{workspace_name}/status for completion.'
+    ReprovisionWorkspaceInfraResponse:
+      properties:
+        workspace:
+          type: string
+          title: Workspace
+        vault_approle:
+          type: string
+          title: Vault Approle
+        runner_certs:
+          type: string
+          title: Runner Certs
+      type: object
+      required:
+      - workspace
+      - vault_approle
+      - runner_certs
+      title: ReprovisionWorkspaceInfraResponse
+      description: Response from reprovisioning workspace runner infrastructure.
+    _ProvisioningStatusResponse:
+      properties:
+        workspace:
+          type: boolean
+          title: Workspace
+          default: false
+        sync:
+          type: boolean
+          title: Sync
+          default: false
+        stages:
+          $ref: '#/components/schemas/_ProvisioningStages'
+        sync_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sync Message
+      type: object
+      title: _ProvisioningStatusResponse
+    SecretUsageItem:
+      properties:
+        slx:
+          type: string
+          title: Slx
+          description: SLX short name
+        kind:
+          type: string
+          title: Kind
+          description: '''Sli'' or ''Runbook'''
+        name:
+          type: string
+          title: Name
+          description: The secretsProvided entry name
+      type: object
+      required:
       - slx
-      title: RunbookInWorkspace
-      description: Runbook schema for workspace response with tasks.
+      - kind
+      - name
+      title: SecretUsageItem
+      description: A single SLI/Runbook that references a workspace secret.
+    WorkspacePermissionUpdate:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: Permission role (admin, readwrite, readandrun, readonly, …)
+        user:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: User
+          description: User email address
+        group:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Group
+          description: Group name
+      type: object
+      required:
+      - role
+      title: WorkspacePermissionUpdate
+      description: 'A single permission entry for workspace update requests.
+
+
+        Mirrors WorkspaceSpecPermission but is used for incoming PATCH payloads.
+
+        Either ``user`` (email) or ``group`` (name) must be set.'
+    SecretsCreateResponse:
+      properties:
+        keys:
+          items:
+            type: string
+          type: array
+          title: Keys
+        rsps:
+          items:
+            type: string
+          type: array
+          title: Rsps
+        codes:
+          items:
+            type: integer
+          type: array
+          title: Codes
+      type: object
+      title: SecretsCreateResponse
+      description: Response after creating/updating secrets.
+    RunSessionCount:
+      properties:
+        date:
+          type: string
+          title: Date
+          description: ISO date string
+        count:
+          type: integer
+          title: Count
+          description: Number of run sessions
+      type: object
+      required:
+      - date
+      - count
+      title: RunSessionCount
+      description: Schema for run session count by date.
+    SecretDeleteResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        deleted:
+          type: boolean
+          title: Deleted
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Detail
+      type: object
+      required:
+      - key
+      - deleted
+      title: SecretDeleteResponse
+      description: Response after deleting a single workspace secret.
     SearchScopeGroup:
       properties:
         name:
@@ -4602,195 +5213,6 @@ components:
       - name
       title: SearchScopeGroup
       description: SLX group in search scope.
-    WorkspaceSpecPermission:
-      additionalProperties: true
-      type: object
-    WorkspaceUpdate:
-      properties:
-        alias:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Alias
-          description: Updated human-readable display name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Updated workspace description
-        scrubber_config:
-          anyOf:
-          - $ref: '#/components/schemas/ResourceScrubberConfigEnum'
-          - type: 'null'
-          description: Updated resource scrubbing configuration
-        enabled_locations:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Enabled Locations
-          description: Updated list of enabled locations
-        config_provided:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Config Provided
-          description: Updated configuration as list of {name, value} objects
-        permissions:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/WorkspacePermissionUpdate'
-            type: array
-          - type: 'null'
-          title: Permissions
-          description: Full replacement of workspace permissions. Each entry must have 'role' and either 'user' (email) or 'group' (name). Owner admin permission is preserved automatically.
-        slx_groups:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Slx Groups
-          description: Updated SLX group definitions (replaces existing groups)
-        slx_relationships:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Slx Relationships
-          description: Updated SLX relationship definitions (replaces existing relationships)
-      type: object
-      title: WorkspaceUpdate
-      description: 'Schema for updating a workspace (partial update).
-
-
-        All fields are optional; only non-None values are applied.'
-    DeletionStep:
-      properties:
-        key:
-          type: string
-          title: Key
-        label:
-          type: string
-          title: Label
-        status:
-          type: string
-          title: Status
-        detail:
-          type: string
-          title: Detail
-          default: ''
-      type: object
-      required:
-      - key
-      - label
-      - status
-      title: DeletionStep
-      description: Status of a single deletion step.
-    AuthorizedRunner:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Runner display name
-        value:
-          type: string
-          title: Value
-          description: Runner resource name (UUID)
-        health:
-          type: string
-          title: Health
-          description: 'Runner health: online, stale, or unknown'
-          default: unknown
-        lastHeartbeat:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lastheartbeat
-          description: ISO timestamp of last heartbeat
-        secondsSinceHeartbeat:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Secondssinceheartbeat
-          description: Seconds since last heartbeat
-      type: object
-      required:
-      - name
-      - value
-      title: AuthorizedRunner
-      description: Authorized runner for a workspace.
-    UploadStatusResponse:
-      properties:
-        task_id:
-          type: string
-          title: Task Id
-          description: Task ID
-        status:
-          type: string
-          enum:
-          - PENDING
-          - STARTED
-          - SUCCESS
-          - FAILURE
-          - UNKNOWN
-          title: Status
-          description: Task status
-        result:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Result
-          description: Task result if completed
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-          description: Error message if failed
-      type: object
-      required:
-      - task_id
-      - status
-      title: UploadStatusResponse
-      description: Schema for upload status check response.
-    SecretsKeysResponse:
-      properties:
-        secrets:
-          items:
-            type: string
-          type: array
-          title: Secrets
-      type: object
-      title: SecretsKeysResponse
-      description: Response containing list of secret key names.
-    AnonymousModeResponse:
-      properties:
-        workspace:
-          type: string
-          title: Workspace
-        anonymousMode:
-          type: boolean
-          title: Anonymousmode
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - workspace
-      - anonymousMode
-      - message
-      title: AnonymousModeResponse
-      description: Response for anonymous mode toggle.
     WorkspaceSpec:
       properties:
         slxGroups:
@@ -4853,449 +5275,27 @@ components:
         model stores them in individual columns for better querying. This schema
 
         reconstructs the spec for API responses to maintain UI compatibility.'
-    WorkspaceUploadRequest:
-      properties:
-        output:
-          type: string
-          maxLength: 104857600
-          title: Output
-          description: Base64-encoded gzip-compressed tar archive
-        mergeMode:
-          $ref: '#/components/schemas/MergeModeEnum'
-          description: Deprecated — ignored under the new ownership/overridden_fields model. Accepted for backward compatibility with existing callers.
-          default: keepexisting
-        pruneStaleSlxs:
-          type: boolean
-          title: Prunestaleslxs
-          description: Remove SLXs no longer present in uploaded data
-          default: false
-        pruneStaleResources:
-          type: boolean
-          title: Prunestaleresources
-          description: Remove resources no longer present in uploaded data
-          default: false
-        message:
-          type: string
-          title: Message
-          description: Human-readable message describing the upload
-          default: Updated workspace from map builder.
-        finalizeAction:
-          $ref: '#/components/schemas/FinalizeActionEnum'
-          description: Action after upload completes
-          default: mergeToMain
-        build_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Build Date
-          description: Builder run timestamp (informational); not processed, stored for audit logs
-      type: object
-      required:
-      - output
-      title: WorkspaceUploadRequest
-      description: Schema for workspace upload request (matches runner format).
-    WorkspaceDeletionResponse:
-      properties:
-        workspace:
-          type: string
-          title: Workspace
-        status:
-          type: string
-          title: Status
-        steps:
-          items:
-            $ref: '#/components/schemas/DeletionStep'
-          type: array
-          title: Steps
-        async_task_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Async Task Id
-      type: object
-      required:
-      - workspace
-      - status
-      - steps
-      title: WorkspaceDeletionResponse
-      description: Response from workspace deletion endpoint.
-    GalleryUser:
-      properties:
-        role:
-          type: string
-          title: Role
-          description: User role in workspace
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: User email
-        group:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Group
-          description: User group
-      type: object
-      required:
-      - role
-      title: GalleryUser
-      description: Schema for user info in workspace gallery.
-    RunSessionCount:
-      properties:
-        date:
-          type: string
-          title: Date
-          description: ISO date string
-        count:
-          type: integer
-          title: Count
-          description: Number of run sessions
-      type: object
-      required:
-      - date
-      - count
-      title: RunSessionCount
-      description: Schema for run session count by date.
-    RunbookTaskInWorkspace:
+    WorkspaceGitCreate:
       properties:
         name:
           type: string
+          maxLength: 63
+          minLength: 2
+          pattern: ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$
           title: Name
-          description: Resolved task display name
-        value:
-          type: string
-          title: Value
-          description: Original task identifier
-        tags:
-          items:
-            type: string
-          type: array
-          title: Tags
-          description: Task tags
-        id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Id
-          description: Stable platform-owned task id (slx_tasks.id); null until reconciled
-      type: object
-      required:
-      - name
-      - value
-      title: RunbookTaskInWorkspace
-      description: Individual task in a runbook for workspace response.
-    WorkspaceRoleEnum:
-      type: string
-      enum:
-      - admin
-      - readwrite
-      - readandrun
-      - readonly
-      - readandrunwithassistant
-      title: WorkspaceRoleEnum
-      description: Workspace permission roles.
-    SATokenResponse:
-      properties:
-        token:
-          type: string
-          title: Token
-      type: object
-      required:
-      - token
-      title: SATokenResponse
-      description: Response containing a service account token.
-    ResetServiceAccountRequest:
-      properties:
-        password:
-          type: string
-          minLength: 8
-          title: Password
-          description: New password for the service account
-      type: object
-      required:
-      - password
-      title: ResetServiceAccountRequest
-      description: Request to reset a workspace service account password.
-    ResourceScrubberConfigEnum:
-      type: string
-      enum:
-      - SCRUB_ALL_RESOURCE_LABELS
-      - SCRUB_ALL_EXCEPT_RESOURCE_NAME
-      - SCRUB_NONE
-      title: ResourceScrubberConfigEnum
-      description: Configuration for resource scrubbing before LLM calls.
-    SecretDeleteResponse:
-      properties:
-        key:
-          type: string
-          title: Key
-        deleted:
-          type: boolean
-          title: Deleted
-        detail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Detail
-      type: object
-      required:
-      - key
-      - deleted
-      title: SecretDeleteResponse
-      description: Response after deleting a single workspace secret.
-    WorkspaceUploadResponse:
-      properties:
-        task_id:
-          type: string
-          title: Task Id
-          description: Task ID for tracking upload progress (empty when deduplicated)
-          default: ''
-        status:
-          type: string
-          enum:
-          - queued
-          - duplicate_skipped
-          title: Status
-          description: Upload status
-          default: queued
-        message:
-          type: string
-          title: Message
-          description: Status message
-      type: object
-      required:
-      - message
-      title: WorkspaceUploadResponse
-      description: Schema for workspace upload response.
-    UploadConfigResponse:
-      properties:
-        token:
-          type: string
-          title: Token
-        papi_url:
-          type: string
-          title: Papi Url
-      type: object
-      required:
-      - token
-      - papi_url
-      title: UploadConfigResponse
-      description: Response containing upload credentials and PAPI URL for workspace-builder.
-    FinalizeActionEnum:
-      type: string
-      enum:
-      - mergeToMain
-      title: FinalizeActionEnum
-      description: Finalize action after workspace upload.
-    SecretUsageResponse:
-      properties:
-        key:
-          type: string
-          title: Key
-        usages:
-          items:
-            $ref: '#/components/schemas/SecretUsageItem'
-          type: array
-          title: Usages
-      type: object
-      required:
-      - key
-      title: SecretUsageResponse
-      description: Response listing where a workspace secret is referenced.
-    _ProvisioningStatusResponse:
-      properties:
-        workspace:
-          type: boolean
-          title: Workspace
-          default: false
-        sync:
-          type: boolean
-          title: Sync
-          default: false
-        stages:
-          $ref: '#/components/schemas/_ProvisioningStages'
-        sync_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sync Message
-      type: object
-      title: _ProvisioningStatusResponse
-    SloBasicInWorkspace:
-      properties:
-        id:
-          type: integer
-          title: Id
-          description: SLO ID (same as slx_id)
-        name:
-          type: string
-          title: Name
-          description: SLO name (same as SLX full name)
-        slx:
-          type: integer
-          title: Slx
-          description: Parent SLX ID
+          description: 'Workspace short name. Must be DNS-label compatible: lowercase alphanumerics and hyphens only, must start and end with an alphanumeric character.'
         spec:
-          additionalProperties: true
-          type: object
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
           title: Spec
-          description: SLO spec (reconstructed)
-        status:
-          additionalProperties: true
-          type: object
-          title: Status
-          description: SLO status (generation info)
-        created:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created
-          description: Creation timestamp (ISO format)
-        modified:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Modified
-          description: Last modified timestamp (ISO format)
-        repo:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Repo
-          description: Repository FK ID
+          description: Optional workspace spec overrides
       type: object
       required:
-      - id
       - name
-      - slx
-      title: SloBasicInWorkspace
-      description: Basic SLO info for workspace SLX response (matches Django SloSerializer).
-    OwnerResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-          description: Owner user ID
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Owner's email
-        fullName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fullname
-          description: Owner's full name
-      type: object
-      required:
-      - id
-      title: OwnerResponse
-      description: Schema for owner info in workspace response.
-    SliAlertInWorkspace:
-      properties:
-        id:
-          type: integer
-          title: Id
-          description: Alert ID
-        slx_name:
-          type: string
-          title: Slx Name
-          description: SLX short name
-        sli_id:
-          type: integer
-          title: Sli Id
-          description: SLI ID (same as slx_id)
-        start_time:
-          type: string
-          format: date-time
-          title: Start Time
-          description: Alert start time
-        end_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: End Time
-          description: Alert end time
-        severity:
-          type: string
-          title: Severity
-          description: Alert severity
-          default: ''
-        kind:
-          type: string
-          title: Kind
-          description: Alert kind
-          default: ''
-      type: object
-      required:
-      - id
-      - slx_name
-      - sli_id
-      - start_time
-      title: SliAlertInWorkspace
-      description: SLI firing alert for workspace response.
-    WorkspaceListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/WorkspaceResponse'
-          type: array
-          title: Results
-          description: List of workspaces
-        count:
-          type: integer
-          title: Count
-          description: Total count matching filters
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: Next page URL
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: Previous page URL
-      type: object
-      required:
-      - results
-      - count
-      title: WorkspaceListResponse
-      description: Schema for paginated workspace list response.
-    MergeModeEnum:
-      type: string
-      enum:
-      - keepexisting
-      - keepuploaded
-      title: MergeModeEnum
-      description: Merge mode for workspace upload.
-    SecretsCreateResponse:
-      properties:
-        keys:
-          items:
-            type: string
-          type: array
-          title: Keys
-        rsps:
-          items:
-            type: string
-          type: array
-          title: Rsps
-        codes:
-          items:
-            type: integer
-          type: array
-          title: Codes
-      type: object
-      title: SecretsCreateResponse
-      description: Response after creating/updating secrets.
+      title: WorkspaceGitCreate
+      description: Schema for Git-first workspace creation.
   securitySchemes:
     BearerAuth:
       type: http

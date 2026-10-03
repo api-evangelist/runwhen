@@ -1706,6 +1706,230 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    RunRequestCreate:
+      properties:
+        runsession_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Runsession Id
+          description: Parent RunSession ID (optional)
+        task_titles:
+          type: string
+          title: Task Titles
+          description: Task titles to run ('||' separated, '*' for all)
+          default: '*'
+        request_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Request Time
+          description: When to run. None = staged (wait for /start), omit = now
+        depends_on:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Depends On
+          description: Comma-separated list of RunRequest IDs to wait for
+        memo:
+          additionalProperties: true
+          type: object
+          title: Memo
+          description: Arbitrary JSON for user storage
+        persona_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Persona Id
+          description: Persona ID if run by AI automation
+        from_run_request_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: From Run Request Id
+          description: ID of RunRequest that spawned this one
+        from_issue_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: From Issue Id
+          description: Issue occurrence ID that triggered this run request
+        from_search_query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: From Search Query
+          description: Search query that triggered this run
+        from_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: From Score
+          description: Confidence score from search or persona action
+        from_context:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: From Context
+          description: Additional context about the origin
+      type: object
+      title: RunRequestCreate
+      description: Schema for creating a new RunRequest.
+    IssueReference:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Issue ID
+        title:
+          type: string
+          title: Title
+          description: Issue title
+        severity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity
+          description: Issue severity
+        slx_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slx Name
+          description: SLX name
+      type: object
+      required:
+      - id
+      - title
+      title: IssueReference
+      description: Reference to an issue from a RunRequest.
+    RunRequestIssuesResponse:
+      properties:
+        issues:
+          items:
+            $ref: '#/components/schemas/IssueReference'
+          type: array
+          title: Issues
+          description: Issues from this RunRequest
+        total:
+          type: integer
+          title: Total
+          description: Total issue count
+      type: object
+      required:
+      - issues
+      - total
+      title: RunRequestIssuesResponse
+      description: Response for issues endpoint.
+    RunRequestRecordResponse:
+      properties:
+        passed_titles:
+          type: string
+          title: Passed Titles
+          description: Pipe-separated list of passed task titles
+          default: ''
+        failed_titles:
+          type: string
+          title: Failed Titles
+          description: Pipe-separated list of failed task titles
+          default: ''
+        skipped_titles:
+          type: string
+          title: Skipped Titles
+          description: Pipe-separated list of skipped task titles
+          default: ''
+        errors:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          title: Errors
+          description: Task errors (dict or pipe-separated string)
+        robot_log_file:
+          type: string
+          title: Robot Log File
+          description: URL to robot log file
+          default: ''
+        robot_stdout_file:
+          type: string
+          title: Robot Stdout File
+          description: URL to robot stdout file
+          default: ''
+        report_file:
+          type: string
+          title: Report File
+          description: URL to report file
+          default: ''
+        issues_file:
+          type: string
+          title: Issues File
+          description: URL to issues file
+          default: ''
+        robot_output:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Robot Output
+          description: Raw robot output XML (legacy format)
+      type: object
+      title: RunRequestRecordResponse
+      description: Schema for recording a run response (runner callback).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProcessingStatusResponse:
+      properties:
+        status:
+          $ref: '#/components/schemas/OutputProcessingStatusEnum'
+          description: Processing status
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+          description: When processing completed
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+          description: Error message if failed
+        retry_count:
+          type: integer
+          title: Retry Count
+          description: Number of retry attempts
+          default: 0
+      type: object
+      required:
+      - status
+      title: ProcessingStatusResponse
+      description: Schema for RunRequest output processing status.
+    OutputResponse:
+      properties:
+        output:
+          additionalProperties: true
+          type: object
+          title: Output
+          description: Parsed XML output as JSON
+        size_bytes:
+          type: integer
+          title: Size Bytes
+          description: Original file size in bytes
+      type: object
+      required:
+      - output
+      - size_bytes
+      title: OutputResponse
+      description: Response for output endpoint.
     RunRequestResponse:
       properties:
         id:
@@ -1885,141 +2109,6 @@ components:
       - modified
       title: RunRequestResponse
       description: Full RunRequest response schema for API responses.
-    IssueReference:
-      properties:
-        id:
-          type: integer
-          title: Id
-          description: Issue ID
-        title:
-          type: string
-          title: Title
-          description: Issue title
-        severity:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Severity
-          description: Issue severity
-        slx_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Slx Name
-          description: SLX name
-      type: object
-      required:
-      - id
-      - title
-      title: IssueReference
-      description: Reference to an issue from a RunRequest.
-    OutputResponse:
-      properties:
-        output:
-          additionalProperties: true
-          type: object
-          title: Output
-          description: Parsed XML output as JSON
-        size_bytes:
-          type: integer
-          title: Size Bytes
-          description: Original file size in bytes
-      type: object
-      required:
-      - output
-      - size_bytes
-      title: OutputResponse
-      description: Response for output endpoint.
-    RunRequestCreate:
-      properties:
-        runsession_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Runsession Id
-          description: Parent RunSession ID (optional)
-        task_titles:
-          type: string
-          title: Task Titles
-          description: Task titles to run ('||' separated, '*' for all)
-          default: '*'
-        request_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Request Time
-          description: When to run. None = staged (wait for /start), omit = now
-        depends_on:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Depends On
-          description: Comma-separated list of RunRequest IDs to wait for
-        memo:
-          additionalProperties: true
-          type: object
-          title: Memo
-          description: Arbitrary JSON for user storage
-        persona_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Persona Id
-          description: Persona ID if run by AI automation
-        from_run_request_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: From Run Request Id
-          description: ID of RunRequest that spawned this one
-        from_issue_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: From Issue Id
-          description: Issue occurrence ID that triggered this run request
-        from_search_query:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: From Search Query
-          description: Search query that triggered this run
-        from_score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: From Score
-          description: Confidence score from search or persona action
-        from_context:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: From Context
-          description: Additional context about the origin
-      type: object
-      title: RunRequestCreate
-      description: Schema for creating a new RunRequest.
-    OutputProcessingStatusEnum:
-      type: string
-      enum:
-      - new
-      - processing
-      - successful
-      - failed
-      - retry
-      title: OutputProcessingStatusEnum
-      description: Processing status for RunRequest output.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     RunnerStatusResponse:
       properties:
         taskset_uuid:
@@ -2041,80 +2130,16 @@ components:
       - status
       title: RunnerStatusResponse
       description: Response for runner status query.
-    ProcessingStatusResponse:
-      properties:
-        status:
-          $ref: '#/components/schemas/OutputProcessingStatusEnum'
-          description: Processing status
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-          description: When processing completed
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-          description: Error message if failed
-        retry_count:
-          type: integer
-          title: Retry Count
-          description: Number of retry attempts
-          default: 0
-      type: object
-      required:
-      - status
-      title: ProcessingStatusResponse
-      description: Schema for RunRequest output processing status.
-    StartRunRequestResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-          description: RunRequest ID
-        taskset_uuid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Taskset Uuid
-          description: UUID from runner-control
-        request_time:
-          type: string
-          format: date-time
-          title: Request Time
-          description: When the run started
-        message:
-          type: string
-          title: Message
-          description: Status message
-      type: object
-      required:
-      - id
-      - request_time
-      - message
-      title: StartRunRequestResponse
-      description: Response for starting a staged RunRequest.
-    RunRequestIssuesResponse:
-      properties:
-        issues:
-          items:
-            $ref: '#/components/schemas/IssueReference'
-          type: array
-          title: Issues
-          description: Issues from this RunRequest
-        total:
-          type: integer
-          title: Total
-          description: Total issue count
-      type: object
-      required:
-      - issues
-      - total
-      title: RunRequestIssuesResponse
-      description: Response for issues endpoint.
+    OutputProcessingStatusEnum:
+      type: string
+      enum:
+      - new
+      - processing
+      - successful
+      - failed
+      - retry
+      title: OutputProcessingStatusEnum
+      description: Processing status for RunRequest output.
     ValidationError:
       properties:
         loc:
@@ -2141,59 +2166,6 @@ components:
       - msg
       - type
       title: ValidationError
-    RunRequestRecordResponse:
-      properties:
-        passed_titles:
-          type: string
-          title: Passed Titles
-          description: Pipe-separated list of passed task titles
-          default: ''
-        failed_titles:
-          type: string
-          title: Failed Titles
-          description: Pipe-separated list of failed task titles
-          default: ''
-        skipped_titles:
-          type: string
-          title: Skipped Titles
-          description: Pipe-separated list of skipped task titles
-          default: ''
-        errors:
-          anyOf:
-          - type: string
-          - additionalProperties: true
-            type: object
-          title: Errors
-          description: Task errors (dict or pipe-separated string)
-        robot_log_file:
-          type: string
-          title: Robot Log File
-          description: URL to robot log file
-          default: ''
-        robot_stdout_file:
-          type: string
-          title: Robot Stdout File
-          description: URL to robot stdout file
-          default: ''
-        report_file:
-          type: string
-          title: Report File
-          description: URL to report file
-          default: ''
-        issues_file:
-          type: string
-          title: Issues File
-          description: URL to issues file
-          default: ''
-        robot_output:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Robot Output
-          description: Raw robot output XML (legacy format)
-      type: object
-      title: RunRequestRecordResponse
-      description: Schema for recording a run response (runner callback).
     RunRequestListResponse:
       properties:
         results:
@@ -2234,6 +2206,34 @@ components:
       - offset
       title: RunRequestListResponse
       description: Paginated list response for RunRequest endpoints.
+    StartRunRequestResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: RunRequest ID
+        taskset_uuid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Taskset Uuid
+          description: UUID from runner-control
+        request_time:
+          type: string
+          format: date-time
+          title: Request Time
+          description: When the run started
+        message:
+          type: string
+          title: Message
+          description: Status message
+      type: object
+      required:
+      - id
+      - request_time
+      - message
+      title: StartRunRequestResponse
+      description: Response for starting a staged RunRequest.
   securitySchemes:
     BearerAuth:
       type: http

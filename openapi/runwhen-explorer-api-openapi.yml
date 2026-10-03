@@ -418,74 +418,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    CodeBundleReference:
-      properties:
-        id:
-          type: string
-          title: Id
-          default: ''
-        name:
-          type: string
-          title: Name
-          default: ''
-        gitURL:
-          type: string
-          title: Giturl
-          default: ''
-        branch:
-          type: string
-          title: Branch
-          default: ''
-        path:
-          type: string
-          title: Path
-          default: ''
-        image:
-          type: string
-          title: Image
-          default: ''
-        imageTag:
-          type: string
-          title: Imagetag
-          default: ''
-      type: object
-      title: CodeBundleReference
-      description: Code bundle reference matching runner-control JSONCodeBundleReference.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    RunnerStatusUpdateRequest:
-      properties:
-        organization:
-          type: string
-          title: Organization
-          default: ''
-        workspace:
-          type: string
-          title: Workspace
-          default: ''
-        runner:
-          type: string
-          title: Runner
-          default: ''
-        runnerUUID:
-          type: string
-          title: Runneruuid
-          default: ''
-        runnerStatus:
-          additionalProperties: true
-          type: object
-          title: Runnerstatus
-          default: {}
-      type: object
-      title: RunnerStatusUpdateRequest
-      description: Request body for runner status update endpoint.
     RunnerRegisterRequest:
       properties:
         organization:
@@ -503,45 +435,15 @@ components:
       type: object
       title: RunnerRegisterRequest
       description: Request body for runner registration endpoint.
-    SLIEnvResponse:
+    HTTPValidationError:
       properties:
-        runner:
-          type: string
-          title: Runner
-          default: ''
-        runnerUUID:
-          type: string
-          title: Runneruuid
-          default: ''
-        version:
-          type: string
-          title: Version
-          default: ''
-        platform:
-          additionalProperties:
-            type: string
-          type: object
-          title: Platform
-        configProvided:
-          additionalProperties:
-            type: string
-          type: object
-          title: Configprovided
-        secretsProvided:
-          additionalProperties:
-            type: string
-          type: object
-          title: Secretsprovided
-        locationServicesProvided:
-          additionalProperties:
-            type: string
-          type: object
-          title: Locationservicesprovided
-        codeBundleReference:
-          $ref: '#/components/schemas/CodeBundleReference'
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      title: SLIEnvResponse
-      description: SLI environment response matching Go SLIEnv struct.
+      title: HTTPValidationError
     RunnerRegisterResponse:
       properties:
         runner:
@@ -581,6 +483,104 @@ components:
       - msg
       - type
       title: ValidationError
+    SLIEnvResponse:
+      properties:
+        runner:
+          type: string
+          title: Runner
+          default: ''
+        runnerUUID:
+          type: string
+          title: Runneruuid
+          default: ''
+        version:
+          type: string
+          title: Version
+          default: ''
+        platform:
+          additionalProperties:
+            type: string
+          type: object
+          title: Platform
+        configProvided:
+          additionalProperties:
+            type: string
+          type: object
+          title: Configprovided
+        secretsProvided:
+          additionalProperties:
+            type: string
+          type: object
+          title: Secretsprovided
+        locationServicesProvided:
+          additionalProperties:
+            type: string
+          type: object
+          title: Locationservicesprovided
+        codeBundleReference:
+          $ref: '#/components/schemas/CodeBundleReference'
+      type: object
+      title: SLIEnvResponse
+      description: SLI environment response matching Go SLIEnv struct.
+    CodeBundleReference:
+      properties:
+        id:
+          type: string
+          title: Id
+          default: ''
+        name:
+          type: string
+          title: Name
+          default: ''
+        gitURL:
+          type: string
+          title: Giturl
+          default: ''
+        branch:
+          type: string
+          title: Branch
+          default: ''
+        path:
+          type: string
+          title: Path
+          default: ''
+        image:
+          type: string
+          title: Image
+          default: ''
+        imageTag:
+          type: string
+          title: Imagetag
+          default: ''
+      type: object
+      title: CodeBundleReference
+      description: Code bundle reference matching runner-control JSONCodeBundleReference.
+    RunnerStatusUpdateRequest:
+      properties:
+        organization:
+          type: string
+          title: Organization
+          default: ''
+        workspace:
+          type: string
+          title: Workspace
+          default: ''
+        runner:
+          type: string
+          title: Runner
+          default: ''
+        runnerUUID:
+          type: string
+          title: Runneruuid
+          default: ''
+        runnerStatus:
+          additionalProperties: true
+          type: object
+          title: Runnerstatus
+          default: {}
+      type: object
+      title: RunnerStatusUpdateRequest
+      description: Request body for runner status update endpoint.
   securitySchemes:
     BearerAuth:
       type: http

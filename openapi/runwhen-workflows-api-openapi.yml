@@ -341,85 +341,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    WebhookTokenResponse:
-      properties:
-        webhook_url:
-          type: string
-          title: Webhook Url
-        webhook_token:
-          type: string
-          title: Webhook Token
-      type: object
-      required:
-      - webhook_url
-      - webhook_token
-      title: WebhookTokenResponse
-      description: Response for webhook token.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    WorkflowListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/WorkflowResponse'
-          type: array
-          title: Results
-          description: List of workflow items
-        count:
-          type: integer
-          title: Count
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-      type: object
-      required:
-      - results
-      - count
-      title: WorkflowListResponse
-      description: 'Paginated list response for Workflow endpoints.
-
-
-        Subclasses WorkflowListResponseV4 but overrides results to use legacy WorkflowResponse items.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     WorkflowResponse:
       properties:
         id:
@@ -471,6 +392,85 @@ components:
       - status
       title: WorkflowResponse
       description: "Workflow response schema for API responses (legacy V1/V3 wire shape).\n\nSubclasses WorkflowResponseV4 (flat V4 fields) and layers on:\n  - Legacy wire keys: ``workspace`` (was ``workspaceId``),\n    ``created`` (was ``createdAt``), ``modified`` (was ``modifiedAt``)\n  - Computed ``spec`` and ``status`` for Django-era consumers\n\nspec is the workflow definition (UI reads workflow.spec.fromActivities).\nSunset path: when external consumers fully migrate to /api/v4, delete this subclass."
+    WebhookTokenResponse:
+      properties:
+        webhook_url:
+          type: string
+          title: Webhook Url
+        webhook_token:
+          type: string
+          title: Webhook Token
+      type: object
+      required:
+      - webhook_url
+      - webhook_token
+      title: WebhookTokenResponse
+      description: Response for webhook token.
+    WorkflowListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/WorkflowResponse'
+          type: array
+          title: Results
+          description: List of workflow items
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: WorkflowListResponse
+      description: 'Paginated list response for Workflow endpoints.
+
+
+        Subclasses WorkflowListResponseV4 but overrides results to use legacy WorkflowResponse items.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     WebhookUrlResponse:
       properties:
         webhook_url:

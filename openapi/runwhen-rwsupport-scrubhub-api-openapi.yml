@@ -490,15 +490,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     Body_bulk_create_recognizers_api_v3_rwsupport_scrubhub_workspaces__workspace_name__recognizers_bulk_post:
       properties:
         file:
@@ -524,6 +515,15 @@ components:
       - file
       - kind
       title: Body_bulk_create_recognizers_api_v3_rwsupport_scrubhub_workspaces__workspace_name__recognizers_bulk_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

@@ -249,12 +249,25 @@ paths:
       security: []
 components:
   schemas:
-    SubjectTokenType:
-      type: string
-      enum:
-      - urn:ietf:params:oauth:token-type:access_token
-      - auth0
-      title: SubjectTokenType
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TokenVerifyRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: TokenVerifyRequest
+      description: Token verify request matching Django SimpleJWT format.
     TokenRequest:
       properties:
         username:
@@ -275,15 +288,6 @@ components:
       - password
       title: TokenRequest
       description: Token request body - accepts username or email with password.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     TokenExchangeResponse:
       properties:
         access_token:
@@ -351,30 +355,6 @@ components:
       - subject_token
       title: TokenExchangeRequest
       description: RFC 8693 Token Exchange request (simplified).
-    TokenResponse:
-      properties:
-        access:
-          type: string
-          title: Access
-        refresh:
-          type: string
-          title: Refresh
-      type: object
-      required:
-      - access
-      - refresh
-      title: TokenResponse
-      description: Token response matching Django SimpleJWT format.
-    TokenRefreshRequest:
-      properties:
-        refresh:
-          type: string
-          title: Refresh
-      type: object
-      required:
-      - refresh
-      title: TokenRefreshRequest
-      description: Refresh token request matching Django SimpleJWT format.
     ValidationError:
       properties:
         loc:
@@ -401,16 +381,36 @@ components:
       - msg
       - type
       title: ValidationError
-    TokenVerifyRequest:
+    TokenRefreshRequest:
       properties:
-        token:
+        refresh:
           type: string
-          title: Token
+          title: Refresh
       type: object
       required:
-      - token
-      title: TokenVerifyRequest
-      description: Token verify request matching Django SimpleJWT format.
+      - refresh
+      title: TokenRefreshRequest
+      description: Refresh token request matching Django SimpleJWT format.
+    TokenResponse:
+      properties:
+        access:
+          type: string
+          title: Access
+        refresh:
+          type: string
+          title: Refresh
+      type: object
+      required:
+      - access
+      - refresh
+      title: TokenResponse
+      description: Token response matching Django SimpleJWT format.
+    SubjectTokenType:
+      type: string
+      enum:
+      - urn:ietf:params:oauth:token-type:access_token
+      - auth0
+      title: SubjectTokenType
   securitySchemes:
     BearerAuth:
       type: http

@@ -316,39 +316,15 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    PreviewResponse:
+    HTTPValidationError:
       properties:
-        agentName:
-          type: string
-          title: Agentname
-        workspaceId:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Workspaceid
-        source:
-          type: string
-          enum:
-          - ui
-          - slack
-          - teams
-          - '*'
-          title: Source
-        sections:
+        detail:
           items:
-            $ref: '#/components/schemas/PreviewSectionResponse'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Sections
-          default: []
-        assembled:
-          type: string
-          title: Assembled
+          title: Detail
       type: object
-      required:
-      - agentName
-      - source
-      - assembled
-      title: PreviewResponse
+      title: HTTPValidationError
     CreateOverrideRequest:
       properties:
         source:
@@ -369,111 +345,32 @@ components:
       - prompt
       title: CreateOverrideRequest
       description: Request body for creating a platform-default override.
-    ResolvedSectionResponse:
+    ValidationError:
       properties:
-        sectionId:
-          type: string
-          title: Sectionid
-        categoryId:
-          type: string
-          title: Categoryid
-        title:
-          type: string
-          title: Title
-        description:
-          type: string
-          title: Description
-        safetyCritical:
-          type: boolean
-          title: Safetycritical
-        recommendedPerSource:
-          type: boolean
-          title: Recommendedpersource
-        placeholdersRequired:
+        loc:
           items:
-            type: string
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Placeholdersrequired
-          default: []
-        placeholdersAllowed:
-          items:
-            type: string
-          type: array
-          title: Placeholdersallowed
-          default: []
-        defaultText:
+          title: Location
+        msg:
           type: string
-          title: Defaulttext
-        resolvedText:
+          title: Message
+        type:
           type: string
-          title: Resolvedtext
-        resolvedOrigin:
-          type: string
-          enum:
-          - workspace_source
-          - workspace_any
-          - platform_source
-          - platform_any
-          - code_default
-          title: Resolvedorigin
-        resolvedVersion:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Resolvedversion
-        resolvedModifiedBy:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Resolvedmodifiedby
-        resolvedModifiedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Resolvedmodifiedat
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - sectionId
-      - categoryId
-      - title
-      - description
-      - safetyCritical
-      - recommendedPerSource
-      - defaultText
-      - resolvedText
-      - resolvedOrigin
-      title: ResolvedSectionResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CategoryResponse:
-      properties:
-        categoryId:
-          type: string
-          title: Categoryid
-        title:
-          type: string
-          title: Title
-        description:
-          type: string
-          title: Description
-        displayOrder:
-          type: integer
-          title: Displayorder
-      type: object
-      required:
-      - categoryId
-      - title
-      - description
-      - displayOrder
-      title: CategoryResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
     PreviewSectionResponse:
       properties:
         sectionId:
@@ -568,32 +465,135 @@ components:
       - createdAt
       - modifiedAt
       title: OverrideRowResponse
-    ValidationError:
+    PreviewResponse:
       properties:
-        loc:
+        agentName:
+          type: string
+          title: Agentname
+        workspaceId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspaceid
+        source:
+          type: string
+          enum:
+          - ui
+          - slack
+          - teams
+          - '*'
+          title: Source
+        sections:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/PreviewSectionResponse'
           type: array
-          title: Location
-        msg:
+          title: Sections
+          default: []
+        assembled:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Assembled
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - agentName
+      - source
+      - assembled
+      title: PreviewResponse
+    CategoryResponse:
+      properties:
+        categoryId:
+          type: string
+          title: Categoryid
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        displayOrder:
+          type: integer
+          title: Displayorder
+      type: object
+      required:
+      - categoryId
+      - title
+      - description
+      - displayOrder
+      title: CategoryResponse
+    ResolvedSectionResponse:
+      properties:
+        sectionId:
+          type: string
+          title: Sectionid
+        categoryId:
+          type: string
+          title: Categoryid
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        safetyCritical:
+          type: boolean
+          title: Safetycritical
+        recommendedPerSource:
+          type: boolean
+          title: Recommendedpersource
+        placeholdersRequired:
+          items:
+            type: string
+          type: array
+          title: Placeholdersrequired
+          default: []
+        placeholdersAllowed:
+          items:
+            type: string
+          type: array
+          title: Placeholdersallowed
+          default: []
+        defaultText:
+          type: string
+          title: Defaulttext
+        resolvedText:
+          type: string
+          title: Resolvedtext
+        resolvedOrigin:
+          type: string
+          enum:
+          - workspace_source
+          - workspace_any
+          - platform_source
+          - platform_any
+          - code_default
+          title: Resolvedorigin
+        resolvedVersion:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resolvedversion
+        resolvedModifiedBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resolvedmodifiedby
+        resolvedModifiedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Resolvedmodifiedat
+      type: object
+      required:
+      - sectionId
+      - categoryId
+      - title
+      - description
+      - safetyCritical
+      - recommendedPerSource
+      - defaultText
+      - resolvedText
+      - resolvedOrigin
+      title: ResolvedSectionResponse
   securitySchemes:
     BearerAuth:
       type: http

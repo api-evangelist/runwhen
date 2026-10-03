@@ -165,45 +165,6 @@ components:
       - msg
       - type
       title: ValidationError
-    PersonaListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/PersonaResponse'
-          type: array
-          title: Results
-          description: List of persona items
-        count:
-          type: integer
-          title: Count
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-      type: object
-      required:
-      - results
-      - count
-      title: PersonaListResponse
-      description: 'Paginated list response for Persona endpoints.
-
-
-        Subclasses PersonaListResponseV4 but overrides results to use legacy PersonaResponse items.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     PersonaResponse:
       properties:
         id:
@@ -311,6 +272,45 @@ components:
       - status
       title: PersonaResponse
       description: "Persona response schema for API responses (legacy V1/V3 wire shape).\n\nSubclasses PersonaResponseV4 (flat V4 fields) and layers on:\n  - Legacy wire keys: ``workspace`` (was ``workspaceId``),\n    ``created`` (was ``createdAt``), ``modified`` (was ``modifiedAt``)\n  - camelCase aliases for filter/run fields\n  - Computed ``spec`` and ``status`` for Django-era consumers\n\nSunset path: when external consumers fully migrate to /api/v4, delete this subclass."
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PersonaListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PersonaResponse'
+          type: array
+          title: Results
+          description: List of persona items
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: PersonaListResponse
+      description: 'Paginated list response for Persona endpoints.
+
+
+        Subclasses PersonaListResponseV4 but overrides results to use legacy PersonaResponse items.'
   securitySchemes:
     BearerAuth:
       type: http

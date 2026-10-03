@@ -248,29 +248,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    PersonaSyncRequestV4:
-      properties:
-        payload:
-          $ref: '#/components/schemas/PersonaPayloadV4'
-        lastSyncedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Lastsyncedat
-      additionalProperties: false
-      type: object
-      required:
-      - payload
-      title: PersonaSyncRequestV4
-      description: 'Body of POST /api/v4/workspaces/{ws}/personas/sync-typed.
-
-
-        ``modified_by`` is not accepted: the server derives it from the JWT via
-
-        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
-
-        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
     ValidationError:
       properties:
         loc:
@@ -297,6 +274,32 @@ components:
       - msg
       - type
       title: ValidationError
+    PersonaListResponseV4:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PersonaResponseV4'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: PersonaListResponseV4
+      description: Paginated list of Personas.
     PersonaResponseV4:
       properties:
         id:
@@ -380,32 +383,29 @@ components:
       - modifiedAt
       title: PersonaResponseV4
       description: Flat-shape Persona detail response.
-    PersonaListResponseV4:
+    PersonaSyncRequestV4:
       properties:
-        results:
-          items:
-            $ref: '#/components/schemas/PersonaResponseV4'
-          type: array
-          title: Results
-        count:
-          type: integer
-          title: Count
-        next:
+        payload:
+          $ref: '#/components/schemas/PersonaPayloadV4'
+        lastSyncedAt:
           anyOf:
           - type: string
+            format: date-time
           - type: 'null'
-          title: Next
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
+          title: Lastsyncedat
+      additionalProperties: false
       type: object
       required:
-      - results
-      - count
-      title: PersonaListResponseV4
-      description: Paginated list of Personas.
+      - payload
+      title: PersonaSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/personas/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
   securitySchemes:
     BearerAuth:
       type: http

@@ -510,6 +510,15 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     SyncRequest:
       properties:
         last_synced_at:
@@ -543,34 +552,6 @@ components:
         key) sees HTTP 422 rather than a silent drop. See RW-998 / the
 
         ``modified_by`` field removal for rationale.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SyncResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        name:
-          type: string
-          title: Name
-        resource_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Resource Id
-      type: object
-      required:
-      - status
-      - name
-      title: SyncResponse
-      description: Response for a sync (upsert) operation.
     ValidationError:
       properties:
         loc:
@@ -638,6 +619,25 @@ components:
       - name
       title: DeleteResponse
       description: Response for a soft-delete operation.
+    SyncResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        name:
+          type: string
+          title: Name
+        resource_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resource Id
+      type: object
+      required:
+      - status
+      - name
+      title: SyncResponse
+      description: Response for a sync (upsert) operation.
   securitySchemes:
     BearerAuth:
       type: http

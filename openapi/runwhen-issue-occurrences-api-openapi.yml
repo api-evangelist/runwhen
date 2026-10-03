@@ -528,42 +528,41 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    IssueOccurrenceListResponse:
+    HTTPValidationError:
       properties:
-        results:
+        detail:
           items:
-            $ref: '#/components/schemas/IssueOccurrenceResponse'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Results
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: Next page URL
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: Previous page URL
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - results
-      - count
-      - limit
-      - offset
-      title: IssueOccurrenceListResponse
-      description: Schema for paginated issue occurrence list response.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     WorkspaceIssueOccurrenceListResponse:
       properties:
         results:
@@ -600,15 +599,132 @@ components:
       - offset
       title: WorkspaceIssueOccurrenceListResponse
       description: Schema for paginated workspace issue occurrence list response.
-    HTTPValidationError:
+    IssueOccurrenceListResponse:
       properties:
-        detail:
+        results:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/IssueOccurrenceResponse'
           type: array
-          title: Detail
+          title: Results
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
       type: object
-      title: HTTPValidationError
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: IssueOccurrenceListResponse
+      description: Schema for paginated issue occurrence list response.
+    IssueOccurrenceResponse:
+      properties:
+        observedAt:
+          type: string
+          format: date-time
+          title: Observedat
+          description: When this occurrence was observed
+        details:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Details
+          description: Detailed description of the occurrence
+        nextSteps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nextsteps
+          description: Suggested next steps
+        expected:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected
+          description: Expected behavior/value
+        actual:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actual
+          description: Actual behavior/value observed
+        reproduceHint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reproducehint
+          description: Hint for reproducing the issue
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+          description: Additional context data
+        occurrenceId:
+          type: integer
+          title: Occurrenceid
+          description: The occurrence ID
+        issueId:
+          type: integer
+          title: Issueid
+          description: The parent issue ID
+        taskTitle:
+          type: string
+          title: Tasktitle
+          description: Task title from the parent issue
+        title:
+          type: string
+          title: Title
+          description: Title from the parent issue
+          default: ''
+        severity:
+          type: integer
+          title: Severity
+          description: Severity from the parent issue (1=critical, 4=warning)
+          default: 0
+        closed:
+          type: boolean
+          title: Closed
+          description: Whether the parent issue is closed (open_since is None)
+        created:
+          type: string
+          format: date-time
+          title: Created
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+      type: object
+      required:
+      - observedAt
+      - occurrenceId
+      - issueId
+      - taskTitle
+      - closed
+      - created
+      - modified
+      title: IssueOccurrenceResponse
+      description: 'Schema for issue occurrence response with flattened issue attributes.
+
+
+        Used for RunSession-scoped issue occurrence listings.'
     WorkspaceIssueOccurrenceResponse:
       properties:
         observedAt:
@@ -711,122 +827,6 @@ components:
 
 
         Extends IssueOccurrenceResponse with additional workspace-level fields.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    IssueOccurrenceResponse:
-      properties:
-        observedAt:
-          type: string
-          format: date-time
-          title: Observedat
-          description: When this occurrence was observed
-        details:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Details
-          description: Detailed description of the occurrence
-        nextSteps:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Nextsteps
-          description: Suggested next steps
-        expected:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expected
-          description: Expected behavior/value
-        actual:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actual
-          description: Actual behavior/value observed
-        reproduceHint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reproducehint
-          description: Hint for reproducing the issue
-        additionalContext:
-          additionalProperties: true
-          type: object
-          title: Additionalcontext
-          description: Additional context data
-        occurrenceId:
-          type: integer
-          title: Occurrenceid
-          description: The occurrence ID
-        issueId:
-          type: integer
-          title: Issueid
-          description: The parent issue ID
-        taskTitle:
-          type: string
-          title: Tasktitle
-          description: Task title from the parent issue
-        title:
-          type: string
-          title: Title
-          description: Title from the parent issue
-          default: ''
-        severity:
-          type: integer
-          title: Severity
-          description: Severity from the parent issue (1=critical, 4=warning)
-          default: 0
-        closed:
-          type: boolean
-          title: Closed
-          description: Whether the parent issue is closed (open_since is None)
-        created:
-          type: string
-          format: date-time
-          title: Created
-        modified:
-          type: string
-          format: date-time
-          title: Modified
-      type: object
-      required:
-      - observedAt
-      - occurrenceId
-      - issueId
-      - taskTitle
-      - closed
-      - created
-      - modified
-      title: IssueOccurrenceResponse
-      description: 'Schema for issue occurrence response with flattened issue attributes.
-
-
-        Used for RunSession-scoped issue occurrence listings.'
   securitySchemes:
     BearerAuth:
       type: http

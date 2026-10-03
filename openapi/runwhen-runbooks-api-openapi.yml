@@ -154,28 +154,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    RunbookTaskV4:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Resolved task display name
-        value:
-          type: string
-          title: Value
-          description: Original task identifier
-        tags:
-          items:
-            type: string
-          type: array
-          title: Tags
-          description: Task tags
-      type: object
-      required:
-      - name
-      - value
-      title: RunbookTaskV4
-      description: Individual task in a runbook (V4 wire shape).
     ValidationError:
       properties:
         loc:
@@ -345,6 +323,28 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    RunbookTaskV4:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: Task tags
+      type: object
+      required:
+      - name
+      - value
+      title: RunbookTaskV4
+      description: Individual task in a runbook (V4 wire shape).
   securitySchemes:
     BearerAuth:
       type: http

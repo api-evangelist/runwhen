@@ -147,36 +147,30 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    WorkspaceTagsResponseV4:
+    NoteDeleteRequestV4:
       properties:
-        tags:
-          items:
-            $ref: '#/components/schemas/TagKeyValuesV4'
-          type: array
-          title: Tags
-      type: object
-      required:
-      - tags
-      title: WorkspaceTagsResponseV4
-    TagKeyValuesV4:
-      properties:
-        key:
+        sourceKind:
           type: string
-          title: Key
-        values:
+          title: Sourcekind
+          default: git
+        source:
+          type: string
+          title: Source
+        sourceIds:
           items:
             type: string
           type: array
-          title: Values
-        valueCount:
-          type: integer
-          title: Valuecount
+          title: Sourceids
+        dryRun:
+          type: boolean
+          title: Dryrun
+          default: false
+      additionalProperties: false
       type: object
       required:
-      - key
-      - values
-      - valueCount
-      title: TagKeyValuesV4
+      - source
+      - sourceIds
+      title: NoteDeleteRequestV4
     NoteSyncResponseV4:
       properties:
         status:
@@ -205,17 +199,30 @@ components:
       - applied
       - ok
       title: NoteSyncResponseV4
-    ResourcePathsResponseV4:
+    NoteDeleteResponseV4:
       properties:
-        resourcePaths:
+        applied:
+          type: boolean
+          title: Applied
+        results:
           items:
-            type: string
+            $ref: '#/components/schemas/NoteDeleteResultV4'
           type: array
-          title: Resourcepaths
+          title: Results
+          default: []
       type: object
       required:
-      - resourcePaths
-      title: ResourcePathsResponseV4
+      - applied
+      title: NoteDeleteResponseV4
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     NoteDiagnosticV4:
       properties:
         level:
@@ -238,6 +245,30 @@ components:
       - code
       - message
       title: NoteDiagnosticV4
+    NoteDeleteResultV4:
+      properties:
+        sourceId:
+          type: string
+          title: Sourceid
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - sourceId
+      - status
+      title: NoteDeleteResultV4
+    ResourcePathsResponseV4:
+      properties:
+        resourcePaths:
+          items:
+            type: string
+          type: array
+          title: Resourcepaths
+      type: object
+      required:
+      - resourcePaths
+      title: ResourcePathsResponseV4
     NoteSyncRequestV4:
       properties:
         sourceKind:
@@ -282,67 +313,6 @@ components:
       - sourceId
       - content
       title: NoteSyncRequestV4
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    NoteDeleteRequestV4:
-      properties:
-        sourceKind:
-          type: string
-          title: Sourcekind
-          default: git
-        source:
-          type: string
-          title: Source
-        sourceIds:
-          items:
-            type: string
-          type: array
-          title: Sourceids
-        dryRun:
-          type: boolean
-          title: Dryrun
-          default: false
-      additionalProperties: false
-      type: object
-      required:
-      - source
-      - sourceIds
-      title: NoteDeleteRequestV4
-    NoteDeleteResultV4:
-      properties:
-        sourceId:
-          type: string
-          title: Sourceid
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - sourceId
-      - status
-      title: NoteDeleteResultV4
-    NoteDeleteResponseV4:
-      properties:
-        applied:
-          type: boolean
-          title: Applied
-        results:
-          items:
-            $ref: '#/components/schemas/NoteDeleteResultV4'
-          type: array
-          title: Results
-          default: []
-      type: object
-      required:
-      - applied
-      title: NoteDeleteResponseV4
     ValidationError:
       properties:
         loc:
@@ -369,6 +339,36 @@ components:
       - msg
       - type
       title: ValidationError
+    WorkspaceTagsResponseV4:
+      properties:
+        tags:
+          items:
+            $ref: '#/components/schemas/TagKeyValuesV4'
+          type: array
+          title: Tags
+      type: object
+      required:
+      - tags
+      title: WorkspaceTagsResponseV4
+    TagKeyValuesV4:
+      properties:
+        key:
+          type: string
+          title: Key
+        values:
+          items:
+            type: string
+          type: array
+          title: Values
+        valueCount:
+          type: integer
+          title: Valuecount
+      type: object
+      required:
+      - key
+      - values
+      - valueCount
+      title: TagKeyValuesV4
   securitySchemes:
     BearerAuth:
       type: http

@@ -253,6 +253,54 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    NoteResourceLinkV4:
+      properties:
+        resourcePath:
+          type: string
+          title: Resourcepath
+          description: Concrete resource path the note attaches to
+        matchReason:
+          type: string
+          title: Matchreason
+          description: '"explicit_path" | "selector"'
+        matchedSelector:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Matchedselector
+          description: Index into resourceSelectors (null for explicit paths)
+      type: object
+      required:
+      - resourcePath
+      - matchReason
+      title: NoteResourceLinkV4
+      description: A materialized note→resource attachment (Tier-3), resolver-owned.
+    ResourceSelectorV4:
+      properties:
+        matchTags:
+          additionalProperties:
+            type: string
+          type: object
+          title: Matchtags
+          description: Tag key/value equalities, ANDed together
+      additionalProperties: false
+      type: object
+      title: ResourceSelectorV4
+      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
+
+
+        (``matchExpressions`` — set-based operators — is a planned follow-on; only
+
+        ``matchTags`` is supported today.)'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     NoteCreateV4:
       properties:
         title:
@@ -302,6 +350,13 @@ components:
       - content
       title: NoteCreateV4
       description: Schema for creating a note.
+    NoteStatusV4:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatusV4
+      description: Note lifecycle status.
     NoteResponseV4:
       properties:
         noteId:
@@ -432,61 +487,6 @@ components:
       - updatedAt
       title: NoteResponseV4
       description: Note response schema for API responses.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    NoteResourceLinkV4:
-      properties:
-        resourcePath:
-          type: string
-          title: Resourcepath
-          description: Concrete resource path the note attaches to
-        matchReason:
-          type: string
-          title: Matchreason
-          description: '"explicit_path" | "selector"'
-        matchedSelector:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Matchedselector
-          description: Index into resourceSelectors (null for explicit paths)
-      type: object
-      required:
-      - resourcePath
-      - matchReason
-      title: NoteResourceLinkV4
-      description: A materialized note→resource attachment (Tier-3), resolver-owned.
-    NoteStatusV4:
-      type: string
-      enum:
-      - active
-      - deprecated
-      title: NoteStatusV4
-      description: Note lifecycle status.
-    ResourceSelectorV4:
-      properties:
-        matchTags:
-          additionalProperties:
-            type: string
-          type: object
-          title: Matchtags
-          description: Tag key/value equalities, ANDed together
-      additionalProperties: false
-      type: object
-      title: ResourceSelectorV4
-      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
-
-
-        (``matchExpressions`` — set-based operators — is a planned follow-on; only
-
-        ``matchTags`` is supported today.)'
     ValidationError:
       properties:
         loc:

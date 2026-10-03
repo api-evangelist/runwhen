@@ -113,6 +113,15 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     RunbookResponseV4:
       properties:
         id:
@@ -231,6 +240,55 @@ components:
       - modifiedAt
       title: RunbookResponseV4
       description: Flat-shape Runbook detail response.
+    RunbookSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/RunbookPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: RunbookSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/runbooks/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     RunbookPayloadV4:
       properties:
         slxId:
@@ -306,38 +364,6 @@ components:
       - slxId
       title: RunbookPayloadV4
       description: Writable subset of Runbook (the body of a sync upsert).
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    RunbookSyncRequestV4:
-      properties:
-        payload:
-          $ref: '#/components/schemas/RunbookPayloadV4'
-        lastSyncedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Lastsyncedat
-      additionalProperties: false
-      type: object
-      required:
-      - payload
-      title: RunbookSyncRequestV4
-      description: 'Body of POST /api/v4/workspaces/{ws}/runbooks/sync-typed.
-
-
-        ``modified_by`` is not accepted: the server derives it from the JWT via
-
-        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
-
-        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
     RunbookTaskV4:
       properties:
         name:
@@ -360,32 +386,6 @@ components:
       - value
       title: RunbookTaskV4
       description: Individual task in a runbook (V4 wire shape).
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
   securitySchemes:
     BearerAuth:
       type: http

@@ -77,6 +77,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     TaskVitalsItem:
       properties:
         slxName:
@@ -128,15 +137,6 @@ components:
       type: object
       title: TaskVitalsResponse
       description: Workspace-scoped task-vitals payload.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http
