@@ -57,6 +57,7 @@ tags:
 - Kubernetes
 - Automation
 - MCP
+- Incident Management
 apis:
 - aid: runwhen:runwhen-alert-query-proxy-api
   name: RunWhen Alert Query Proxy API
@@ -608,6 +609,8 @@ apis:
   humanURL: https://docs.runwhen.com/docs/use/api-reference
   baseURL: https://papi.beta.runwhen.com
   tags:
+  - GraphQL
+  tags_raw:
   - Graph QL
   properties:
   - type: OpenAPI
