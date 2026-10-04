@@ -987,6 +987,60 @@ components:
         is what makes ``"   "`` count as empty: ``Field(min_length=1)`` checks
 
         the raw string and would otherwise let three-space input through.'
+    RuleCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          title: Name
+        rule_content:
+          type: string
+          title: Rule Content
+        scope_type:
+          type: string
+          title: Scope Type
+        scope_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Id
+        is_active:
+          type: boolean
+          title: Is Active
+          default: true
+      type: object
+      required:
+      - name
+      - rule_content
+      - scope_type
+      title: RuleCreate
+      description: Create a chat rule.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CommandCreate:
       properties:
         name:
@@ -1068,15 +1122,6 @@ components:
         against no instructions, so reject at the schema layer instead of
 
         bouncing the user off agentfarm''s 422.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     RuleUpdate:
       properties:
         name:
@@ -1137,32 +1182,6 @@ components:
         posted. Returns per-sink rendered payloads so admins can inspect
 
         exactly what was (or would-be) delivered for a past run.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     CommandUpdate:
       properties:
         name:
@@ -1251,34 +1270,15 @@ components:
         then-blank mistake — reject so the prompt can''t accidentally be
 
         overwritten with nothing on save.'
-    RuleCreate:
+    HTTPValidationError:
       properties:
-        name:
-          type: string
-          maxLength: 200
-          title: Name
-        rule_content:
-          type: string
-          title: Rule Content
-        scope_type:
-          type: string
-          title: Scope Type
-        scope_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope Id
-        is_active:
-          type: boolean
-          title: Is Active
-          default: true
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - name
-      - rule_content
-      - scope_type
-      title: RuleCreate
-      description: Create a chat rule.
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

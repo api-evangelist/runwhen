@@ -418,32 +418,39 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    RunnerRegisterRequest:
+    CodeBundleReference:
       properties:
-        organization:
+        id:
           type: string
-          title: Organization
+          title: Id
           default: ''
-        workspace:
+        name:
           type: string
-          title: Workspace
+          title: Name
           default: ''
-        runner:
+        gitURL:
           type: string
-          title: Runner
+          title: Giturl
+          default: ''
+        branch:
+          type: string
+          title: Branch
+          default: ''
+        path:
+          type: string
+          title: Path
+          default: ''
+        image:
+          type: string
+          title: Image
+          default: ''
+        imageTag:
+          type: string
+          title: Imagetag
           default: ''
       type: object
-      title: RunnerRegisterRequest
-      description: Request body for runner registration endpoint.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      title: CodeBundleReference
+      description: Code bundle reference matching runner-control JSONCodeBundleReference.
     RunnerRegisterResponse:
       properties:
         runner:
@@ -457,32 +464,6 @@ components:
       type: object
       title: RunnerRegisterResponse
       description: Response for runner registration endpoint.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     SLIEnvResponse:
       properties:
         runner:
@@ -522,39 +503,32 @@ components:
       type: object
       title: SLIEnvResponse
       description: SLI environment response matching Go SLIEnv struct.
-    CodeBundleReference:
+    ValidationError:
       properties:
-        id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Id
-          default: ''
-        name:
+          title: Message
+        type:
           type: string
-          title: Name
-          default: ''
-        gitURL:
-          type: string
-          title: Giturl
-          default: ''
-        branch:
-          type: string
-          title: Branch
-          default: ''
-        path:
-          type: string
-          title: Path
-          default: ''
-        image:
-          type: string
-          title: Image
-          default: ''
-        imageTag:
-          type: string
-          title: Imagetag
-          default: ''
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
-      title: CodeBundleReference
-      description: Code bundle reference matching runner-control JSONCodeBundleReference.
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     RunnerStatusUpdateRequest:
       properties:
         organization:
@@ -581,6 +555,32 @@ components:
       type: object
       title: RunnerStatusUpdateRequest
       description: Request body for runner status update endpoint.
+    RunnerRegisterRequest:
+      properties:
+        organization:
+          type: string
+          title: Organization
+          default: ''
+        workspace:
+          type: string
+          title: Workspace
+          default: ''
+        runner:
+          type: string
+          title: Runner
+          default: ''
+      type: object
+      title: RunnerRegisterRequest
+      description: Request body for runner registration endpoint.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

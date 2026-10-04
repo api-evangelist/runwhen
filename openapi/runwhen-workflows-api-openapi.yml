@@ -341,6 +341,56 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    WebhookTokenResponse:
+      properties:
+        webhook_url:
+          type: string
+          title: Webhook Url
+        webhook_token:
+          type: string
+          title: Webhook Token
+      type: object
+      required:
+      - webhook_url
+      - webhook_token
+      title: WebhookTokenResponse
+      description: Response for webhook token.
+    WebhookUrlResponse:
+      properties:
+        webhook_url:
+          type: string
+          title: Webhook Url
+      type: object
+      required:
+      - webhook_url
+      title: WebhookUrlResponse
+      description: Response for webhook URL.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     WorkflowResponse:
       properties:
         id:
@@ -392,20 +442,6 @@ components:
       - status
       title: WorkflowResponse
       description: "Workflow response schema for API responses (legacy V1/V3 wire shape).\n\nSubclasses WorkflowResponseV4 (flat V4 fields) and layers on:\n  - Legacy wire keys: ``workspace`` (was ``workspaceId``),\n    ``created`` (was ``createdAt``), ``modified`` (was ``modifiedAt``)\n  - Computed ``spec`` and ``status`` for Django-era consumers\n\nspec is the workflow definition (UI reads workflow.spec.fromActivities).\nSunset path: when external consumers fully migrate to /api/v4, delete this subclass."
-    WebhookTokenResponse:
-      properties:
-        webhook_url:
-          type: string
-          title: Webhook Url
-        webhook_token:
-          type: string
-          title: Webhook Token
-      type: object
-      required:
-      - webhook_url
-      - webhook_token
-      title: WebhookTokenResponse
-      description: Response for webhook token.
     WorkflowListResponse:
       properties:
         results:
@@ -445,42 +481,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    WebhookUrlResponse:
-      properties:
-        webhook_url:
-          type: string
-          title: Webhook Url
-      type: object
-      required:
-      - webhook_url
-      title: WebhookUrlResponse
-      description: Response for webhook URL.
   securitySchemes:
     BearerAuth:
       type: http

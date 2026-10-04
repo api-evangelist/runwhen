@@ -510,15 +510,70 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
+    SyncResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        status:
+          type: string
+          title: Status
+        name:
+          type: string
+          title: Name
+        resource_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resource Id
       type: object
-      title: HTTPValidationError
+      required:
+      - status
+      - name
+      title: SyncResponse
+      description: Response for a sync (upsert) operation.
+    DeleteResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        name:
+          type: string
+          title: Name
+        resource_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Resource Id
+      type: object
+      required:
+      - status
+      - name
+      title: DeleteResponse
+      description: Response for a soft-delete operation.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     SyncRequest:
       properties:
         last_synced_at:
@@ -552,32 +607,6 @@ components:
         key) sees HTTP 422 rather than a silent drop. See RW-998 / the
 
         ``modified_by`` field removal for rationale.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     ReconcileTasksResponse:
       properties:
         workspace:
@@ -600,44 +629,15 @@ components:
       - task_soft_deleted
       title: ReconcileTasksResponse
       description: Response for the dev-only slx_tasks reconcile trigger.
-    DeleteResponse:
+    HTTPValidationError:
       properties:
-        status:
-          type: string
-          title: Status
-        name:
-          type: string
-          title: Name
-        resource_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Resource Id
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - status
-      - name
-      title: DeleteResponse
-      description: Response for a soft-delete operation.
-    SyncResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        name:
-          type: string
-          title: Name
-        resource_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Resource Id
-      type: object
-      required:
-      - status
-      - name
-      title: SyncResponse
-      description: Response for a sync (upsert) operation.
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

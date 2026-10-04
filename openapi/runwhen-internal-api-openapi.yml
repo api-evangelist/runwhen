@@ -180,15 +180,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     UploadConfigResponse:
       properties:
         token:
@@ -203,6 +194,15 @@ components:
       - papi_url
       title: UploadConfigResponse
       description: Response containing upload credentials and PAPI URL for workspace-builder.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

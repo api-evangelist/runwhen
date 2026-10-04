@@ -306,6 +306,39 @@ paths:
       security: []
 components:
   schemas:
+    Body_oauth_token_oauth_token_post:
+      properties:
+        grant_type:
+          type: string
+          title: Grant Type
+        code:
+          type: string
+          title: Code
+          default: ''
+        redirect_uri:
+          type: string
+          title: Redirect Uri
+          default: ''
+        client_id:
+          type: string
+          title: Client Id
+          default: ''
+        client_secret:
+          type: string
+          title: Client Secret
+          default: ''
+        code_verifier:
+          type: string
+          title: Code Verifier
+          default: ''
+        refresh_token:
+          type: string
+          title: Refresh Token
+          default: ''
+      type: object
+      required:
+      - grant_type
+      title: Body_oauth_token_oauth_token_post
     ValidationError:
       properties:
         loc:
@@ -358,39 +391,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    Body_oauth_token_oauth_token_post:
-      properties:
-        grant_type:
-          type: string
-          title: Grant Type
-        code:
-          type: string
-          title: Code
-          default: ''
-        redirect_uri:
-          type: string
-          title: Redirect Uri
-          default: ''
-        client_id:
-          type: string
-          title: Client Id
-          default: ''
-        client_secret:
-          type: string
-          title: Client Secret
-          default: ''
-        code_verifier:
-          type: string
-          title: Code Verifier
-          default: ''
-        refresh_token:
-          type: string
-          title: Refresh Token
-          default: ''
-      type: object
-      required:
-      - grant_type
-      title: Body_oauth_token_oauth_token_post
   securitySchemes:
     BearerAuth:
       type: http

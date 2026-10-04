@@ -139,6 +139,36 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    PersonaListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PersonaResponse'
+          type: array
+          title: Results
+          description: List of persona items
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: PersonaListResponse
+      description: 'Paginated list response for Persona endpoints.
+
+
+        Subclasses PersonaListResponseV4 but overrides results to use legacy PersonaResponse items.'
     ValidationError:
       properties:
         loc:
@@ -281,36 +311,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    PersonaListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/PersonaResponse'
-          type: array
-          title: Results
-          description: List of persona items
-        count:
-          type: integer
-          title: Count
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-      type: object
-      required:
-      - results
-      - count
-      title: PersonaListResponse
-      description: 'Paginated list response for Persona endpoints.
-
-
-        Subclasses PersonaListResponseV4 but overrides results to use legacy PersonaResponse items.'
   securitySchemes:
     BearerAuth:
       type: http

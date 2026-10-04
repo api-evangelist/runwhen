@@ -157,6 +157,29 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    WorkflowSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/WorkflowPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: WorkflowSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/workflows/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
     WorkflowPayloadV4:
       properties:
         name:
@@ -172,15 +195,6 @@ components:
       - name
       title: WorkflowPayloadV4
       description: Writable subset of Workflow (the body of a sync upsert).
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     WorkflowResponseV4:
       properties:
         id:
@@ -270,29 +284,15 @@ components:
       - count
       title: WorkflowListResponseV4
       description: Paginated list of Workflows.
-    WorkflowSyncRequestV4:
+    HTTPValidationError:
       properties:
-        payload:
-          $ref: '#/components/schemas/WorkflowPayloadV4'
-        lastSyncedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Lastsyncedat
-      additionalProperties: false
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - payload
-      title: WorkflowSyncRequestV4
-      description: 'Body of POST /api/v4/workspaces/{ws}/workflows/sync-typed.
-
-
-        ``modified_by`` is not accepted: the server derives it from the JWT via
-
-        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
-
-        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

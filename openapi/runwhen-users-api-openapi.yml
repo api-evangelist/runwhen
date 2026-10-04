@@ -793,55 +793,23 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
+    UserSearchEmailResponse:
       properties:
-        detail:
+        users:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/UserSearchResponse'
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    RegisterRequest:
-      properties:
-        username:
-          anyOf:
-          - type: string
-            maxLength: 150
-            minLength: 3
-          - type: 'null'
-          title: Username
-        email:
-          type: string
-          format: email
-          title: Email
-        password:
-          type: string
-          maxLength: 128
-          minLength: 8
-          title: Password
-        confirm_password:
-          anyOf:
-          - type: string
-            maxLength: 128
-          - type: 'null'
-          title: Confirm Password
-        first_name:
-          type: string
-          maxLength: 100
-          title: First Name
-          default: ''
-        last_name:
-          type: string
-          maxLength: 100
-          title: Last Name
-          default: ''
+          title: Users
+        notFound:
+          items:
+            type: string
+          type: array
+          title: Notfound
       type: object
       required:
-      - email
-      - password
-      title: RegisterRequest
-      description: User registration request.
+      - users
+      title: UserSearchEmailResponse
+      description: Response for email search including not found emails.
     CsrfTokenResponse:
       properties:
         csrfToken:
@@ -852,86 +820,20 @@ components:
       - csrfToken
       title: CsrfTokenResponse
       description: CSRF token response.
-    ResetPasswordRequest:
+    LoginRequest:
       properties:
-        token:
-          type: string
-          title: Token
-        password:
-          anyOf:
-          - type: string
-            maxLength: 128
-            minLength: 8
-          - type: 'null'
-          title: Password
-        new_password:
-          anyOf:
-          - type: string
-            maxLength: 128
-            minLength: 8
-          - type: 'null'
-          title: New Password
-        confirm_password:
-          anyOf:
-          - type: string
-            maxLength: 128
-          - type: 'null'
-          title: Confirm Password
-      type: object
-      required:
-      - token
-      title: ResetPasswordRequest
-      description: 'Password reset request.
-
-
-        Accepts both ''password'' (frontend sends this) and ''new_password'' for
-
-        backward compatibility.'
-    UserSearchResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
         username:
           type: string
           title: Username
-        primaryEmail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Primaryemail
-        firstName:
+        password:
           type: string
-          title: Firstname
-          default: ''
-        lastName:
-          type: string
-          title: Lastname
-          default: ''
-        fullName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fullname
-        avatarUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Avatarurl
-        isActive:
-          type: boolean
-          title: Isactive
-          default: true
-        isServiceAccount:
-          type: boolean
-          title: Isserviceaccount
-          default: false
+          title: Password
       type: object
       required:
-      - id
       - username
-      title: UserSearchResponse
-      description: Response for user search results.
+      - password
+      title: LoginRequest
+      description: Username/password login request.
     VerifyEmailRequest:
       properties:
         token:
@@ -942,117 +844,6 @@ components:
       - token
       title: VerifyEmailRequest
       description: Email verification request.
-    LoginResponse:
-      properties:
-        access:
-          type: string
-          title: Access
-        refresh:
-          type: string
-          title: Refresh
-        user:
-          $ref: '#/components/schemas/UserResponse'
-      type: object
-      required:
-      - access
-      - refresh
-      - user
-      title: LoginResponse
-      description: Login response with tokens.
-    UserTokenResponse:
-      properties:
-        access:
-          type: string
-          title: Access
-        lifetime:
-          type: string
-          title: Lifetime
-      type: object
-      required:
-      - access
-      - lifetime
-      title: UserTokenResponse
-      description: Response for token generation.
-    UserActivitiesCountResponse:
-      properties:
-        date:
-          type: string
-          title: Date
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - date
-      - count
-      title: UserActivitiesCountResponse
-      description: Response for user activities count (heatmap data).
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    UserNetworkResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        username:
-          type: string
-          title: Username
-        primaryEmail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Primaryemail
-        fullName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fullname
-        avatarUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Avatarurl
-      type: object
-      required:
-      - id
-      - username
-      title: UserNetworkResponse
-      description: Response schema for users in the current user's network.
-    ForgotPasswordRequest:
-      properties:
-        email:
-          type: string
-          format: email
-          title: Email
-      type: object
-      required:
-      - email
-      title: ForgotPasswordRequest
-      description: Forgot password request.
     UserUpdateRequest:
       properties:
         primaryEmail:
@@ -1091,69 +882,6 @@ components:
 
 
         Accepts both camelCase (from UI) and snake_case field names.'
-    UserSearchEmailResponse:
-      properties:
-        users:
-          items:
-            $ref: '#/components/schemas/UserSearchResponse'
-          type: array
-          title: Users
-        notFound:
-          items:
-            type: string
-          type: array
-          title: Notfound
-      type: object
-      required:
-      - users
-      title: UserSearchEmailResponse
-      description: Response for email search including not found emails.
-    GroupResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - name
-      title: GroupResponse
-      description: Minimal group info returned inside UserResponse.
-    MessageResponse:
-      properties:
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - message
-      title: MessageResponse
-      description: Generic message response.
-    RegisterResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        username:
-          type: string
-          title: Username
-        email:
-          type: string
-          title: Email
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - id
-      - username
-      - email
-      - message
-      title: RegisterResponse
-      description: User registration response.
     UserResponse:
       properties:
         id:
@@ -1237,20 +965,27 @@ components:
       - username
       title: UserResponse
       description: User response schema matching Django's UserSerializer.
-    LoginRequest:
+    MessageResponse:
       properties:
-        username:
+        message:
           type: string
-          title: Username
-        password:
-          type: string
-          title: Password
+          title: Message
       type: object
       required:
-      - username
-      - password
-      title: LoginRequest
-      description: Username/password login request.
+      - message
+      title: MessageResponse
+      description: Generic message response.
+    ForgotPasswordRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+      - email
+      title: ForgotPasswordRequest
+      description: Forgot password request.
     UserActiveWorkspacesResponse:
       properties:
         workspaceName:
@@ -1265,6 +1000,271 @@ components:
       - count
       title: UserActiveWorkspacesResponse
       description: Response for user's active workspaces with activity count.
+    GroupResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: GroupResponse
+      description: Minimal group info returned inside UserResponse.
+    RegisterResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        email:
+          type: string
+          title: Email
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - username
+      - email
+      - message
+      title: RegisterResponse
+      description: User registration response.
+    RegisterRequest:
+      properties:
+        username:
+          anyOf:
+          - type: string
+            maxLength: 150
+            minLength: 3
+          - type: 'null'
+          title: Username
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          maxLength: 128
+          minLength: 8
+          title: Password
+        confirm_password:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Confirm Password
+        first_name:
+          type: string
+          maxLength: 100
+          title: First Name
+          default: ''
+        last_name:
+          type: string
+          maxLength: 100
+          title: Last Name
+          default: ''
+      type: object
+      required:
+      - email
+      - password
+      title: RegisterRequest
+      description: User registration request.
+    LoginResponse:
+      properties:
+        access:
+          type: string
+          title: Access
+        refresh:
+          type: string
+          title: Refresh
+        user:
+          $ref: '#/components/schemas/UserResponse'
+      type: object
+      required:
+      - access
+      - refresh
+      - user
+      title: LoginResponse
+      description: Login response with tokens.
+    ResetPasswordRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+        password:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 8
+          - type: 'null'
+          title: Password
+        new_password:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 8
+          - type: 'null'
+          title: New Password
+        confirm_password:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Confirm Password
+      type: object
+      required:
+      - token
+      title: ResetPasswordRequest
+      description: 'Password reset request.
+
+
+        Accepts both ''password'' (frontend sends this) and ''new_password'' for
+
+        backward compatibility.'
+    UserSearchResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        primaryEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primaryemail
+        firstName:
+          type: string
+          title: Firstname
+          default: ''
+        lastName:
+          type: string
+          title: Lastname
+          default: ''
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+        isActive:
+          type: boolean
+          title: Isactive
+          default: true
+        isServiceAccount:
+          type: boolean
+          title: Isserviceaccount
+          default: false
+      type: object
+      required:
+      - id
+      - username
+      title: UserSearchResponse
+      description: Response for user search results.
+    UserTokenResponse:
+      properties:
+        access:
+          type: string
+          title: Access
+        lifetime:
+          type: string
+          title: Lifetime
+      type: object
+      required:
+      - access
+      - lifetime
+      title: UserTokenResponse
+      description: Response for token generation.
+    UserActivitiesCountResponse:
+      properties:
+        date:
+          type: string
+          title: Date
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - date
+      - count
+      title: UserActivitiesCountResponse
+      description: Response for user activities count (heatmap data).
+    UserNetworkResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        primaryEmail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primaryemail
+        fullName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fullname
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+      type: object
+      required:
+      - id
+      - username
+      title: UserNetworkResponse
+      description: Response schema for users in the current user's network.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

@@ -238,56 +238,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    NoteUpdate:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Title
-        content:
-          anyOf:
-          - type: string
-            maxLength: 20000
-            minLength: 1
-          - type: 'null'
-          title: Content
-        resourcePaths:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Resourcepaths
-        abstractEntities:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Abstractentities
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/NoteStatus'
-          - type: 'null'
-        verified:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Verified
-      type: object
-      title: NoteUpdate
-      description: Schema for partial update of a note.
     NoteResponse:
       properties:
         noteId:
@@ -353,39 +303,6 @@ components:
       - updatedAt
       title: NoteResponse
       description: Note response schema for API responses.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    NoteStatus:
-      type: string
-      enum:
-      - active
-      - deprecated
-      title: NoteStatus
-      description: Note lifecycle status.
     NoteCreate:
       properties:
         title:
@@ -422,6 +339,89 @@ components:
       - content
       title: NoteCreate
       description: Schema for creating a note.
+    NoteUpdate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+        content:
+          anyOf:
+          - type: string
+            maxLength: 20000
+            minLength: 1
+          - type: 'null'
+          title: Content
+        resourcePaths:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Resourcepaths
+        abstractEntities:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Abstractentities
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/NoteStatus'
+          - type: 'null'
+        verified:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Verified
+      type: object
+      title: NoteUpdate
+      description: Schema for partial update of a note.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    NoteStatus:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatus
+      description: Note lifecycle status.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

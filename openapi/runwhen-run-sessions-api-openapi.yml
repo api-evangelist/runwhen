@@ -1669,226 +1669,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SourcesResponse:
-      properties:
-        sources:
-          items:
-            $ref: '#/components/schemas/SourceOption'
-          type: array
-          title: Sources
-      type: object
-      required:
-      - sources
-      title: SourcesResponse
-      description: Response for available search sources.
-    RunRequestIssue:
-      properties:
-        occurrenceId:
-          type: integer
-          title: Occurrenceid
-          description: Issue occurrence ID
-        issueId:
-          type: integer
-          title: Issueid
-          description: Parent issue ID
-        taskTitle:
-          type: string
-          title: Tasktitle
-          description: Task title from the issue
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Issue title
-        severity:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Severity
-          description: Issue severity (1-4)
-        closed:
-          type: boolean
-          title: Closed
-          description: Whether the issue is closed
-          default: false
-        observedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Observedat
-          description: When the issue was observed
-        details:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Details
-          description: Issue occurrence details
-        nextSteps:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Nextsteps
-          description: Recommended next steps
-        expected:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expected
-          description: Expected result
-        actual:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actual
-          description: Actual result
-        reproduceHint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reproducehint
-          description: Hint for reproducing the issue
-        additionalContext:
-          additionalProperties: true
-          type: object
-          title: Additionalcontext
-          description: Additional context data
-        created:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created
-          description: Occurrence creation timestamp
-        modified:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Modified
-          description: Occurrence modification timestamp
-      type: object
-      required:
-      - occurrenceId
-      - issueId
-      - taskTitle
-      title: RunRequestIssue
-      description: Schema for issue occurrence within a run request.
-    RunSessionCreateWithRequests:
-      properties:
-        source:
-          type: string
-          enum:
-          - direct
-          - slo_alert
-          - sli_alert
-          - webhook
-          - search
-          - alert_group
-          title: Source
-          description: Origin of the session - determines default deduplication behavior
-          default: direct
-        generateName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Generatename
-          description: Session name (auto-generated if omitted)
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Session name (alternative to generateName)
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: User-provided session notes
-        personaName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Personaname
-          description: Persona full name (workspace--persona-short-name)
-        persona_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Persona Id
-          description: Persona ID (alternative to personaName)
-        alertId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Alertid
-          description: Alert ID - required for slo_alert and sli_alert sources
-        webhookId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Webhookid
-          description: Webhook ID - required for webhook source
-        searchQuery:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Searchquery
-          description: Search query - required for search source
-        aliasKey:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Aliaskey
-          description: Custom alias key (e.g. 'PagerDuty-Incident-ID')
-        aliasValue:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Aliasvalue
-          description: Custom alias value (e.g. 'P12345')
-        skipNextStepsAnalysis:
-          type: boolean
-          title: Skipnextstepsanalysis
-          description: When true, persona will not create follow-up RunRequests from issue next steps
-          default: false
-        dedupe:
-          anyOf:
-          - $ref: '#/components/schemas/DedupeConfig'
-          - type: 'null'
-          description: Override default deduplication config for this source
-        runRequests:
-          items:
-            $ref: '#/components/schemas/RunRequestInSession'
-          type: array
-          minItems: 1
-          title: Runrequests
-          description: RunRequests to create within this session
-      type: object
-      required:
-      - runRequests
-      title: RunSessionCreateWithRequests
-      description: 'Schema for creating a RunSession with RunRequests atomically.
-
-
-        This is the new preferred API for RunSession creation that:
-
-        - Supports atomic RunRequest creation
-
-        - Supports deduplication configuration
-
-        - Accepts camelCase field names from frontend'
     RunSessionSearchResponse:
       properties:
         results:
@@ -1936,110 +1716,6 @@ components:
       - type
       title: SourceOption
       description: A single source filter option.
-    DeactivateRequest:
-      properties:
-        reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reason
-          description: Optional reason for deactivation
-      type: object
-      title: DeactivateRequest
-      description: Schema for deactivating a run session.
-    RunRequestInSession:
-      properties:
-        slxName:
-          type: string
-          title: Slxname
-          description: Full SLX name to execute (workspace--slx-short-name)
-        taskTitles:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Tasktitles
-          description: Specific task titles to run (None = all tasks)
-        memo:
-          additionalProperties: true
-          type: object
-          title: Memo
-          description: Arbitrary JSON for user storage
-        fromSearchQuery:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fromsearchquery
-          description: Search query that led to this run request
-        fromIssue:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Fromissue
-          description: Issue occurrence ID that triggered this run request
-        fromRunRequest:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Fromrunrequest
-          description: ID of RunRequest that spawned this one
-        fromSliAlert:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Fromslialert
-          description: Source SLI alert ID
-        fromSloAlert:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Fromsloalert
-          description: Source SLO alert ID
-        force:
-          type: boolean
-          title: Force
-          description: Skip task-title deduplication (re-run even if already executed)
-          default: false
-        runtimeVarOverrides:
-          anyOf:
-          - additionalProperties:
-              type: string
-            type: object
-          - type: 'null'
-          title: Runtimevaroverrides
-          description: Values for runtime variables declared on this SLX's runbook
-      type: object
-      required:
-      - slxName
-      title: RunRequestInSession
-      description: Single RunRequest within a RunSession creation.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     RunSessionResponse:
       properties:
         name:
@@ -2162,131 +1838,6 @@ components:
         Uses alias_generator=to_camel so JSON output uses camelCase keys
 
         matching the Django DRF convention the frontend expects.'
-    RunSessionSearchRequest:
-      properties:
-        timeStart:
-          type: string
-          format: date-time
-          title: Timestart
-        timeEnd:
-          type: string
-          format: date-time
-          title: Timeend
-        resourcePaths:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Resourcepaths
-        sources:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Sources
-        sortOrder:
-          type: string
-          enum:
-          - asc
-          - desc
-          title: Sortorder
-          default: desc
-        page:
-          type: integer
-          minimum: 1.0
-          title: Page
-          default: 1
-        pageSize:
-          type: integer
-          maximum: 100.0
-          minimum: 1.0
-          title: Pagesize
-          default: 20
-      type: object
-      required:
-      - timeStart
-      - timeEnd
-      title: RunSessionSearchRequest
-      description: Request body for POST /workspaces/{ws}/runsessions/search.
-    DedupeConfig:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-          description: Whether deduplication is enabled
-          default: true
-        strategy:
-          type: string
-          const: slx
-          title: Strategy
-          description: Deduplication strategy (only 'slx' supported currently)
-          default: slx
-        window:
-          type: string
-          title: Window
-          description: Lookback window for finding matching sessions (e.g., '10m', '1h', '3d')
-          default: 10m
-      type: object
-      title: DedupeConfig
-      description: Configuration for RunSession deduplication.
-    RunSessionAlertsListResponse:
-      properties:
-        alerts:
-          items:
-            $ref: '#/components/schemas/RunSessionAlertResponse'
-          type: array
-          title: Alerts
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - alerts
-      - count
-      title: RunSessionAlertsListResponse
-      description: Response for GET /runsessions/{rs_id}/alerts.
-    RunSessionListResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/RunSessionResponse'
-          type: array
-          title: Results
-          description: List of RunSessions
-        count:
-          type: integer
-          title: Count
-          description: Total count matching filters
-        limit:
-          type: integer
-          title: Limit
-          description: Maximum items per page
-        offset:
-          type: integer
-          title: Offset
-          description: Number of items skipped
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: Next page URL
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: Previous page URL
-      type: object
-      required:
-      - results
-      - count
-      - limit
-      - offset
-      title: RunSessionListResponse
-      description: Schema for paginated run session list response.
     RunSessionSearchItem:
       properties:
         id:
@@ -2382,50 +1933,113 @@ components:
       - eol
       title: RunSessionSearchItem
       description: Slim RunSession for list view — no nested run_requests.
-    RunSessionCreate:
+    PersonaResponse:
       properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Unique slug identifier for the session
-        notes:
-          type: string
-          title: Notes
-          description: User-provided session notes
-          default: your session notes here
-        source:
-          type: string
-          title: Source
-          description: Origin of the session (e.g., 'directSlx', 'sloAlert', 'webhook')
-          default: ''
-        workspace_id:
+        id:
           type: integer
-          title: Workspace Id
-          description: Workspace ID this session belongs to
-        persona_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Persona Id
-          description: Optional AI persona ID for automated runs
-        ttl:
+          title: Id
+        name:
+          type: string
+          title: Name
+          description: 'Full persona name: workspace--persona-short-name'
+        shortName:
+          type: string
+          title: Shortname
+          description: Short name (workspace prefix stripped)
+          default: ''
+        fullName:
           anyOf:
           - type: string
           - type: 'null'
-          title: Ttl
-          description: Time-to-live for session (e.g., '20m', '1h', '3d')
-        generate_name:
-          type: boolean
-          title: Generate Name
-          description: Auto-generate a unique name if name not provided
-          default: true
+          title: Fullname
+          description: Human-readable display name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        avatarUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatarurl
+          description: Avatar image URL
+        workspace:
+          type: integer
+          title: Workspace
+          description: Parent workspace ID
+        filterConfidenceThreshold:
+          type: number
+          title: Filterconfidencethreshold
+          description: Confidence threshold for filtering results
+          default: 0.5
+        filterIssueSelectionStrategy:
+          type: string
+          title: Filterissueselectionstrategy
+          description: Strategy for selecting issues
+          default: MOST_SEVERE
+        filterCodebundleTaskTags:
+          items:
+            type: string
+          type: array
+          title: Filtercodebundletasktags
+          description: Task tags to filter code bundles
+        filterStopWords:
+          items:
+            type: string
+          type: array
+          title: Filterstopwords
+          description: Words to remove from search queries
+        filterScope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Filterscope
+          description: Scope filter for results
+        searchFilters:
+          additionalProperties: true
+          type: object
+          title: Searchfilters
+          description: Search filter operators for vector search
+        runConfidenceThreshold:
+          type: number
+          title: Runconfidencethreshold
+          description: Confidence threshold for automatic runs
+          default: 0.95
+        runConfig:
+          additionalProperties: true
+          type: object
+          title: Runconfig
+          description: Run configuration (allow/disallow/budget settings)
+        created:
+          title: Created
+          description: Creation timestamp
+        modified:
+          title: Modified
+          description: Last modification timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Return spec dict matching Django's CoreModelSerializer structure.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Return empty status dict matching Django's CoreModelSerializer structure.
+          readOnly: true
       type: object
       required:
-      - workspace_id
-      title: RunSessionCreate
-      description: Schema for creating a run session.
+      - id
+      - name
+      - workspace
+      - created
+      - modified
+      - spec
+      - status
+      title: PersonaResponse
+      description: "Persona response schema for API responses (legacy V1/V3 wire shape).\n\nSubclasses PersonaResponseV4 (flat V4 fields) and layers on:\n  - Legacy wire keys: ``workspace`` (was ``workspaceId``),\n    ``created`` (was ``createdAt``), ``modified`` (was ``modifiedAt``)\n  - camelCase aliases for filter/run fields\n  - Computed ``spec`` and ``status`` for Django-era consumers\n\nSunset path: when external consumers fully migrate to /api/v4, delete this subclass."
     RunRequestInResponse:
       properties:
         id:
@@ -2641,27 +2255,17 @@ components:
       - id
       title: RunRequestInResponse
       description: Schema for run request within a run session response.
-    StepResponse:
+    DeactivateRequest:
       properties:
-        status:
-          type: string
-          title: Status
-          description: Processing status (processing, error)
-        runRequests:
-          type: integer
-          title: Runrequests
-          description: Number of RunRequests started
-        hasPersona:
-          type: boolean
-          title: Haspersona
-          description: Whether the session has a persona attached
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+          description: Optional reason for deactivation
       type: object
-      required:
-      - status
-      - runRequests
-      - hasPersona
-      title: StepResponse
-      description: Response for RunSession step endpoint.
+      title: DeactivateRequest
+      description: Schema for deactivating a run session.
     RunSessionAlertResponse:
       properties:
         id:
@@ -2704,123 +2308,54 @@ components:
       - event
       title: RunSessionAlertResponse
       description: Single alert in RS alert detail view.
-    EscalateRequest:
+    RunSessionSearchRequest:
       properties:
-        escalated:
-          type: boolean
-          title: Escalated
-          description: Escalation status (typically True)
-          default: true
-      type: object
-      title: EscalateRequest
-      description: Schema for escalating a run session.
-    PersonaResponse:
-      properties:
-        id:
+        timeStart:
+          type: string
+          format: date-time
+          title: Timestart
+        timeEnd:
+          type: string
+          format: date-time
+          title: Timeend
+        resourcePaths:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Resourcepaths
+        sources:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Sources
+        sortOrder:
+          type: string
+          enum:
+          - asc
+          - desc
+          title: Sortorder
+          default: desc
+        page:
           type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-          description: 'Full persona name: workspace--persona-short-name'
-        shortName:
-          type: string
-          title: Shortname
-          description: Short name (workspace prefix stripped)
-          default: ''
-        fullName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fullname
-          description: Human-readable display name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        avatarUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Avatarurl
-          description: Avatar image URL
-        workspace:
+          minimum: 1.0
+          title: Page
+          default: 1
+        pageSize:
           type: integer
-          title: Workspace
-          description: Parent workspace ID
-        filterConfidenceThreshold:
-          type: number
-          title: Filterconfidencethreshold
-          description: Confidence threshold for filtering results
-          default: 0.5
-        filterIssueSelectionStrategy:
-          type: string
-          title: Filterissueselectionstrategy
-          description: Strategy for selecting issues
-          default: MOST_SEVERE
-        filterCodebundleTaskTags:
-          items:
-            type: string
-          type: array
-          title: Filtercodebundletasktags
-          description: Task tags to filter code bundles
-        filterStopWords:
-          items:
-            type: string
-          type: array
-          title: Filterstopwords
-          description: Words to remove from search queries
-        filterScope:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Filterscope
-          description: Scope filter for results
-        searchFilters:
-          additionalProperties: true
-          type: object
-          title: Searchfilters
-          description: Search filter operators for vector search
-        runConfidenceThreshold:
-          type: number
-          title: Runconfidencethreshold
-          description: Confidence threshold for automatic runs
-          default: 0.95
-        runConfig:
-          additionalProperties: true
-          type: object
-          title: Runconfig
-          description: Run configuration (allow/disallow/budget settings)
-        created:
-          title: Created
-          description: Creation timestamp
-        modified:
-          title: Modified
-          description: Last modification timestamp
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-          description: Return spec dict matching Django's CoreModelSerializer structure.
-          readOnly: true
-        status:
-          additionalProperties: true
-          type: object
-          title: Status
-          description: Return empty status dict matching Django's CoreModelSerializer structure.
-          readOnly: true
+          maximum: 100.0
+          minimum: 1.0
+          title: Pagesize
+          default: 20
       type: object
       required:
-      - id
-      - name
-      - workspace
-      - created
-      - modified
-      - spec
-      - status
-      title: PersonaResponse
-      description: "Persona response schema for API responses (legacy V1/V3 wire shape).\n\nSubclasses PersonaResponseV4 (flat V4 fields) and layers on:\n  - Legacy wire keys: ``workspace`` (was ``workspaceId``),\n    ``created`` (was ``createdAt``), ``modified`` (was ``modifiedAt``)\n  - camelCase aliases for filter/run fields\n  - Computed ``spec`` and ``status`` for Django-era consumers\n\nSunset path: when external consumers fully migrate to /api/v4, delete this subclass."
+      - timeStart
+      - timeEnd
+      title: RunSessionSearchRequest
+      description: Request body for POST /workspaces/{ws}/runsessions/search.
     RunSessionUpdate:
       properties:
         notes:
@@ -2863,6 +2398,471 @@ components:
       type: object
       title: RunSessionUpdate
       description: Schema for updating a run session (partial update).
+    RunRequestIssue:
+      properties:
+        occurrenceId:
+          type: integer
+          title: Occurrenceid
+          description: Issue occurrence ID
+        issueId:
+          type: integer
+          title: Issueid
+          description: Parent issue ID
+        taskTitle:
+          type: string
+          title: Tasktitle
+          description: Task title from the issue
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Issue title
+        severity:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Severity
+          description: Issue severity (1-4)
+        closed:
+          type: boolean
+          title: Closed
+          description: Whether the issue is closed
+          default: false
+        observedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Observedat
+          description: When the issue was observed
+        details:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Details
+          description: Issue occurrence details
+        nextSteps:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nextsteps
+          description: Recommended next steps
+        expected:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected
+          description: Expected result
+        actual:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actual
+          description: Actual result
+        reproduceHint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reproducehint
+          description: Hint for reproducing the issue
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+          description: Additional context data
+        created:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created
+          description: Occurrence creation timestamp
+        modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Modified
+          description: Occurrence modification timestamp
+      type: object
+      required:
+      - occurrenceId
+      - issueId
+      - taskTitle
+      title: RunRequestIssue
+      description: Schema for issue occurrence within a run request.
+    EscalateRequest:
+      properties:
+        escalated:
+          type: boolean
+          title: Escalated
+          description: Escalation status (typically True)
+          default: true
+      type: object
+      title: EscalateRequest
+      description: Schema for escalating a run session.
+    RunSessionAlertsListResponse:
+      properties:
+        alerts:
+          items:
+            $ref: '#/components/schemas/RunSessionAlertResponse'
+          type: array
+          title: Alerts
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - alerts
+      - count
+      title: RunSessionAlertsListResponse
+      description: Response for GET /runsessions/{rs_id}/alerts.
+    SourcesResponse:
+      properties:
+        sources:
+          items:
+            $ref: '#/components/schemas/SourceOption'
+          type: array
+          title: Sources
+      type: object
+      required:
+      - sources
+      title: SourcesResponse
+      description: Response for available search sources.
+    RunSessionCreate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Unique slug identifier for the session
+        notes:
+          type: string
+          title: Notes
+          description: User-provided session notes
+          default: your session notes here
+        source:
+          type: string
+          title: Source
+          description: Origin of the session (e.g., 'directSlx', 'sloAlert', 'webhook')
+          default: ''
+        workspace_id:
+          type: integer
+          title: Workspace Id
+          description: Workspace ID this session belongs to
+        persona_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Persona Id
+          description: Optional AI persona ID for automated runs
+        ttl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ttl
+          description: Time-to-live for session (e.g., '20m', '1h', '3d')
+        generate_name:
+          type: boolean
+          title: Generate Name
+          description: Auto-generate a unique name if name not provided
+          default: true
+      type: object
+      required:
+      - workspace_id
+      title: RunSessionCreate
+      description: Schema for creating a run session.
+    DedupeConfig:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          description: Whether deduplication is enabled
+          default: true
+        strategy:
+          type: string
+          const: slx
+          title: Strategy
+          description: Deduplication strategy (only 'slx' supported currently)
+          default: slx
+        window:
+          type: string
+          title: Window
+          description: Lookback window for finding matching sessions (e.g., '10m', '1h', '3d')
+          default: 10m
+      type: object
+      title: DedupeConfig
+      description: Configuration for RunSession deduplication.
+    RunRequestInSession:
+      properties:
+        slxName:
+          type: string
+          title: Slxname
+          description: Full SLX name to execute (workspace--slx-short-name)
+        taskTitles:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tasktitles
+          description: Specific task titles to run (None = all tasks)
+        memo:
+          additionalProperties: true
+          type: object
+          title: Memo
+          description: Arbitrary JSON for user storage
+        fromSearchQuery:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fromsearchquery
+          description: Search query that led to this run request
+        fromIssue:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fromissue
+          description: Issue occurrence ID that triggered this run request
+        fromRunRequest:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fromrunrequest
+          description: ID of RunRequest that spawned this one
+        fromSliAlert:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fromslialert
+          description: Source SLI alert ID
+        fromSloAlert:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fromsloalert
+          description: Source SLO alert ID
+        force:
+          type: boolean
+          title: Force
+          description: Skip task-title deduplication (re-run even if already executed)
+          default: false
+        runtimeVarOverrides:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Runtimevaroverrides
+          description: Values for runtime variables declared on this SLX's runbook
+      type: object
+      required:
+      - slxName
+      title: RunRequestInSession
+      description: Single RunRequest within a RunSession creation.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RunSessionListResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/RunSessionResponse'
+          type: array
+          title: Results
+          description: List of RunSessions
+        count:
+          type: integer
+          title: Count
+          description: Total count matching filters
+        limit:
+          type: integer
+          title: Limit
+          description: Maximum items per page
+        offset:
+          type: integer
+          title: Offset
+          description: Number of items skipped
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: Next page URL
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: Previous page URL
+      type: object
+      required:
+      - results
+      - count
+      - limit
+      - offset
+      title: RunSessionListResponse
+      description: Schema for paginated run session list response.
+    RunSessionCreateWithRequests:
+      properties:
+        source:
+          type: string
+          enum:
+          - direct
+          - slo_alert
+          - sli_alert
+          - webhook
+          - search
+          - alert_group
+          title: Source
+          description: Origin of the session - determines default deduplication behavior
+          default: direct
+        generateName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generatename
+          description: Session name (auto-generated if omitted)
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Session name (alternative to generateName)
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: User-provided session notes
+        personaName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Personaname
+          description: Persona full name (workspace--persona-short-name)
+        persona_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Persona Id
+          description: Persona ID (alternative to personaName)
+        alertId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Alertid
+          description: Alert ID - required for slo_alert and sli_alert sources
+        webhookId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Webhookid
+          description: Webhook ID - required for webhook source
+        searchQuery:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Searchquery
+          description: Search query - required for search source
+        aliasKey:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aliaskey
+          description: Custom alias key (e.g. 'PagerDuty-Incident-ID')
+        aliasValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aliasvalue
+          description: Custom alias value (e.g. 'P12345')
+        skipNextStepsAnalysis:
+          type: boolean
+          title: Skipnextstepsanalysis
+          description: When true, persona will not create follow-up RunRequests from issue next steps
+          default: false
+        dedupe:
+          anyOf:
+          - $ref: '#/components/schemas/DedupeConfig'
+          - type: 'null'
+          description: Override default deduplication config for this source
+        runRequests:
+          items:
+            $ref: '#/components/schemas/RunRequestInSession'
+          type: array
+          minItems: 1
+          title: Runrequests
+          description: RunRequests to create within this session
+      type: object
+      required:
+      - runRequests
+      title: RunSessionCreateWithRequests
+      description: 'Schema for creating a RunSession with RunRequests atomically.
+
+
+        This is the new preferred API for RunSession creation that:
+
+        - Supports atomic RunRequest creation
+
+        - Supports deduplication configuration
+
+        - Accepts camelCase field names from frontend'
+    StepResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+          description: Processing status (processing, error)
+        runRequests:
+          type: integer
+          title: Runrequests
+          description: Number of RunRequests started
+        hasPersona:
+          type: boolean
+          title: Haspersona
+          description: Whether the session has a persona attached
+      type: object
+      required:
+      - status
+      - runRequests
+      - hasPersona
+      title: StepResponse
+      description: Response for RunSession step endpoint.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

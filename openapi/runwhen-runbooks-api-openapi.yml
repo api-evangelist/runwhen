@@ -154,32 +154,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     papi__schemas__runbook__RunbookResponse:
       properties:
         id:
@@ -314,15 +288,6 @@ components:
       - status
       title: RunbookResponse
       description: "Legacy V1/V3 shape: V4 fields + computed ``spec`` and ``status`` for Django-era consumers.\n\nSubclassing keeps flat fields in lock-step with V4. Computed fields rebuild the\nCRD-shape sub-objects from flat ones at serialization time. Sunset path: when\nexternal consumers fully migrate to /api/v4, delete this subclass.\n\nLegacy wire keys preserved by overriding aliased timestamp fields:\n  - ``created_at`` → alias ``created``   (was ``createdAt`` in V4)\n  - ``modified_at`` → alias ``modified``  (was ``modifiedAt`` in V4)"
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     RunbookTaskV4:
       properties:
         name:
@@ -345,6 +310,41 @@ components:
       - value
       title: RunbookTaskV4
       description: Individual task in a runbook (V4 wire shape).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

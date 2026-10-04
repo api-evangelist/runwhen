@@ -77,15 +77,17 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
+    TaskVitalsResponse:
       properties:
-        detail:
+        items:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/TaskVitalsItem'
           type: array
-          title: Detail
+          title: Items
+          description: One entry per (slx, task) with any run history.
       type: object
-      title: HTTPValidationError
+      title: TaskVitalsResponse
+      description: Workspace-scoped task-vitals payload.
     TaskVitalsItem:
       properties:
         slxName:
@@ -126,17 +128,15 @@ components:
       - lastRunAt
       title: TaskVitalsItem
       description: Per-(slx, task) run-history rollup.
-    TaskVitalsResponse:
+    HTTPValidationError:
       properties:
-        items:
+        detail:
           items:
-            $ref: '#/components/schemas/TaskVitalsItem'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Items
-          description: One entry per (slx, task) with any run history.
+          title: Detail
       type: object
-      title: TaskVitalsResponse
-      description: Workspace-scoped task-vitals payload.
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

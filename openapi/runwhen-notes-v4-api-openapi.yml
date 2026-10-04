@@ -275,33 +275,7 @@ components:
       - matchReason
       title: NoteResourceLinkV4
       description: A materialized note→resource attachment (Tier-3), resolver-owned.
-    ResourceSelectorV4:
-      properties:
-        matchTags:
-          additionalProperties:
-            type: string
-          type: object
-          title: Matchtags
-          description: Tag key/value equalities, ANDed together
-      additionalProperties: false
-      type: object
-      title: ResourceSelectorV4
-      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
-
-
-        (``matchExpressions`` — set-based operators — is a planned follow-on; only
-
-        ``matchTags`` is supported today.)'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    NoteCreateV4:
+    NoteUpdateV4:
       properties:
         title:
           anyOf:
@@ -309,54 +283,80 @@ components:
             maxLength: 255
           - type: 'null'
           title: Title
-          description: Short note title
         content:
-          type: string
-          maxLength: 20000
-          minLength: 1
+          anyOf:
+          - type: string
+            maxLength: 20000
+            minLength: 1
+          - type: 'null'
           title: Content
-          description: Note content
         resourcePaths:
-          items:
-            type: string
-          type: array
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Resourcepaths
-          description: Canonical resource paths
         resourceSelectors:
-          items:
-            $ref: '#/components/schemas/ResourceSelectorV4'
-          type: array
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ResourceSelectorV4'
+            type: array
+          - type: 'null'
           title: Resourceselectors
-          description: Tag selectors resolved to resources by the platform
         abstractEntities:
-          items:
-            type: string
-          type: array
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Abstractentities
-          description: Normalized entity tokens
         tags:
-          items:
-            type: string
-          type: array
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Tags
-          description: Author-facing labels
         status:
-          $ref: '#/components/schemas/NoteStatusV4'
-          description: Note lifecycle status
-          default: active
+          anyOf:
+          - $ref: '#/components/schemas/NoteStatusV4'
+          - type: 'null'
+        verified:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Verified
       additionalProperties: false
       type: object
+      title: NoteUpdateV4
+      description: Schema for partial update of a note.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
       required:
-      - content
-      title: NoteCreateV4
-      description: Schema for creating a note.
-    NoteStatusV4:
-      type: string
-      enum:
-      - active
-      - deprecated
-      title: NoteStatusV4
-      description: Note lifecycle status.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     NoteResponseV4:
       properties:
         noteId:
@@ -487,33 +487,31 @@ components:
       - updatedAt
       title: NoteResponseV4
       description: Note response schema for API responses.
-    ValidationError:
+    ResourceSelectorV4:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
+        matchTags:
+          additionalProperties:
+            type: string
           type: object
-          title: Context
+          title: Matchtags
+          description: Tag key/value equalities, ANDed together
+      additionalProperties: false
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    NoteUpdateV4:
+      title: ResourceSelectorV4
+      description: 'A tag match rule (Tier-2). ``matchTags`` is an AND of equality.
+
+
+        (``matchExpressions`` — set-based operators — is a planned follow-on; only
+
+        ``matchTags`` is supported today.)'
+    NoteStatusV4:
+      type: string
+      enum:
+      - active
+      - deprecated
+      title: NoteStatusV4
+      description: Note lifecycle status.
+    NoteCreateV4:
       properties:
         title:
           anyOf:
@@ -521,54 +519,56 @@ components:
             maxLength: 255
           - type: 'null'
           title: Title
+          description: Short note title
         content:
-          anyOf:
-          - type: string
-            maxLength: 20000
-            minLength: 1
-          - type: 'null'
+          type: string
+          maxLength: 20000
+          minLength: 1
           title: Content
+          description: Note content
         resourcePaths:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+          items:
+            type: string
+          type: array
           title: Resourcepaths
+          description: Canonical resource paths
         resourceSelectors:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/ResourceSelectorV4'
-            type: array
-          - type: 'null'
+          items:
+            $ref: '#/components/schemas/ResourceSelectorV4'
+          type: array
           title: Resourceselectors
+          description: Tag selectors resolved to resources by the platform
         abstractEntities:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+          items:
+            type: string
+          type: array
           title: Abstractentities
+          description: Normalized entity tokens
         tags:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+          items:
+            type: string
+          type: array
           title: Tags
+          description: Author-facing labels
         status:
-          anyOf:
-          - $ref: '#/components/schemas/NoteStatusV4'
-          - type: 'null'
-        verified:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Verified
+          $ref: '#/components/schemas/NoteStatusV4'
+          description: Note lifecycle status
+          default: active
       additionalProperties: false
       type: object
-      title: NoteUpdateV4
-      description: Schema for partial update of a note.
+      required:
+      - content
+      title: NoteCreateV4
+      description: Schema for creating a note.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

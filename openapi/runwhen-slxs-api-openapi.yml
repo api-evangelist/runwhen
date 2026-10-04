@@ -1408,249 +1408,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    papi__schemas__slx__SloResponse:
-      properties:
-        slxId:
-          type: integer
-          title: Slxid
-          description: Parent SLX ID (also serves as SLO ID)
-        sloSpecType:
-          type: string
-          title: Slospectype
-          description: SLO specification type
-          default: simple-mwmb
-        objective:
-          type: number
-          title: Objective
-          description: SLO objective percentage
-          default: 99.9
-        threshold:
-          type: integer
-          title: Threshold
-          description: SLO threshold
-          default: 9
-        operand:
-          type: string
-          title: Operand
-          description: Comparison operand
-          default: eq
-        codeBundleRepoUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlerepourl
-          description: Code bundle repository URL
-        codeBundleRef:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundleref
-          description: Code bundle git ref
-        codeBundlePathToYaml:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlepathtoyaml
-          description: Path to SLO YAML
-        repositoryId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Repositoryid
-          description: Repository ID
-        generation:
-          type: integer
-          title: Generation
-          description: Generation number
-          default: 0
-        generationChecksum:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Generationchecksum
-          description: Generation checksum
-        ruleGroups:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Rulegroups
-          description: Rule groups from CRD status (list of Prometheus rule-group dicts)
-        firingAlerts:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Firingalerts
-          description: Currently firing SLO alerts
-        lastSevenDaysAlerts:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Lastsevendaysalerts
-          description: SLO alerts from the last 7 days
-        alertCount:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Alertcount
-          description: SLO alert counts grouped by date
-        monthErrorBudgetRemaining:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Montherrorbudgetremaining
-          description: Calendar month error budget remaining (Prometheus-style response). Values are ratio units (0..1, negative on breach), passed through unchanged from Cortex.
-        thirtyDayErrorBudgetRemaining:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Thirtydayerrorbudgetremaining
-          description: Rolling 30-day error budget remaining (Prometheus-style response). Values are ratio units (0..1, negative on breach), passed through unchanged from Cortex.
-        recent:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Recent
-          description: Recent SLO error budget remaining for an arbitrary history/resolution window (Prometheus-style response). Values are percent units (0..100, negative on breach) — the router multiplies the Cortex ratio by 100 (x100) before serialising. Consumers MUST NOT divide by 100; the existing `month_error_budget_remaining` and `thirty_day_error_budget_remaining` fields on the same response remain in ratio units.
-        created:
-          type: string
-          format: date-time
-          title: Created
-          description: Creation timestamp
-        modified:
-          type: string
-          format: date-time
-          title: Modified
-          description: Last update timestamp
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-          description: Spec dict matching Django CoreModelSerializer shape.
-          readOnly: true
-        status:
-          additionalProperties: true
-          type: object
-          title: Status
-          description: Status dict matching Django CoreModelSerializer shape.
-          readOnly: true
-      type: object
-      required:
-      - slxId
-      - created
-      - modified
-      - spec
-      - status
-      title: SloResponse
-      description: SLO (Service Level Objective) response schema.
-    papi__schemas__slx__RunbookResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-          description: Runbook ID
-        slxId:
-          type: integer
-          title: Slxid
-          description: Parent SLX ID
-        name:
-          type: string
-          title: Name
-          description: Runbook name (same as SLX full name)
-          default: ''
-        runnerUUID:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Runneruuid
-          description: Runner UUID
-        codeBundleRepoUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlerepourl
-          description: Code bundle repository URL
-        codeBundleRef:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundleref
-          description: Code bundle git ref
-        codeBundlePath:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlepath
-          description: Path to runbook in repository
-        repositoryId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Repositoryid
-          description: Repository ID
-        configProvided:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - additionalProperties: true
-            type: object
-          title: Configprovided
-          description: Configuration as list of {name, value} objects or dict
-        secretsProvided:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Secretsprovided
-          description: Secrets configuration
-        tasks:
-          items:
-            $ref: '#/components/schemas/RunbookTaskResponse'
-          type: array
-          title: Tasks
-          description: Runbook tasks
-        created:
-          type: string
-          format: date-time
-          title: Created
-          description: Creation timestamp
-        modified:
-          type: string
-          format: date-time
-          title: Modified
-          description: Last update timestamp
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-          description: Spec dict matching Django CoreModelSerializer shape.
-          readOnly: true
-        status:
-          additionalProperties: true
-          type: object
-          title: Status
-          description: Status dict matching Django CoreModelSerializer shape.
-          readOnly: true
-      type: object
-      required:
-      - id
-      - slxId
-      - created
-      - modified
-      - spec
-      - status
-      title: RunbookResponse
-      description: Runbook response schema with tasks.
     SlxResponse:
       properties:
         id:
@@ -1770,76 +1527,6 @@ components:
       - status
       title: SlxResponse
       description: "Legacy V1/V3 shape: V4 fields + computed ``spec`` and ``status`` for Django-era consumers.\n\nSubclassing keeps flat fields in lock-step with V4. Computed fields rebuild the\nCRD-shape sub-objects from flat ones at serialization time. Sunset path: when\nexternal consumers fully migrate to /api/v4, delete this subclass.\n\nLegacy wire keys preserved by overriding three aliased fields:\n  - ``workspace_id`` → alias ``workspace`` (was ``workspaceId`` in V4)\n  - ``created_at``   → alias ``created``   (was ``createdAt`` in V4)\n  - ``modified_at``  → alias ``modified``  (was ``modifiedAt`` in V4)\n  - ``image_url``    → accepts both ``imageURL`` (legacy) and ``imageUrl`` (V4)"
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MetricTypeV4:
-      type: string
-      enum:
-      - gauge
-      - counter
-      - histogram
-      title: MetricTypeV4
-    RunbookTaskResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Resolved task display name
-        value:
-          type: string
-          title: Value
-          description: Original task identifier
-        tags:
-          items:
-            type: string
-          type: array
-          title: Tags
-          description: Task tags
-        id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Id
-          description: Stable platform-owned task id (slx_tasks.id); null until reconciled
-      type: object
-      required:
-      - name
-      - value
-      title: RunbookTaskResponse
-      description: Individual task in a runbook.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     papi__schemas__slx__SliResponse:
       properties:
         slxId:
@@ -1987,39 +1674,190 @@ components:
       - status
       title: SliResponse
       description: SLI (Service Level Indicator) response schema.
-    SlxListResponse:
+    RunbookTaskResponse:
       properties:
-        results:
+        name:
+          type: string
+          title: Name
+          description: Resolved task display name
+        value:
+          type: string
+          title: Value
+          description: Original task identifier
+        tags:
           items:
-            $ref: '#/components/schemas/SlxResponse'
+            type: string
           type: array
-          title: Results
-          description: List of SLX items
-        count:
-          type: integer
-          title: Count
-          description: Total count of items matching filters
-        next:
+          title: Tags
+          description: Task tags
+        id:
           anyOf:
-          - type: string
+          - type: integer
           - type: 'null'
-          title: Next
-          description: URL to next page
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: URL to previous page
+          title: Id
+          description: Stable platform-owned task id (slx_tasks.id); null until reconciled
       type: object
       required:
-      - results
-      - count
-      title: SlxListResponse
-      description: 'Paginated list response for SLX endpoints.
-
-
-        Uses ''results'' key for Django REST Framework compatibility.'
+      - name
+      - value
+      title: RunbookTaskResponse
+      description: Individual task in a runbook.
+    SlxTagV4:
+      properties:
+        name:
+          type: string
+          title: Name
+        value:
+          type: string
+          title: Value
+      type: object
+      required:
+      - name
+      - value
+      title: SlxTagV4
+    papi__schemas__slx__RunbookResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: Runbook ID
+        slxId:
+          type: integer
+          title: Slxid
+          description: Parent SLX ID
+        name:
+          type: string
+          title: Name
+          description: Runbook name (same as SLX full name)
+          default: ''
+        runnerUUID:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Runneruuid
+          description: Runner UUID
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+          description: Code bundle repository URL
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+          description: Code bundle git ref
+        codeBundlePath:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepath
+          description: Path to runbook in repository
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+          description: Repository ID
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+          description: Configuration as list of {name, value} objects or dict
+        secretsProvided:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Secretsprovided
+          description: Secrets configuration
+        tasks:
+          items:
+            $ref: '#/components/schemas/RunbookTaskResponse'
+          type: array
+          title: Tasks
+          description: Runbook tasks
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Spec dict matching Django CoreModelSerializer shape.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Status dict matching Django CoreModelSerializer shape.
+          readOnly: true
+      type: object
+      required:
+      - id
+      - slxId
+      - created
+      - modified
+      - spec
+      - status
+      title: RunbookResponse
+      description: Runbook response schema with tasks.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FileUploadUrlResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - url
+      title: FileUploadUrlResponse
+      description: Response containing a signed URL for file upload.
+    MetricTypeV4:
+      type: string
+      enum:
+      - gauge
+      - counter
+      - histogram
+      title: MetricTypeV4
     SlxMetricsResponse:
       properties:
         alias:
@@ -2076,29 +1914,191 @@ components:
 
 
         ``sli`` and ``slo`` are null when the corresponding type was not requested.'
-    SlxTagV4:
+    papi__schemas__slx__SloResponse:
       properties:
-        name:
+        slxId:
+          type: integer
+          title: Slxid
+          description: Parent SLX ID (also serves as SLO ID)
+        sloSpecType:
           type: string
-          title: Name
-        value:
+          title: Slospectype
+          description: SLO specification type
+          default: simple-mwmb
+        objective:
+          type: number
+          title: Objective
+          description: SLO objective percentage
+          default: 99.9
+        threshold:
+          type: integer
+          title: Threshold
+          description: SLO threshold
+          default: 9
+        operand:
           type: string
-          title: Value
+          title: Operand
+          description: Comparison operand
+          default: eq
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+          description: Code bundle repository URL
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+          description: Code bundle git ref
+        codeBundlePathToYaml:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepathtoyaml
+          description: Path to SLO YAML
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+          description: Repository ID
+        generation:
+          type: integer
+          title: Generation
+          description: Generation number
+          default: 0
+        generationChecksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generationchecksum
+          description: Generation checksum
+        ruleGroups:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Rulegroups
+          description: Rule groups from CRD status (list of Prometheus rule-group dicts)
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+          description: Currently firing SLO alerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+          description: SLO alerts from the last 7 days
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+          description: SLO alert counts grouped by date
+        monthErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Montherrorbudgetremaining
+          description: Calendar month error budget remaining (Prometheus-style response). Values are ratio units (0..1, negative on breach), passed through unchanged from Cortex.
+        thirtyDayErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thirtydayerrorbudgetremaining
+          description: Rolling 30-day error budget remaining (Prometheus-style response). Values are ratio units (0..1, negative on breach), passed through unchanged from Cortex.
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+          description: Recent SLO error budget remaining for an arbitrary history/resolution window (Prometheus-style response). Values are percent units (0..100, negative on breach) — the router multiplies the Cortex ratio by 100 (x100) before serialising. Consumers MUST NOT divide by 100; the existing `month_error_budget_remaining` and `thirty_day_error_budget_remaining` fields on the same response remain in ratio units.
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: Creation timestamp
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last update timestamp
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+          description: Spec dict matching Django CoreModelSerializer shape.
+          readOnly: true
+        status:
+          additionalProperties: true
+          type: object
+          title: Status
+          description: Status dict matching Django CoreModelSerializer shape.
+          readOnly: true
       type: object
       required:
-      - name
-      - value
-      title: SlxTagV4
-    FileUploadUrlResponse:
+      - slxId
+      - created
+      - modified
+      - spec
+      - status
+      title: SloResponse
+      description: SLO (Service Level Objective) response schema.
+    SlxListResponse:
       properties:
-        url:
-          type: string
-          title: Url
+        results:
+          items:
+            $ref: '#/components/schemas/SlxResponse'
+          type: array
+          title: Results
+          description: List of SLX items
+        count:
+          type: integer
+          title: Count
+          description: Total count of items matching filters
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: URL to next page
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: URL to previous page
       type: object
       required:
-      - url
-      title: FileUploadUrlResponse
-      description: Response containing a signed URL for file upload.
+      - results
+      - count
+      title: SlxListResponse
+      description: 'Paginated list response for SLX endpoints.
+
+
+        Uses ''results'' key for Django REST Framework compatibility.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

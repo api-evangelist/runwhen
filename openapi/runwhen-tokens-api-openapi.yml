@@ -214,15 +214,58 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
+    PATCreateResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        tokenSuffix:
+          type: string
+          title: Tokensuffix
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        expiresAt:
+          type: string
+          format: date-time
+          title: Expiresat
+        isRevoked:
+          type: boolean
+          title: Isrevoked
+        isExpired:
+          type: boolean
+          title: Isexpired
+        isActive:
+          type: boolean
+          title: Isactive
+        lastUsedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastusedat
+        token:
+          type: string
+          title: Token
       type: object
-      title: HTTPValidationError
+      required:
+      - id
+      - name
+      - tokenSuffix
+      - createdAt
+      - expiresAt
+      - isRevoked
+      - isExpired
+      - isActive
+      - lastUsedAt
+      - token
+      title: PATCreateResponse
+      description: Returned only at creation time -- includes the full token value.
     ValidationError:
       properties:
         loc:
@@ -296,58 +339,6 @@ components:
       - isActive
       - lastUsedAt
       title: PATResponse
-    PATCreateResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        name:
-          type: string
-          title: Name
-        tokenSuffix:
-          type: string
-          title: Tokensuffix
-        createdAt:
-          type: string
-          format: date-time
-          title: Createdat
-        expiresAt:
-          type: string
-          format: date-time
-          title: Expiresat
-        isRevoked:
-          type: boolean
-          title: Isrevoked
-        isExpired:
-          type: boolean
-          title: Isexpired
-        isActive:
-          type: boolean
-          title: Isactive
-        lastUsedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Lastusedat
-        token:
-          type: string
-          title: Token
-      type: object
-      required:
-      - id
-      - name
-      - tokenSuffix
-      - createdAt
-      - expiresAt
-      - isRevoked
-      - isExpired
-      - isActive
-      - lastUsedAt
-      - token
-      title: PATCreateResponse
-      description: Returned only at creation time -- includes the full token value.
     PATCreateRequest:
       properties:
         name:
@@ -365,6 +356,15 @@ components:
       required:
       - name
       title: PATCreateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

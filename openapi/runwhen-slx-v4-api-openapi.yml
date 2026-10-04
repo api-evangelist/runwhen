@@ -288,22 +288,6 @@ components:
       - modifiedAt
       title: RunbookResponseV4
       description: Flat-shape Runbook detail response.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MetricTypeV4:
-      type: string
-      enum:
-      - gauge
-      - counter
-      - histogram
-      title: MetricTypeV4
     SlxPayloadV4:
       properties:
         name:
@@ -371,304 +355,6 @@ components:
       - name
       title: SlxPayloadV4
       description: Writable subset of SLX (the body of a sync upsert).
-    SlxResponseV4:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-          description: 'Full SLX name: workspace--slx-short-name'
-        shortName:
-          type: string
-          title: Shortname
-        alias:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Alias
-        workspaceId:
-          type: integer
-          title: Workspaceid
-        statement:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Statement
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        asMeasuredBy:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Asmeasuredby
-        metricType:
-          $ref: '#/components/schemas/MetricTypeV4'
-          default: gauge
-        owners:
-          items:
-            type: string
-          type: array
-          title: Owners
-        tags:
-          items:
-            $ref: '#/components/schemas/SlxTagV4'
-          type: array
-          title: Tags
-        configProvided:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - additionalProperties: true
-            type: object
-          title: Configprovided
-        additionalContext:
-          additionalProperties: true
-          type: object
-          title: Additionalcontext
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        imageUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Imageurl
-        runbook:
-          anyOf:
-          - $ref: '#/components/schemas/RunbookResponseV4'
-          - type: 'null'
-        sli:
-          anyOf:
-          - $ref: '#/components/schemas/SliResponseV4'
-          - type: 'null'
-        slo:
-          anyOf:
-          - $ref: '#/components/schemas/SloResponseV4'
-          - type: 'null'
-        createdAt:
-          type: string
-          format: date-time
-          title: Createdat
-        modifiedAt:
-          type: string
-          format: date-time
-          title: Modifiedat
-      type: object
-      required:
-      - id
-      - name
-      - shortName
-      - workspaceId
-      - createdAt
-      - modifiedAt
-      title: SlxResponseV4
-      description: Flat-shape SLX detail response.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    SlxSyncRequestV4:
-      properties:
-        payload:
-          $ref: '#/components/schemas/SlxPayloadV4'
-        lastSyncedAt:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Lastsyncedat
-      additionalProperties: false
-      type: object
-      required:
-      - payload
-      title: SlxSyncRequestV4
-      description: 'Body of POST /api/v4/workspaces/{ws}/slxs/sync-typed.
-
-
-        ``modified_by`` is not accepted: the server derives it from the JWT via
-
-        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
-
-        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
-    SloResponseV4:
-      properties:
-        slxId:
-          type: integer
-          title: Slxid
-        sloSpecType:
-          type: string
-          title: Slospectype
-          default: simple-mwmb
-        objective:
-          type: number
-          title: Objective
-          default: 99.9
-        threshold:
-          type: integer
-          title: Threshold
-          default: 9
-        operand:
-          type: string
-          title: Operand
-          default: eq
-        codeBundleRepoUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlerepourl
-        codeBundleRef:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundleref
-        codeBundlePathToYaml:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codebundlepathtoyaml
-        repositoryId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Repositoryid
-        generation:
-          type: integer
-          title: Generation
-          default: 0
-        generationChecksum:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Generationchecksum
-        ruleGroups:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Rulegroups
-        firingAlerts:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Firingalerts
-        lastSevenDaysAlerts:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Lastsevendaysalerts
-        alertCount:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Alertcount
-        monthErrorBudgetRemaining:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Montherrorbudgetremaining
-        thirtyDayErrorBudgetRemaining:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Thirtydayerrorbudgetremaining
-        recent:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Recent
-        createdAt:
-          type: string
-          format: date-time
-          title: Createdat
-        modifiedAt:
-          type: string
-          format: date-time
-          title: Modifiedat
-      type: object
-      required:
-      - slxId
-      - createdAt
-      - modifiedAt
-      title: SloResponseV4
-      description: Flat-shape SLO detail response.
-    SlxListResponseV4:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/SlxResponseV4'
-          type: array
-          title: Results
-        count:
-          type: integer
-          title: Count
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-      type: object
-      required:
-      - results
-      - count
-      title: SlxListResponseV4
-      description: Paginated list of SLXs.
-    SlxTagV4:
-      properties:
-        name:
-          type: string
-          title: Name
-        value:
-          type: string
-          title: Value
-      type: object
-      required:
-      - name
-      - value
-      title: SlxTagV4
     SliResponseV4:
       properties:
         slxId:
@@ -798,6 +484,171 @@ components:
       - modifiedAt
       title: SliResponseV4
       description: Flat-shape SLI detail response.
+    SlxSyncRequestV4:
+      properties:
+        payload:
+          $ref: '#/components/schemas/SlxPayloadV4'
+        lastSyncedAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lastsyncedat
+      additionalProperties: false
+      type: object
+      required:
+      - payload
+      title: SlxSyncRequestV4
+      description: 'Body of POST /api/v4/workspaces/{ws}/slxs/sync-typed.
+
+
+        ``modified_by`` is not accepted: the server derives it from the JWT via
+
+        ``get_effective_modifier``. Unknown keys (including ``modified_by``)
+
+        raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SloResponseV4:
+      properties:
+        slxId:
+          type: integer
+          title: Slxid
+        sloSpecType:
+          type: string
+          title: Slospectype
+          default: simple-mwmb
+        objective:
+          type: number
+          title: Objective
+          default: 99.9
+        threshold:
+          type: integer
+          title: Threshold
+          default: 9
+        operand:
+          type: string
+          title: Operand
+          default: eq
+        codeBundleRepoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlerepourl
+        codeBundleRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundleref
+        codeBundlePathToYaml:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codebundlepathtoyaml
+        repositoryId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Repositoryid
+        generation:
+          type: integer
+          title: Generation
+          default: 0
+        generationChecksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generationchecksum
+        ruleGroups:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Rulegroups
+        firingAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Firingalerts
+        lastSevenDaysAlerts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Lastsevendaysalerts
+        alertCount:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Alertcount
+        monthErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Montherrorbudgetremaining
+        thirtyDayErrorBudgetRemaining:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thirtydayerrorbudgetremaining
+        recent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recent
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - slxId
+      - createdAt
+      - modifiedAt
+      title: SloResponseV4
+      description: Flat-shape SLO detail response.
+    MetricTypeV4:
+      type: string
+      enum:
+      - gauge
+      - counter
+      - histogram
+      title: MetricTypeV4
     RunbookTaskV4:
       properties:
         name:
@@ -820,6 +671,155 @@ components:
       - value
       title: RunbookTaskV4
       description: Individual task in a runbook (V4 wire shape).
+    SlxTagV4:
+      properties:
+        name:
+          type: string
+          title: Name
+        value:
+          type: string
+          title: Value
+      type: object
+      required:
+      - name
+      - value
+      title: SlxTagV4
+    SlxListResponseV4:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/SlxResponseV4'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: SlxListResponseV4
+      description: Paginated list of SLXs.
+    SlxResponseV4:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+          description: 'Full SLX name: workspace--slx-short-name'
+        shortName:
+          type: string
+          title: Shortname
+        alias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alias
+        workspaceId:
+          type: integer
+          title: Workspaceid
+        statement:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Statement
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        asMeasuredBy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asmeasuredby
+        metricType:
+          $ref: '#/components/schemas/MetricTypeV4'
+          default: gauge
+        owners:
+          items:
+            type: string
+          type: array
+          title: Owners
+        tags:
+          items:
+            $ref: '#/components/schemas/SlxTagV4'
+          type: array
+          title: Tags
+        configProvided:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - additionalProperties: true
+            type: object
+          title: Configprovided
+        additionalContext:
+          additionalProperties: true
+          type: object
+          title: Additionalcontext
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        imageUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Imageurl
+        runbook:
+          anyOf:
+          - $ref: '#/components/schemas/RunbookResponseV4'
+          - type: 'null'
+        sli:
+          anyOf:
+          - $ref: '#/components/schemas/SliResponseV4'
+          - type: 'null'
+        slo:
+          anyOf:
+          - $ref: '#/components/schemas/SloResponseV4'
+          - type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+          title: Createdat
+        modifiedAt:
+          type: string
+          format: date-time
+          title: Modifiedat
+      type: object
+      required:
+      - id
+      - name
+      - shortName
+      - workspaceId
+      - createdAt
+      - modifiedAt
+      title: SlxResponseV4
+      description: Flat-shape SLX detail response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

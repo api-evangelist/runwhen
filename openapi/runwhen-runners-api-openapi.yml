@@ -81,6 +81,36 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    RunnerListResponse:
+      properties:
+        count:
+          type: integer
+          title: Count
+          description: Total count of runners
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+          description: URL to next page
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+          description: URL to previous page
+        results:
+          items:
+            $ref: '#/components/schemas/RunnerResponse'
+          type: array
+          title: Results
+          description: List of runners
+      type: object
+      required:
+      - count
+      - results
+      title: RunnerListResponse
+      description: DRF-style paginated response for Runner list endpoint.
     ValidationError:
       properties:
         loc:
@@ -163,36 +193,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    RunnerListResponse:
-      properties:
-        count:
-          type: integer
-          title: Count
-          description: Total count of runners
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-          description: URL to next page
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-          description: URL to previous page
-        results:
-          items:
-            $ref: '#/components/schemas/RunnerResponse'
-          type: array
-          title: Results
-          description: List of runners
-      type: object
-      required:
-      - count
-      - results
-      title: RunnerListResponse
-      description: DRF-style paginated response for Runner list endpoint.
   securitySchemes:
     BearerAuth:
       type: http

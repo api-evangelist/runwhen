@@ -239,15 +239,6 @@ components:
         fields produced by ``user-pages/utils/yamlMappers/persona.ts`` and then
 
         promote this class to ``V4RequestModel``.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -274,32 +265,6 @@ components:
       - msg
       - type
       title: ValidationError
-    PersonaListResponseV4:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/PersonaResponseV4'
-          type: array
-          title: Results
-        count:
-          type: integer
-          title: Count
-        next:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next
-        previous:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous
-      type: object
-      required:
-      - results
-      - count
-      title: PersonaListResponseV4
-      description: Paginated list of Personas.
     PersonaResponseV4:
       properties:
         id:
@@ -406,6 +371,41 @@ components:
         ``get_effective_modifier``. Unknown keys (including ``modified_by``)
 
         raise 422 because ``V4RequestModel`` sets ``extra="forbid"``.'
+    PersonaListResponseV4:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PersonaResponseV4'
+          type: array
+          title: Results
+        count:
+          type: integer
+          title: Count
+        next:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+        previous:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous
+      type: object
+      required:
+      - results
+      - count
+      title: PersonaListResponseV4
+      description: Paginated list of Personas.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

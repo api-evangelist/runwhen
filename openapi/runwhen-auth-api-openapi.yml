@@ -249,45 +249,6 @@ paths:
       security: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    TokenVerifyRequest:
-      properties:
-        token:
-          type: string
-          title: Token
-      type: object
-      required:
-      - token
-      title: TokenVerifyRequest
-      description: Token verify request matching Django SimpleJWT format.
-    TokenRequest:
-      properties:
-        username:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Username
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        password:
-          type: string
-          title: Password
-      type: object
-      required:
-      - password
-      title: TokenRequest
-      description: Token request body - accepts username or email with password.
     TokenExchangeResponse:
       properties:
         access_token:
@@ -330,31 +291,6 @@ components:
       - lifetime
       title: UsernamePasswordLoginResponse
       description: Response for username-password-login endpoint matching Django format.
-    TokenExchangeRequest:
-      properties:
-        grant_type:
-          type: string
-          title: Grant Type
-          description: Must be the token-exchange grant type.
-          default: urn:ietf:params:oauth:grant-type:token-exchange
-        subject_token:
-          type: string
-          title: Subject Token
-          description: The external token to exchange (e.g. Auth0 access token).
-        subject_token_type:
-          $ref: '#/components/schemas/SubjectTokenType'
-          description: 'Token type: "auth0" or the full RFC 8693 URN.'
-          default: auth0
-        scope:
-          type: string
-          title: Scope
-          description: Requested scopes (informational only).
-          default: openid profile email
-      type: object
-      required:
-      - subject_token
-      title: TokenExchangeRequest
-      description: RFC 8693 Token Exchange request (simplified).
     ValidationError:
       properties:
         loc:
@@ -381,16 +317,32 @@ components:
       - msg
       - type
       title: ValidationError
-    TokenRefreshRequest:
+    SubjectTokenType:
+      type: string
+      enum:
+      - urn:ietf:params:oauth:token-type:access_token
+      - auth0
+      title: SubjectTokenType
+    TokenRequest:
       properties:
-        refresh:
+        username:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Username
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        password:
           type: string
-          title: Refresh
+          title: Password
       type: object
       required:
-      - refresh
-      title: TokenRefreshRequest
-      description: Refresh token request matching Django SimpleJWT format.
+      - password
+      title: TokenRequest
+      description: Token request body - accepts username or email with password.
     TokenResponse:
       properties:
         access:
@@ -405,12 +357,60 @@ components:
       - refresh
       title: TokenResponse
       description: Token response matching Django SimpleJWT format.
-    SubjectTokenType:
-      type: string
-      enum:
-      - urn:ietf:params:oauth:token-type:access_token
-      - auth0
-      title: SubjectTokenType
+    TokenVerifyRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: TokenVerifyRequest
+      description: Token verify request matching Django SimpleJWT format.
+    TokenExchangeRequest:
+      properties:
+        grant_type:
+          type: string
+          title: Grant Type
+          description: Must be the token-exchange grant type.
+          default: urn:ietf:params:oauth:grant-type:token-exchange
+        subject_token:
+          type: string
+          title: Subject Token
+          description: The external token to exchange (e.g. Auth0 access token).
+        subject_token_type:
+          $ref: '#/components/schemas/SubjectTokenType'
+          description: 'Token type: "auth0" or the full RFC 8693 URN.'
+          default: auth0
+        scope:
+          type: string
+          title: Scope
+          description: Requested scopes (informational only).
+          default: openid profile email
+      type: object
+      required:
+      - subject_token
+      title: TokenExchangeRequest
+      description: RFC 8693 Token Exchange request (simplified).
+    TokenRefreshRequest:
+      properties:
+        refresh:
+          type: string
+          title: Refresh
+      type: object
+      required:
+      - refresh
+      title: TokenRefreshRequest
+      description: Refresh token request matching Django SimpleJWT format.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http

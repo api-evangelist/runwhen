@@ -454,154 +454,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AuthorRunStatusUpdate:
-      properties:
-        passedTitles:
-          type: string
-          title: Passedtitles
-          description: '''||''-separated titles of passed tasks'
-          default: ''
-        failedTitles:
-          type: string
-          title: Failedtitles
-          description: '''||''-separated titles of failed tasks'
-          default: ''
-        skippedTitles:
-          type: string
-          title: Skippedtitles
-          description: '''||''-separated titles of skipped tasks'
-          default: ''
-        errors:
-          title: Errors
-          description: Error details (dict or list)
-      type: object
-      title: AuthorRunStatusUpdate
-      description: 'Payload for ``PATCH /author/run/{run_id}/status`` (runner callback).
-
-
-        The runner posts back the RunRequest response shape; we derive SUCCEEDED /
-
-        FAILED from whether ``passed_titles`` is truthy.
-
-
-        Django stores these as ''||''-separated CharField strings, so the runner
-
-        sends strings (e.g. ``"Task A||Task B"``), not arrays.  Extra fields
-
-        (``robot_log_file``, ``runsession_id``, etc.) are silently ignored.'
-    AuthorRunOutputResponse:
-      properties:
-        runId:
-          type: string
-          title: Runid
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        artifacts:
-          items:
-            $ref: '#/components/schemas/AuthorRunOutputArtifact'
-          type: array
-          title: Artifacts
-      type: object
-      required:
-      - runId
-      - status
-      - artifacts
-      title: AuthorRunOutputResponse
-      description: Response for ``GET /author/run/{run_id}/output``.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AuthorRunStatusResponse:
-      properties:
-        runId:
-          type: string
-          title: Runid
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - runId
-      - status
-      title: AuthorRunStatusResponse
-      description: Response for ``GET|PATCH /author/run/{run_id}/status``.
-    AuthorRunOutputArtifact:
-      properties:
-        type:
-          type: string
-          title: Type
-        filename:
-          type: string
-          title: Filename
-        contentType:
-          type: string
-          title: Contenttype
-        expiresAt:
-          type: string
-          title: Expiresat
-        signedUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Signedurl
-      type: object
-      required:
-      - type
-      - filename
-      - contentType
-      - expiresAt
-      - signedUrl
-      title: AuthorRunOutputArtifact
-      description: Single artifact entry inside the output response.
-    AuthorRunCreateResponse:
-      properties:
-        runId:
-          type: string
-          title: Runid
-        status:
-          type: string
-          title: Status
-          default: RUNNING
-      type: object
-      required:
-      - runId
-      title: AuthorRunCreateResponse
-      description: Response for ``POST /author/run``.
     AuthorRunCreate:
       properties:
         command:
@@ -640,6 +492,154 @@ components:
       - location
       title: AuthorRunCreate
       description: Payload for ``POST /author/run``.
+    AuthorRunOutputArtifact:
+      properties:
+        type:
+          type: string
+          title: Type
+        filename:
+          type: string
+          title: Filename
+        contentType:
+          type: string
+          title: Contenttype
+        expiresAt:
+          type: string
+          title: Expiresat
+        signedUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signedurl
+      type: object
+      required:
+      - type
+      - filename
+      - contentType
+      - expiresAt
+      - signedUrl
+      title: AuthorRunOutputArtifact
+      description: Single artifact entry inside the output response.
+    AuthorRunStatusUpdate:
+      properties:
+        passedTitles:
+          type: string
+          title: Passedtitles
+          description: '''||''-separated titles of passed tasks'
+          default: ''
+        failedTitles:
+          type: string
+          title: Failedtitles
+          description: '''||''-separated titles of failed tasks'
+          default: ''
+        skippedTitles:
+          type: string
+          title: Skippedtitles
+          description: '''||''-separated titles of skipped tasks'
+          default: ''
+        errors:
+          title: Errors
+          description: Error details (dict or list)
+      type: object
+      title: AuthorRunStatusUpdate
+      description: 'Payload for ``PATCH /author/run/{run_id}/status`` (runner callback).
+
+
+        The runner posts back the RunRequest response shape; we derive SUCCEEDED /
+
+        FAILED from whether ``passed_titles`` is truthy.
+
+
+        Django stores these as ''||''-separated CharField strings, so the runner
+
+        sends strings (e.g. ``"Task A||Task B"``), not arrays.  Extra fields
+
+        (``robot_log_file``, ``runsession_id``, etc.) are silently ignored.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AuthorRunOutputResponse:
+      properties:
+        runId:
+          type: string
+          title: Runid
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        artifacts:
+          items:
+            $ref: '#/components/schemas/AuthorRunOutputArtifact'
+          type: array
+          title: Artifacts
+      type: object
+      required:
+      - runId
+      - status
+      - artifacts
+      title: AuthorRunOutputResponse
+      description: Response for ``GET /author/run/{run_id}/output``.
+    AuthorRunCreateResponse:
+      properties:
+        runId:
+          type: string
+          title: Runid
+        status:
+          type: string
+          title: Status
+          default: RUNNING
+      type: object
+      required:
+      - runId
+      title: AuthorRunCreateResponse
+      description: Response for ``POST /author/run``.
+    AuthorRunStatusResponse:
+      properties:
+        runId:
+          type: string
+          title: Runid
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - runId
+      - status
+      title: AuthorRunStatusResponse
+      description: Response for ``GET|PATCH /author/run/{run_id}/status``.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     BearerAuth:
       type: http
